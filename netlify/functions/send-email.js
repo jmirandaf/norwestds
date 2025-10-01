@@ -91,17 +91,23 @@ Este mensaje fue enviado desde el formulario de contacto de norwestds.com
 
     // Enviar el correo usando la API de Zoho
     try {
+      console.log('Intentando enviar email con los siguientes datos:', {
+        to: mailTo,
+        from: mailFrom,
+        subject: `Nuevo contacto de ${name} - ${company}`
+      });
+
       const response = await axios({
         method: 'post',
-        url: 'https://mail.zoho.com/api/v1/messages',
+        url: 'https://mail.zoho.com/api/organization/mail/send',
         headers: {
           'Authorization': `Zoho-oauthtoken ${accessToken}`,
           'Content-Type': 'application/json',
         },
         data: {
           subject: `Nuevo contacto de ${name} - ${company}`,
-          body: {
-            content: `
+          content: `
+            <div style="font-family: Arial, sans-serif;">
               <h2>Nuevo mensaje de contacto</h2>
               <p><strong>Nombre:</strong> ${name}</p>
               <p><strong>Email:</strong> ${email}</p>
@@ -110,11 +116,11 @@ Este mensaje fue enviado desde el formulario de contacto de norwestds.com
               <p>${message}</p>
               <hr>
               <p><em>Este mensaje fue enviado desde el formulario de contacto de norwestds.com</em></p>
-            `,
-            contentType: "html"
-          },
+            </div>
+          `,
           fromAddress: mailFrom,
           toAddress: mailTo,
+          mailFormat: "html",
           subject: `Nuevo contacto de ${name} - ${company}`,
           content: `
 Nuevo mensaje de contacto:
