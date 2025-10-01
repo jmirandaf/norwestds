@@ -6,7 +6,7 @@ export default function Navbar() {
     { 
       label: "About",    
       bgColor: "#ffffff",
-      textColor: "#004C71", // brand-deep
+      textColor: "#00A7E1", // brand-light-blue
       links: [
         { label: "Nuestra Historia", ariaLabel: "About Company", href: "/about" },
         { label: "Equipo", ariaLabel: "About Team", href: "/about#team" }
@@ -15,7 +15,7 @@ export default function Navbar() {
     { 
       label: "Projects", 
       bgColor: "#ffffff",
-      textColor: "#004C71", // brand-deep
+      textColor: "#00A7E1", // brand-light-blue
       links: [
         { label: "Automatización", ariaLabel: "Automation Projects", href: "/projects#automation" },
         { label: "Visión Artificial", ariaLabel: "Vision Projects", href: "/projects#vision" }
@@ -24,7 +24,7 @@ export default function Navbar() {
     { 
       label: "Services", 
       bgColor: "#ffffff",
-      textColor: "#004C71", // brand-deep
+      textColor: "#00A7E1", // brand-light-blue
       links: [
         { label: "Robótica", ariaLabel: "Robotics Services", href: "/services#robotics" },
         { label: "Control de Calidad", ariaLabel: "Quality Control", href: "/services#quality" }
