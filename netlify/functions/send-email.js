@@ -93,12 +93,26 @@ Este mensaje fue enviado desde el formulario de contacto de norwestds.com
     try {
       const response = await axios({
         method: 'post',
-        url: `https://mail.zoho.com/api/accounts/${mailFrom}/messages`,
+        url: 'https://mail.zoho.com/api/v1/messages',
         headers: {
           'Authorization': `Zoho-oauthtoken ${accessToken}`,
           'Content-Type': 'application/json',
         },
         data: {
+          subject: `Nuevo contacto de ${name} - ${company}`,
+          body: {
+            content: `
+              <h2>Nuevo mensaje de contacto</h2>
+              <p><strong>Nombre:</strong> ${name}</p>
+              <p><strong>Email:</strong> ${email}</p>
+              <p><strong>Empresa:</strong> ${company}</p>
+              <p><strong>Mensaje:</strong></p>
+              <p>${message}</p>
+              <hr>
+              <p><em>Este mensaje fue enviado desde el formulario de contacto de norwestds.com</em></p>
+            `,
+            contentType: "html"
+          },
           fromAddress: mailFrom,
           toAddress: mailTo,
           subject: `Nuevo contacto de ${name} - ${company}`,
