@@ -60,18 +60,31 @@ Este mensaje fue enviado desde el formulario de contacto de norwestds.com
     // Log de variables de entorno (sin mostrar valores sensibles)
     console.log('Environment variables present:', {
       ZOHO_MAIL_FROM: !!process.env.ZOHO_MAIL_FROM,
+      VITE_ZOHO_MAIL_FROM: !!process.env.VITE_ZOHO_MAIL_FROM,
       ZOHO_MAIL_TO: !!process.env.ZOHO_MAIL_TO,
-      ZOHO_MAIL_ACCESS_TOKEN: !!process.env.ZOHO_MAIL_ACCESS_TOKEN
+      VITE_ZOHO_MAIL_TO: !!process.env.VITE_ZOHO_MAIL_TO,
+      ZOHO_MAIL_ACCESS_TOKEN: !!process.env.ZOHO_MAIL_ACCESS_TOKEN,
+      VITE_ZOHO_MAIL_ACCESS_TOKEN: !!process.env.VITE_ZOHO_MAIL_ACCESS_TOKEN
     });
 
+    // Usar variables con o sin prefijo VITE_
+    const mailFrom = process.env.ZOHO_MAIL_FROM || process.env.VITE_ZOHO_MAIL_FROM;
+    const mailTo = process.env.ZOHO_MAIL_TO || process.env.VITE_ZOHO_MAIL_TO;
+    const accessToken = process.env.ZOHO_MAIL_ACCESS_TOKEN || process.env.VITE_ZOHO_MAIL_ACCESS_TOKEN;
+
     // Verificar variables de entorno
-    if (!process.env.ZOHO_MAIL_FROM || !process.env.ZOHO_MAIL_TO || !process.env.ZOHO_MAIL_ACCESS_TOKEN) {
+    if (!mailFrom || !mailTo || !accessToken) {
       console.error('Missing environment variables');
       return {
         statusCode: 500,
         body: JSON.stringify({ 
           error: 'Error de configuración del servidor',
-          details: 'Faltan variables de entorno necesarias'
+          details: 'Faltan variables de entorno necesarias',
+          debug: {
+            mailFrom: !!mailFrom,
+            mailTo: !!mailTo,
+            accessToken: !!accessToken
+          }
         })
       };
     }
@@ -80,14 +93,14 @@ Este mensaje fue enviado desde el formulario de contacto de norwestds.com
     try {
       const response = await axios({
         method: 'post',
-        url: 'https://mail.zoho.com/api/accounts/ventas@norwestds.com/messages',
+        url: `https://mail.zoho.com/api/accounts/${mailFrom}/messages`,
         headers: {
-          'Authorization': `Zoho-oauthtoken ${process.env.ZOHO_MAIL_ACCESS_TOKEN}`,
+          'Authorization': `Zoho-oauthtoken ${accessToken}`,
           'Content-Type': 'application/json',
         },
         data: {
-          fromAddress: process.env.ZOHO_MAIL_FROM,
-          toAddress: process.env.ZOHO_MAIL_TO,
+          fromAddress: mailFrom,
+          toAddress: mailTo,
           subject: `Nuevo contacto de ${name} - ${company}`,
           content: `
 Nuevo mensaje de contacto:
