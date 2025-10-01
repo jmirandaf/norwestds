@@ -1,6 +1,5 @@
 import useMeta from '../hooks/useMeta';
 import PageLayout from '../layout/PageLayout';
-import './Home.css';
 
 export default function Home() {
   // Si usas el hook useMeta, descomenta:
@@ -52,99 +51,99 @@ export default function Home() {
     <>
 <PageLayout>
           {/* HERO (sin hero__bg) */}
-      <div className="main-content">
-        {/* Hero Section */}
-        <section className="hero">
-          <div className="container hero__content">
-            <div className="hero__copy">
-              <h1 className="hero__title">
-                Soluciones Inteligentes en <span className="accent">Automatización Industrial</span>
-              </h1>
-              <p className="hero__subtitle">
-                Optimizamos procesos industriales con tecnología de punta y experiencia comprobada
-              </p>
-              <div className="hero__actions">
-                <a className="btn" href="/contact">Consulta con un experto</a>
-                <a className="btn outline" href="/projects">Conoce nuestros proyectos</a>
-              </div>
+      <section className="hero">
+        <div className="container hero__content">
+          <div className="hero__copy">
+            <h1 className="hero__title">
+              Soluciones Inteligentes en <span className="accent">Automatización Industrial</span>
+            </h1>
+            <p className="hero__subtitle">
+              Optimizamos procesos industriales con tecnología de punta y experiencia comprobada
+            </p>
+            <div className="hero__actions">
+              <a className="btn" href="/contact">Consulta con un experto</a>
+              <a className="btn outline" href="/projects">Ver proyectos</a>
             </div>
-            <div className="image-placeholder">
-              Imagen: Robot industrial en acción
-            </div>
+            <ul className="hero__bullets">
+              <li>Integración Robótica FANUC</li>
+              <li>Sistemas de Visión 2D/3D</li>
+              <li>Control y Automatización</li>
+            </ul>
           </div>
-        </section>
 
-        {/* Solutions Section */}
-        <section className="section">
-          <div className="container">
-            <h2 className="section__title">Nuestras Soluciones</h2>
-            <div className="grid grid-cols-2 gap-8">
-              {solutions.map((solution, index) => (
-                <div key={index} className="section__content">
-                  <h3 className="text-xl text-brand-light mb-4">{solution.title}</h3>
-                  <p className="mb-4">{solution.description}</p>
-                  <ul className="list-disc pl-5">
-                    {solution.features.map((feature, i) => (
-                      <li key={i}>{feature}</li>
-                    ))}
-                  </ul>
-                  <div className="image-placeholder mt-4">
-                    Imagen: {solution.title}
-                  </div>
-                </div>
-              ))}
+          <div className="hero__panel">
+            <div className="panel">
+              <p className="panel__label">Especialistas en</p>
+              <ul className="panel__list">
+                <li>FANUC • Keyence • Cognex • SICK</li>
+                <li>PLCs • HMIs • SCADA</li>
+                <li>Seguridad Industrial</li>
+              </ul>
+              <a className="btn block" href="/services">Nuestros servicios</a>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Specialties Section */}
-        <section className="section bg-brand-deep">
-          <div className="container">
-            <h2 className="section__title">Especialidades</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {specialties.map((specialty, index) => (
-                <div key={index} className="section__content">
-                  <h3 className="text-lg text-brand-light mb-3">{specialty.title}</h3>
-                  <ul className="space-y-2">
-                    {specialty.items.map((item, i) => (
-                      <li key={i}>{item}</li>
-                    ))}
-                  </ul>
-                  <div className="image-placeholder mt-4">
-                    Ícono: {specialty.title}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+      {/* Servicios */}
+      <section className="container pad">
+        <h2 className="section__title">Soluciones Integrales</h2>
+        <p className="section__lead">
+          Diseñamos e implementamos soluciones de automatización personalizadas para optimizar tus procesos industriales
+        </p>
+        <div className="grid cards-3">
+          {solutions.map((solution, i) => (
+            <article className="card" key={i}>
+              <h3 className="card__title">{solution.title}</h3>
+              <p className="card__text">{solution.description}</p>
+              <a href="/services" className="card__link">Conoce más →</a>
+            </article>
+          ))}
+        </div>
+      </section>
 
-        {/* Stats Section */}
-        <section className="section">
-          <div className="container">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {stats.map((stat, index) => (
-                <div key={index} className="text-center">
-                  <div className="text-4xl text-brand-light font-bold">{stat.n}</div>
-                  <div className="text-white">{stat.l}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+      {/* Especialidades */}
+      <section className="container pad">
+        <h2 className="section__title">Nuestras Especialidades</h2>
+        <div className="grid cards-2">
+          {specialties.map((specialty, i) => (
+            <article className="card" key={i}>
+              <h3 className="card__title">{specialty.title}</h3>
+              <ul className="card__list">
+                {specialty.items.map((item, j) => (
+                  <li key={j}>{item}</li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+      </section>
 
-        {/* CTA Section */}
-        <section className="section">
-          <div className="container text-center">
-            <h2 className="text-3xl text-brand-light mb-4">¿Listo para optimizar tus procesos?</h2>
-            <p className="text-white mb-6">Contáctanos hoy y descubre cómo podemos ayudarte</p>
-            <div className="space-x-4">
-              <a href="/contact" className="btn">Solicitar consultoría</a>
-              <a href="/projects" className="btn outline">Ver casos de éxito</a>
+      {/* Métricas */}
+      <section className="metrics">
+        <div className="container metrics__row">
+          {stats.map((s, i) => (
+            <div className="metric" key={i}>
+              <div className="metric__n">{s.n}</div>
+              <div className="metric__l">{s.l}</div>
             </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA Final */}
+      <section className="cta">
+        <div className="container cta__row">
+          <div>
+            <h2 className="cta__title">¿Listo para optimizar tus procesos?</h2>
+            <p className="cta__text">Descubre cómo podemos ayudarte a alcanzar tus objetivos</p>
           </div>
-        </section>
-      </div>
+          <div className="cta__actions">
+            <a className="btn" href="/contact">Solicitar consultoría</a>
+            <a className="btn outline" href="/projects">Ver casos de éxito</a>
+          </div>
+        </div>
+      </section>
     </PageLayout>
     </>
   );
