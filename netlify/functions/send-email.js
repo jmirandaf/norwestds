@@ -57,29 +57,99 @@ Este mensaje fue enviado desde el formulario de contacto de norwestds.com
       }]
     };
 
-    // Enviar el correo usando la API de Zoho
-    const response = await axios({
-      method: 'post',
-      url: 'https://mail.zoho.com/api/v1/accounts/' + process.env.ZOHO_MAIL_FROM + '/messages',
-      headers: {
-        'Authorization': `Zoho-oauthtoken ${process.env.ZOHO_MAIL_ACCESS_TOKEN}`,
-        'Content-Type': 'application/json',
-      },
-      data: emailData
+    // Log de variables de entorno (sin mostrar valores sensibles)
+    console.log('Environment variables present:', {
+      ZOHO_MAIL_FROM: !!process.env.ZOHO_MAIL_FROM,
+      ZOHO_MAIL_TO: !!process.env.ZOHO_MAIL_TO,
+      ZOHO_MAIL_ACCESS_TOKEN: !!process.env.ZOHO_MAIL_ACCESS_TOKEN
     });
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ message: 'Correo enviado exitosamente' })
-    };
+    // Verificar variables de entorno
+    if (!process.env.ZOHO_MAIL_FROM || !process.env.ZOHO_MAIL_TO || !process.env.ZOHO_MAIL_ACCESS_TOKEN) {
+      console.error('Missing environment variables');
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ 
+          error: 'Error de configuración del servidor',
+          details: 'Faltan variables de entorno necesarias'
+        })
+      };
+    }
 
+    // Enviar el correo usando la API de Zoho
+    try {
+      const response = await axios({
+        method: 'post',
+        url: 'https://mail.zoho.com/api/accounts/ventas@norwestds.com/messages',
+        headers: {
+          'Authorization': `Zoho-oauthtoken ${process.env.ZOHO_MAIL_ACCESS_TOKEN}`,
+          'Content-Type': 'application/json',
+        },
+        data: {
+          fromAddress: process.env.ZOHO_MAIL_FROM,
+          toAddress: process.env.ZOHO_MAIL_TO,
+          subject: `Nuevo contacto de ${name} - ${company}`,
+          content: `
+Nuevo mensaje de contacto:
+
+Nombre: ${name}
+Email: ${email}
+Empresa: ${company}
+
+Mensaje:
+${message}
+
+---
+Este mensaje fue enviado desde el formulario de contacto de norwestds.com`,
+          mailFormat: "html"
+        }
+      });
+
+      console.log('Zoho API Response:', response.status, response.data);
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ 
+          message: 'Correo enviado exitosamente',
+          responseData: response.data
+        })
+      };
+
+    } catch (error) {
+      console.error('Error details:', {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        message: error.message
+      });
+
+      // Si es un error de autenticación
+      if (error.response?.status === 401) {
+        return {
+          statusCode: 401,
+          body: JSON.stringify({ 
+            error: 'Error de autenticación con Zoho',
+            details: 'El token de acceso puede haber expirado'
+          })
+        };
+      }
+
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ 
+          error: 'Error al enviar el correo',
+          details: error.response?.data || error.message,
+          status: error.response?.status
+        })
+      };
+    }
   } catch (error) {
-    console.error('Error:', error.response ? error.response.data : error);
+    console.error('Error general:', error);
     return {
       statusCode: 500,
       body: JSON.stringify({ 
-        error: 'Error al enviar el correo',
-        details: error.response ? error.response.data : error.message
+        error: 'Error interno del servidor',
+        details: error.message
       })
     };
   }
