@@ -86,12 +86,12 @@ export default function Home() {
       </section>
 
       {/* Servicios */}
-      <section className="container pad">
-        <h2 className="section__title">Soluciones Integrales</h2>
+      <section className="container">
+        <h2 className="section__title" style={{marginTop: 32}}>Soluciones Integrales</h2>
         <p className="section__lead">
           Diseñamos e implementamos soluciones de automatización personalizadas para optimizar tus procesos industriales
         </p>
-        <div className="grid cards-3">
+        <div className="grid" style={{marginTop: 48, gap: 24, gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))'}}>
           {solutions.map((solution, i) => (
             <article className="card" key={i}>
               <h3 className="card__title">{solution.title}</h3>
@@ -103,9 +103,9 @@ export default function Home() {
       </section>
 
       {/* Especialidades */}
-      <section className="container pad">
-        <h2 className="section__title">Nuestras Especialidades</h2>
-        <div className="grid cards-2">
+      <section className="container">
+        <h2 className="section__title" style={{marginTop: 64}}>Nuestras Especialidades</h2>
+        <div className="grid" style={{marginTop: 32, gap: 24, gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))'}}>
           {specialties.map((specialty, i) => (
             <article className="card" key={i}>
               <h3 className="card__title">{specialty.title}</h3>

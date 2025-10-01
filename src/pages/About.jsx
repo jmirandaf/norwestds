@@ -11,35 +11,37 @@ export default function About() {
 
   const team = [
     {
-      name: "Ing. Daniel Ramírez",
-      role: "Director de Proyectos",
-      expertise: "Robótica y Visión Artificial",
-      cert: "Certificado Fanuc & Cognex"
+      name: "Carlos Gonzalez",
+      role: "Sales Engineer / PM",
+      expertise: "Ventas y Gestión de Proyectos"
     },
     {
-      name: "Ing. Ana Martínez",
-      role: "Líder de Integración",
-      expertise: "PLC y Redes Industriales",
-      cert: "Certificada Siemens & Allen Bradley"
+      name: "Sebastian Bandeliz",
+      role: "Legal Affairs / PM",
+      expertise: "Asuntos Legales y Gestión de Proyectos"
     },
     {
-      name: "Ing. Carlos López",
-      role: "Especialista en Control",
-      expertise: "HMI y SCADA",
-      cert: "Certificado Wonderware"
+      name: "Elias Mejia",
+      role: "Design Lead Engineer",
+      expertise: "Diseño e Ingeniería"
+    },
+    {
+      name: "Juan Miranda",
+      role: "Control Lead Engineer",
+      expertise: "Control e Ingeniería"
     }
   ];
 
   return (
     <PageLayout>
-      <section className="container pad">
-        <h1 className="section__title">Sobre Nosotros</h1>
+      <section className="container">
+        <h1 className="section__title" style={{marginTop: 32}}>Sobre Nosotros</h1>
         <p className="section__lead">
           Somos un equipo de ingeniería especializado en integración de sistemas y automatización industrial,
           comprometidos con la excelencia técnica y la innovación.
         </p>
 
-        <div className="grid" style={{marginTop: 48}}>
+        <div className="grid" style={{marginTop: 48, gap: 24, gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))'}}>
           <div className="card">
             <h3>Nuestra Misión</h3>
             <p>Transformar procesos industriales mediante soluciones de automatización innovadoras y confiables que impulsen la productividad y competitividad de nuestros clientes.</p>
@@ -62,15 +64,14 @@ export default function About() {
         <div style={{marginTop: 64}}>
           <h2 className="section__title">Nuestro Equipo</h2>
           <p className="section__lead">
-            Contamos con profesionales certificados y especializados en diferentes áreas de la automatización.
+            Contamos con profesionales especializados en diferentes áreas de ingeniería y gestión de proyectos.
           </p>
-          <div className="grid" style={{marginTop: 32}}>
+          <div className="grid" style={{marginTop: 32, gap: 24, gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))'}}>
             {team.map((member, i) => (
               <div className="card" key={i}>
                 <h3>{member.name}</h3>
                 <p style={{color: 'var(--brand)', marginBottom: 8}}>{member.role}</p>
-                <p style={{marginBottom: 4}}><strong>Especialidad:</strong> {member.expertise}</p>
-                <p style={{opacity: 0.8}}>{member.cert}</p>
+                <p style={{marginBottom: 4}}>{member.expertise}</p>
               </div>
             ))}
           </div>
@@ -78,14 +79,10 @@ export default function About() {
 
         <div style={{marginTop: 64}}>
           <h2 className="section__title">Por Qué Elegirnos</h2>
-          <div className="grid">
+          <div className="grid" style={{gap: 24, gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))'}}>
             <div className="card">
               <h3>Experiencia Comprobada</h3>
               <p>Más de 10 años en el sector industrial implementando soluciones de automatización exitosas.</p>
-            </div>
-            <div className="card">
-              <h3>Certificaciones</h3>
-              <p>Equipo certificado en las principales marcas y tecnologías del mercado industrial.</p>
             </div>
             <div className="card">
               <h3>Soporte Continuo</h3>
