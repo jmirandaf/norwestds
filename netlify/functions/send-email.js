@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');
+const axios = require('axios');
 
 exports.handler = async (event, context) => {
   // Solo permitir POST
@@ -58,23 +58,15 @@ Este mensaje fue enviado desde el formulario de contacto de norwestds.com
     };
 
     // Enviar el correo usando la API de Zoho
-    const response = await fetch(
-      'https://mail.zoho.com/api/v1/accounts/' + process.env.ZOHO_MAIL_FROM + '/messages',
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${process.env.ZOHO_MAIL_ACCESS_TOKEN}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(emailData),
-      }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(JSON.stringify(data));
-    }
+    const response = await axios({
+      method: 'post',
+      url: 'https://mail.zoho.com/api/v1/accounts/' + process.env.ZOHO_MAIL_FROM + '/messages',
+      headers: {
+        'Authorization': `Zoho-oauthtoken ${process.env.ZOHO_MAIL_ACCESS_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      data: emailData
+    });
 
     return {
       statusCode: 200,
@@ -82,10 +74,13 @@ Este mensaje fue enviado desde el formulario de contacto de norwestds.com
     };
 
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error:', error.response ? error.response.data : error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Error al enviar el correo' })
+      body: JSON.stringify({ 
+        error: 'Error al enviar el correo',
+        details: error.response ? error.response.data : error.message
+      })
     };
   }
 };
