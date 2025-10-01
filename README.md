@@ -1,16 +1,39 @@
-# React + Vite
+# Norwest Digital Solutions
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Sitio web corporativo de Norwest Digital Solutions, construido con React y Vite.
 
-Currently, two official plugins are available:
+## Características
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Diseño moderno y responsive
+- Efectos visuales interactivos
+- Formulario de contacto integrado con Zoho Mail
+- Despliegue automático con Netlify
 
-## React Compiler
+## Tecnologías
 
-The React Compiler is not enabled on this template. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React
+- Vite
+- Zoho Mail API
+- Netlify Functions
+- GitHub Actions
 
-## Expanding the ESLint configuration
+## Desarrollo
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. Clonar el repositorio
+```bash
+git clone https://github.com/jmirandaf/norwestds.git
+```
+
+2. Instalar dependencias
+```bash
+npm install
+```
+
+3. Ejecutar en desarrollo
+```bash
+npm run dev
+```
+
+## Despliegue
+
+El sitio se despliega automáticamente en Netlify cuando se hace push a la rama main.
