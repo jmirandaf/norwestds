@@ -21,30 +21,11 @@ exports.handler = async (event, context) => {
     }
 
     const emailData = {
-      data: [{
-        from: {
-          address: process.env.ZOHO_MAIL_FROM,
-          name: "Norwest DS Formulario"
-        },
-        to: [{
-          address: process.env.ZOHO_MAIL_TO,
-          name: "Ventas Norwest"
-        }],
-        subject: `Nuevo contacto de ${name} - ${company}`,
-        textBody: `
-Nuevo mensaje de contacto:
-
-Nombre: ${name}
-Email: ${email}
-Empresa: ${company}
-
-Mensaje:
-${message}
-
----
-Este mensaje fue enviado desde el formulario de contacto de norwestds.com
-        `,
-        htmlBody: `
+      fromAddress: mailFrom,
+      toAddress: mailTo,
+      subject: `Nuevo contacto de ${name} - ${company}`,
+      content: `
+        <div style="font-family: Arial, sans-serif;">
           <h2>Nuevo mensaje de contacto</h2>
           <p><strong>Nombre:</strong> ${name}</p>
           <p><strong>Email:</strong> ${email}</p>
@@ -53,8 +34,10 @@ Este mensaje fue enviado desde el formulario de contacto de norwestds.com
           <p>${message}</p>
           <hr>
           <p><em>Este mensaje fue enviado desde el formulario de contacto de norwestds.com</em></p>
-        `
-      }]
+        </div>
+      `,
+      askReceipt: true,
+      mailFormat: "html"
     };
 
     // Log de variables de entorno (sin mostrar valores sensibles)
@@ -99,7 +82,7 @@ Este mensaje fue enviado desde el formulario de contacto de norwestds.com
 
       const response = await axios({
         method: 'post',
-        url: 'https://mail.zoho.com/api/v1/accounts/' + encodeURIComponent(mailFrom) + '/messages',
+        url: 'https://mail.zoho.com/api/accounts/ventas@norwestds.com/messages/send',
         headers: {
           'Authorization': `Zoho-oauthtoken ${accessToken}`,
           'Content-Type': 'application/json',
