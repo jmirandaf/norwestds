@@ -5,8 +5,8 @@ import * as THREE from 'three';
 import './LiquidEther.css';
 
 export default function LiquidEther({
-  mouseForce = 12,
-  cursorSize = 120,
+  mouseForce = 8,
+  cursorSize = 150,
   isViscous = false,
   viscous = 30,
   iterationsViscous = 32,
@@ -15,7 +15,7 @@ export default function LiquidEther({
   BFECC = true,
   resolution = 0.5,
   isBounce = false,
-  colors = ['#5227FF80', '#FF9FFC80', '#B19EEF80'],
+  colors = ['#5227FF40', '#FF9FFC40', '#B19EEF40'],
   style = {},
   className = '',
   autoDemo = true,
