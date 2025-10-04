@@ -40,7 +40,7 @@ export default function Navbar() {
         items={items}
 
         /* Colores Norwest */
-        baseColor="#EAF6FB"           // texto/link base claro
+        baseColor="#444042"           // texto/link base claro
         menuColor="var(--brand)"      // paneles/menus
         buttonBgColor="var(--brand)"  // botones
         buttonTextColor="#ffffff"     // texto de botón
