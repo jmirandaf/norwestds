@@ -165,13 +165,13 @@
   gap: 6px;
   padding: 6px 0;
   opacity: 0.8;
-  color: #004C71; /* brand-deep */
+  color: #444042; /* dark gray */
 }
 
 .nav-card-link:hover {
   opacity: 1;
   padding-left: 4px;
-  color: #007DA6; /* brand */
+  color: #444042; /* dark gray */
 }
 
 .nav-card-link-icon {
