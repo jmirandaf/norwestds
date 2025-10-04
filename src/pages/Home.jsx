@@ -119,18 +119,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Métricas */}
-      <section className="metrics">
-        <div className="container metrics__row">
-          {stats.map((s, i) => (
-            <div className="metric" key={i}>
-              <div className="metric__n">{s.n}</div>
-              <div className="metric__l">{s.l}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* CTA Final */}
       <section className="cta">
         <div className="container cta__row">
