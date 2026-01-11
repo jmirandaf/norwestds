@@ -164,14 +164,14 @@
   align-items: center;
   gap: 6px;
   padding: 6px 0;
-  opacity: 0.8;
-  color: #444042; /* dark gray */
+  opacity: 0.9;
+  color: #1a1a1a; /* negro/gris muy oscuro */
 }
 
 .nav-card-link:hover {
   opacity: 1;
   padding-left: 4px;
-  color: #444042; /* dark gray */
+  color: #000000; /* negro completo en hover */
 }
 
 .nav-card-link-icon {
