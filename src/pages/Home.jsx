@@ -1,5 +1,6 @@
 import useMeta from '../hooks/useMeta';
 import PageLayout from '../layout/PageLayout';
+import LogoLoop from '../components/bits/LogoLoop';
 
 export default function Home() {
   // Si usas el hook useMeta, descomenta:
@@ -116,6 +117,59 @@ export default function Home() {
               </ul>
             </article>
           ))}
+        </div>
+      </section>
+
+      {/* Partners */}
+      <section className="container" style={{marginTop: 64}}>
+        <h2 className="section__title">Nuestros Partners Tecnológicos</h2>
+        <p className="section__lead">Trabajamos con las marcas líderes en automatización industrial</p>
+        <div style={{marginTop: 40}}>
+          <LogoLoop
+            logos={[
+              <div style={{fontSize: '32px', fontWeight: 'bold', color: '#004C71', padding: '0 20px'}}>FANUC</div>,
+              <div style={{fontSize: '32px', fontWeight: 'bold', color: '#004C71', padding: '0 20px'}}>Keyence</div>,
+              <div style={{fontSize: '32px', fontWeight: 'bold', color: '#004C71', padding: '0 20px'}}>Cognex</div>,
+              <div style={{fontSize: '32px', fontWeight: 'bold', color: '#004C71', padding: '0 20px'}}>SICK</div>,
+              <div style={{fontSize: '32px', fontWeight: 'bold', color: '#004C71', padding: '0 20px'}}>Siemens</div>,
+              <div style={{fontSize: '32px', fontWeight: 'bold', color: '#004C71', padding: '0 20px'}}>ABB</div>,
+            ]}
+            speed={50}
+            direction="left"
+            logoHeight={60}
+            gap={80}
+            hoverSpeed={0}
+            fadeOut={true}
+            fadeOutColor="rgba(255,255,255,1)"
+            scaleOnHover={true}
+            ariaLabel="Technology partners"
+          />
+        </div>
+      </section>
+
+      {/* Clientes */}
+      <section className="container" style={{marginTop: 64}}>
+        <h2 className="section__title">Clientes que Confían en Nosotros</h2>
+        <p className="section__lead">Empresas líderes que han optimizado sus procesos con nuestras soluciones</p>
+        <div style={{marginTop: 40}}>
+          <LogoLoop
+            logos={[
+              <div style={{fontSize: '32px', fontWeight: 'bold', color: '#007DAB', padding: '0 20px'}}>MeritMedical</div>,
+              <div style={{fontSize: '32px', fontWeight: 'bold', color: '#007DAB', padding: '0 20px'}}>Medtronic</div>,
+              <div style={{fontSize: '32px', fontWeight: 'bold', color: '#007DAB', padding: '0 20px'}}>Foxconn</div>,
+              <div style={{fontSize: '32px', fontWeight: 'bold', color: '#007DAB', padding: '0 20px'}}>Jabil</div>,
+              <div style={{fontSize: '32px', fontWeight: 'bold', color: '#007DAB', padding: '0 20px'}}>TE Connectivity</div>,
+            ]}
+            speed={40}
+            direction="left"
+            logoHeight={60}
+            gap={100}
+            hoverSpeed={0}
+            fadeOut={true}
+            fadeOutColor="rgba(255,255,255,1)"
+            scaleOnHover={true}
+            ariaLabel="Our clients"
+          />
         </div>
       </section>
 
