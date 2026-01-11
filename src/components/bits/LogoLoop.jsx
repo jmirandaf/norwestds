@@ -30,66 +30,81 @@ const LogoLoop = ({
     if (!container) return;
 
     const track = container.querySelector('.logo-loop-track');
-    if (!track) return;
+    if (!track || !logos.length) return;
 
+    // Espera a que el DOM esté listo
+    let animationStarted = false;
     let lastTime = performance.now();
 
-    const animate = (currentTime) => {
-      const deltaTime = (currentTime - lastTime) / 1000;
-      lastTime = currentTime;
-
-      let movement = currentSpeed * deltaTime;
+    const startAnimation = () => {
+      if (animationStarted) return;
       
-      if (direction === 'right' || direction === 'down') {
-        movement = -movement;
-      }
-
-      positionRef.current += movement;
-
-      // Calcula el tamaño de un set individual (track tiene 3 copias)
       const items = track.children;
-      const itemsPerSet = items.length / 3;
+      if (items.length === 0) return;
+      
+      const itemsPerSet = logos.length;
       let singleSetSize = 0;
       
-      // Calcula el tamaño real de un set sumando todos los elementos + gaps
+      // Calcula el tamaño de un set completo
       for (let i = 0; i < itemsPerSet; i++) {
         const item = items[i];
         if (item) {
           singleSetSize += isVertical ? item.offsetHeight : item.offsetWidth;
-          if (i < itemsPerSet - 1) {
-            singleSetSize += gap; // Agrega el gap entre items
+          singleSetSize += gap;
+        }
+      }
+
+      if (singleSetSize === 0) {
+        requestAnimationFrame(startAnimation);
+        return;
+      }
+
+      animationStarted = true;
+
+      const animate = (currentTime) => {
+        const deltaTime = (currentTime - lastTime) / 1000;
+        lastTime = currentTime;
+
+        let movement = currentSpeed * deltaTime;
+        
+        if (direction === 'right' || direction === 'down') {
+          movement = -movement;
+        }
+
+        positionRef.current += movement;
+
+        // Reset seamless: cuando llega al final del primer set, vuelve a 0
+        if (direction === 'left' || direction === 'up') {
+          if (positionRef.current <= -singleSetSize) {
+            positionRef.current += singleSetSize;
+          }
+        } else {
+          if (positionRef.current >= singleSetSize) {
+            positionRef.current -= singleSetSize;
           }
         }
-      }
 
-      // Reset seamless cuando completa un ciclo completo
-      if (direction === 'left' || direction === 'up') {
-        if (Math.abs(positionRef.current) >= singleSetSize) {
-          positionRef.current = positionRef.current % singleSetSize;
+        if (isVertical) {
+          track.style.transform = `translateY(${positionRef.current}px)`;
+        } else {
+          track.style.transform = `translateX(${positionRef.current}px)`;
         }
-      } else {
-        if (positionRef.current >= singleSetSize) {
-          positionRef.current = positionRef.current % singleSetSize;
-        }
-      }
 
-      if (isVertical) {
-        track.style.transform = `translateY(${positionRef.current}px)`;
-      } else {
-        track.style.transform = `translateX(${positionRef.current}px)`;
-      }
+        animationRef.current = requestAnimationFrame(animate);
+      };
 
       animationRef.current = requestAnimationFrame(animate);
     };
 
-    animationRef.current = requestAnimationFrame(animate);
+    // Inicia la animación cuando el DOM esté listo
+    requestAnimationFrame(startAnimation);
 
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [currentSpeed, direction, isVertical, logos.length]);
+  }, [currentSpeed, direction, isVertical, logos.length, gap]);
 
   const defaultRenderItem = (item, key) => {
     const content = typeof item === 'string' ? (
