@@ -46,21 +46,28 @@ const LogoLoop = ({
 
       positionRef.current += movement;
 
-      // Calcula el tamaño de un set completo de logos
+      // Calcula el tamaño de un set completo de logos (con gap incluido)
       const firstChild = track.children[0];
       if (!firstChild) return;
       
-      const itemSize = isVertical ? firstChild.offsetHeight : firstChild.offsetWidth;
+      const gap = isVertical ? 
+        (firstChild.style.marginBottom ? parseInt(firstChild.style.marginBottom) : 0) :
+        (firstChild.style.marginRight ? parseInt(firstChild.style.marginRight) : 0);
+      
+      const itemSize = isVertical ? 
+        firstChild.offsetHeight + gap : 
+        firstChild.offsetWidth + gap;
+      
       const singleSetSize = itemSize * logos.length;
 
-      // Reset seamless cuando completa un ciclo
+      // Reset seamless cuando completa un ciclo completo
       if (direction === 'left' || direction === 'up') {
         if (positionRef.current <= -singleSetSize) {
-          positionRef.current = 0;
+          positionRef.current += singleSetSize;
         }
       } else {
-        if (positionRef.current >= 0) {
-          positionRef.current = -singleSetSize;
+        if (positionRef.current >= singleSetSize) {
+          positionRef.current -= singleSetSize;
         }
       }
 
@@ -109,7 +116,8 @@ const LogoLoop = ({
 
   const itemRenderer = renderItem || defaultRenderItem;
 
-  const duplicatedLogos = [...logos, ...logos];
+  // Triplicar los logos para asegurar loop seamless
+  const duplicatedLogos = [...logos, ...logos, ...logos];
 
   return (
     <div
