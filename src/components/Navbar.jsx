@@ -11,8 +11,7 @@ export default function Navbar() {
       bgColor: "#ffffff",
       textColor: "#00A7E1", // brand-light-blue
       links: [
-        { label: t('nav.projectsAutomation'), ariaLabel: "Automation Projects", href: "/projects#automation" },
-        { label: t('nav.projectsVision'), ariaLabel: "Vision Projects", href: "/projects#vision" }
+        { label: t('nav.projectsAutomation'), ariaLabel: "Automation Projects", href: "/projects" }
       ]
     },
     { 

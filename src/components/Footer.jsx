@@ -9,7 +9,7 @@ export default function Footer() {
         <div className="col">
           <h4>Contacto</h4>
           <p>Email: ventas@norwestds.com</p>
-          <p>Tel: +52 664-233-0442</p>
+          <p>Tel: +52 664-685-3430</p>
         </div>
       </div>
     </footer>

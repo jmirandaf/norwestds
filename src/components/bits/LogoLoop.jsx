@@ -46,19 +46,9 @@ const LogoLoop = ({
 
       positionRef.current += movement;
 
-      // Calcula el tamaño de un set completo de logos (con gap incluido)
-      const firstChild = track.children[0];
-      if (!firstChild) return;
-      
-      const gap = isVertical ? 
-        (firstChild.style.marginBottom ? parseInt(firstChild.style.marginBottom) : 0) :
-        (firstChild.style.marginRight ? parseInt(firstChild.style.marginRight) : 0);
-      
-      const itemSize = isVertical ? 
-        firstChild.offsetHeight + gap : 
-        firstChild.offsetWidth + gap;
-      
-      const singleSetSize = itemSize * logos.length;
+      // Calcula el ancho/alto total del track y divide por 3 (porque triplicamos)
+      const trackSize = isVertical ? track.scrollHeight : track.scrollWidth;
+      const singleSetSize = trackSize / 3;
 
       // Reset seamless cuando completa un ciclo completo
       if (direction === 'left' || direction === 'up') {

@@ -15,12 +15,12 @@ export default function Contact() {
     {
       icon: "📍",
       title: "Oficina",
-      info: "Parque Industrial Monterrey\nAv. Industria #2000\nMonterrey, N.L.",
+      info: "Pedregal de Santa Julia\nTijuana, Baja California\nMéxico",
     },
     {
       icon: "📱",
       title: "Teléfono",
-      info: "+52 (81) 8123-4567\nLun - Vie: 9:00 - 18:00",
+      info: "+52 664-685-3430\nLun - Vie: 9:00 - 18:00",
     },
     {
       icon: "📧",
