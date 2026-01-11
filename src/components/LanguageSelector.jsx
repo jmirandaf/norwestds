@@ -16,7 +16,7 @@ export default function LanguageSelector() {
         aria-label="Switch to English"
         title="English"
       >
-        🇺🇸
+        <img src="/usaflag.png" alt="USA" className="flag-icon" />
       </button>
       <button
         onClick={() => changeLanguage('es')}
@@ -24,7 +24,7 @@ export default function LanguageSelector() {
         aria-label="Cambiar a Español"
         title="Español"
       >
-        🇲🇽
+        <img src="/mxflag.png" alt="México" className="flag-icon" />
       </button>
     </div>
   );
