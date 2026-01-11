@@ -149,12 +149,19 @@ export default function Home() {
         <div style={{marginTop: 40}}>
           <LogoLoop
             logos={[
-              <div style={{fontSize: '32px', fontWeight: 'bold', color: '#004C71', padding: '0 20px'}}>FANUC</div>,
-              <div style={{fontSize: '32px', fontWeight: 'bold', color: '#004C71', padding: '0 20px'}}>Keyence</div>,
-              <div style={{fontSize: '32px', fontWeight: 'bold', color: '#004C71', padding: '0 20px'}}>Cognex</div>,
-              <div style={{fontSize: '32px', fontWeight: 'bold', color: '#004C71', padding: '0 20px'}}>SICK</div>,
-              <div style={{fontSize: '32px', fontWeight: 'bold', color: '#004C71', padding: '0 20px'}}>Siemens</div>,
-              <div style={{fontSize: '32px', fontWeight: 'bold', color: '#004C71', padding: '0 20px'}}>ABB</div>,
+              '/partnersLogo/fanucLogo.png',
+              '/partnersLogo/keyenceLogo.png',
+              '/partnersLogo/cognexLogo.png',
+              '/partnersLogo/omronLogo.png',
+              '/partnersLogo/abbLogo.png',
+              '/partnersLogo/yaskawaLogo.png',
+              '/partnersLogo/kukaLogo.png',
+              '/partnersLogo/mitsubishielectricLogo.png',
+              '/partnersLogo/nachiLogo.png',
+              '/partnersLogo/boschrexrothLogo.png',
+              '/partnersLogo/festoLogo.png',
+              '/partnersLogo/smcLogo.png',
+              '/partnersLogo/medtronicLogo.png'
             ]}
             speed={50}
             direction="left"
@@ -176,11 +183,8 @@ export default function Home() {
         <div style={{marginTop: 40}}>
           <LogoLoop
             logos={[
-              <div style={{fontSize: '32px', fontWeight: 'bold', color: '#007DAB', padding: '0 20px'}}>MeritMedical</div>,
-              <div style={{fontSize: '32px', fontWeight: 'bold', color: '#007DAB', padding: '0 20px'}}>Medtronic</div>,
-              <div style={{fontSize: '32px', fontWeight: 'bold', color: '#007DAB', padding: '0 20px'}}>Foxconn</div>,
-              <div style={{fontSize: '32px', fontWeight: 'bold', color: '#007DAB', padding: '0 20px'}}>Jabil</div>,
-              <div style={{fontSize: '32px', fontWeight: 'bold', color: '#007DAB', padding: '0 20px'}}>TE Connectivity</div>,
+              '/clientsLogo/jabilLogo.png',
+              '/clientsLogo/strykerLogo.png'
             ]}
             speed={40}
             direction="left"

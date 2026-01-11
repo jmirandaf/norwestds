@@ -1,14 +1,14 @@
 {
   "nav": {
     "about": "About",
-    "aboutHistory": "Our History",
+    "aboutUs": "About Us",
     "aboutTeam": "Team",
+    "aboutContact": "Contact",
     "projects": "Projects",
     "projectsAutomation": "Automation",
     "projectsVision": "Artificial Vision",
     "services": "Services",
-    "servicesRobotics": "Robotics",
-    "servicesQuality": "Quality Control",
+    "servicesField": "Field Services",
     "servicesTraining": "Training Center",
     "getStarted": "Get Started"
   },
@@ -119,5 +119,13 @@
     "course5": "Industrial Robotics",
     "course5Desc": "Training in programming and operation of FANUC industrial robots.",
     "comingSoon": "Coming Soon"
+  },
+  "team": {
+    "title": "Our Team",
+    "lead": "Professionals specialized in industrial automation committed to excellence",
+    "expertise1": "Sales and Project Management",
+    "expertise2": "Legal Affairs and Project Management",
+    "expertise3": "Design and Engineering",
+    "expertise4": "Control and Engineering"
   }
 }
