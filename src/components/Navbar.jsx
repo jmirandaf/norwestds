@@ -38,6 +38,7 @@ export default function Navbar() {
   return (
     <header className="site-header sticky-header norwest-nav">
       <CardNav
+        key={t('nav.projects')} // Force re-render on language change
         logo={logo}
         logoAlt="Norwest DS"
         items={items}

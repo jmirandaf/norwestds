@@ -155,13 +155,13 @@ const CardNav = ({
             </a>
           </div>
 
-          <button
-            type="button"
+          <a
+            href="/contact"
             className="card-nav-cta-button"
             style={{ backgroundColor: buttonBgColor, color: buttonTextColor }}
           >
             Get Started
-          </button>
+          </a>
         </div>
 
         <div className="card-nav-content" aria-hidden={!isExpanded}>
