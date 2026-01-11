@@ -164,14 +164,16 @@
   align-items: center;
   gap: 6px;
   padding: 6px 0;
-  opacity: 0.9;
-  color: #1a1a1a; /* negro/gris muy oscuro */
+  opacity: 1;
+  color: #000000 !important; /* negro para máximo contraste */
+  font-weight: 500;
 }
 
 .nav-card-link:hover {
   opacity: 1;
   padding-left: 4px;
-  color: #000000; /* negro completo en hover */
+  color: #000000 !important;
+  font-weight: 600;
 }
 
 .nav-card-link-icon {
