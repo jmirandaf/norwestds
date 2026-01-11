@@ -46,18 +46,30 @@ const LogoLoop = ({
 
       positionRef.current += movement;
 
-      // Calcula el ancho/alto total del track y divide por 3 (porque triplicamos)
-      const trackSize = isVertical ? track.scrollHeight : track.scrollWidth;
-      const singleSetSize = trackSize / 3;
+      // Calcula el tamaño de un set individual (track tiene 3 copias)
+      const items = track.children;
+      const itemsPerSet = items.length / 3;
+      let singleSetSize = 0;
+      
+      // Calcula el tamaño real de un set sumando todos los elementos + gaps
+      for (let i = 0; i < itemsPerSet; i++) {
+        const item = items[i];
+        if (item) {
+          singleSetSize += isVertical ? item.offsetHeight : item.offsetWidth;
+          if (i < itemsPerSet - 1) {
+            singleSetSize += gap; // Agrega el gap entre items
+          }
+        }
+      }
 
       // Reset seamless cuando completa un ciclo completo
       if (direction === 'left' || direction === 'up') {
-        if (positionRef.current <= -singleSetSize) {
-          positionRef.current += singleSetSize;
+        if (Math.abs(positionRef.current) >= singleSetSize) {
+          positionRef.current = positionRef.current % singleSetSize;
         }
       } else {
         if (positionRef.current >= singleSetSize) {
-          positionRef.current -= singleSetSize;
+          positionRef.current = positionRef.current % singleSetSize;
         }
       }
 
