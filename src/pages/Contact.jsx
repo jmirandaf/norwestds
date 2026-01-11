@@ -1,8 +1,10 @@
+import { useTranslation } from 'react-i18next';
 import useMeta from '../hooks/useMeta'
 import PageLayout from '../layout/PageLayout';
 import ContactForm from '../components/ContactForm';
 
 export default function Contact() {
+  const { t } = useTranslation();
   useMeta({
     title: "Contacto | Norwest DS",
     description: "Cuéntanos tu reto y lo convertimos en solución.",
@@ -30,9 +32,9 @@ export default function Contact() {
   return (
     <PageLayout>
       <section className="container pad">
-        <h1 className="section__title">Contacto</h1>
+        <h1 className="section__title">{t('contact.title')}</h1>
         <p className="section__lead">
-          ¿Listo para automatizar? Cuéntanos sobre tu proyecto y te responderemos dentro de las siguientes 24 horas hábiles.
+          {t('contact.lead')}
         </p>
 
         <div style={{

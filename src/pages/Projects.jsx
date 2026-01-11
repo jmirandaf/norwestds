@@ -1,8 +1,10 @@
+import { useTranslation } from 'react-i18next';
 import useMeta from '../hooks/useMeta'
 
 import PageLayout from '../layout/PageLayout';
 
 export default function Projects() {
+  const { t } = useTranslation();
   useMeta({
     title: "Proyectos | Norwest DS",
     description: "Casos reales de integración y automatización.",

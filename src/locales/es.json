@@ -9,6 +9,7 @@
     "services": "Services",
     "servicesRobotics": "Robótica",
     "servicesQuality": "Control de Calidad",
+    "servicesTraining": "Training Center",
     "getStarted": "Get Started"
   },
   "home": {
@@ -69,5 +70,54 @@
     "ctaText": "Descubre cómo podemos ayudarte a alcanzar tus objetivos",
     "ctaConsult": "Solicitar consultoría",
     "ctaSuccess": "Ver casos de éxito"
+  },
+  "about": {
+    "title": "Sobre Nosotros",
+    "lead": "Somos un equipo de ingeniería especializado en integración de sistemas y automatización industrial",
+    "teamTitle": "Nuestro Equipo"
+  },
+  "services": {
+    "title": "Servicios",
+    "service1": "Automatización Industrial",
+    "service1Desc": "Implementación de sistemas de control y automatización para optimizar procesos industriales y mejorar la eficiencia operativa.",
+    "service2": "Sistemas de Control",
+    "service2Desc": "Diseño e integración de sistemas de control avanzados para supervisar y gestionar procesos industriales de manera eficiente.",
+    "service3": "Robótica",
+    "service3Desc": "Desarrollo e implementación de soluciones robóticas personalizadas para automatizar tareas repetitivas y mejorar la productividad.",
+    "service4": "Programación PLC",
+    "service4Desc": "Programación y configuración de controladores lógicos programables (PLC) para automatizar procesos industriales complejos.",
+    "service5": "HMI/SCADA",
+    "service5Desc": "Diseño e implementación de interfaces hombre-máquina (HMI) y sistemas de control y adquisición de datos (SCADA) para una supervisión eficiente.",
+    "service6": "Diseño Eléctrico",
+    "service6Desc": "Diseño y desarrollo de sistemas eléctricos para proyectos industriales, asegurando cumplimiento con normativas y estándares.",
+    "service7": "Integración de Sistemas",
+    "service7Desc": "Integración de diversos sistemas y tecnologías para crear soluciones cohesivas que optimicen las operaciones industriales.",
+    "service8": "Mantenimiento y Soporte",
+    "service8Desc": "Servicios de mantenimiento preventivo y correctivo para asegurar el funcionamiento óptimo de los sistemas automatizados."
+  },
+  "projects": {
+    "title": "Proyectos"
+  },
+  "contact": {
+    "title": "Contacto",
+    "lead": "¿Listo para automatizar? Cuéntanos sobre tu proyecto y te responderemos dentro de las siguientes 24 horas hábiles.",
+    "office": "Oficina",
+    "phone": "Teléfono",
+    "email": "Email"
+  },
+  "training": {
+    "title": "NDS Training Center",
+    "lead": "Centro de capacitación especializado en automatización industrial, robótica y control",
+    "course1": "Programación PLC",
+    "course1Desc": "Aprende a programar controladores lógicos programables desde cero hasta nivel avanzado.",
+    "course2": "Control Industrial",
+    "course2Desc": "Fundamentos y aplicaciones de sistemas de control para procesos industriales.",
+    "course3": "Programación Visual",
+    "course3Desc": "Desarrollo de sistemas de visión artificial para inspección y control de calidad.",
+    "course4": "Redes Industriales",
+    "course4Desc": "Configuración y administración de redes de comunicación industrial.",
+    "course5": "Robótica Industrial",
+    "course5Desc": "Capacitación en programación y operación de robots industriales FANUC.",
+    "comingSoon": "Próximamente"
   }
 }

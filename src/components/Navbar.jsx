@@ -30,7 +30,8 @@ export default function Navbar() {
       textColor: "#00A7E1", // brand-light-blue
       links: [
         { label: t('nav.servicesRobotics'), ariaLabel: "Robotics Services", href: "/services#robotics" },
-        { label: t('nav.servicesQuality'), ariaLabel: "Quality Control", href: "/services#quality" }
+        { label: t('nav.servicesQuality'), ariaLabel: "Quality Control", href: "/services#quality" },
+        { label: t('nav.servicesTraining'), ariaLabel: "Training Center", href: "/training" }
       ]
     }
   ]

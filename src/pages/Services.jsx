@@ -1,8 +1,10 @@
+import { useTranslation } from 'react-i18next';
 import useMeta from "../hooks/useMeta";
 
 import PageLayout from '../layout/PageLayout';
 
 export default function Services() {
+    const { t } = useTranslation();
     useMeta({
         title: "Services - Norwest",
         description: "Explore the range of services offered by Norwest, including construction management, design-build, general contracting, and pre-construction consulting.",
@@ -11,25 +13,25 @@ export default function Services() {
 
 
     const items = [
-        { t:"Industrial Automation", d: "Implementación de sistemas de control y automatización para optimizar procesos industriales y mejorar la eficiencia operativa." },
-        { t:"Control Systems", d: "Diseño e integración de sistemas de control avanzados para supervisar y gestionar procesos industriales de manera eficiente." },
-        { t:"Robotics", d: "Desarrollo e implementación de soluciones robóticas personalizadas para automatizar tareas repetitivas y mejorar la productividad." },
-        { t:"PLC Programming", d: "Programación y configuración de controladores lógicos programables (PLC) para automatizar procesos industriales complejos." },
-        { t:"HMI/SCADA", d: "Diseño e implementación de interfaces hombre-máquina (HMI) y sistemas de control y adquisición de datos (SCADA) para una supervisión eficiente." },
-        { t:"Electrical Design", d: "Diseño y desarrollo de sistemas eléctricos para proyectos industriales, asegurando cumplimiento con normativas y estándares." },
-        { t:"System Integration", d: "Integración de diversos sistemas y tecnologías para crear soluciones cohesivas que optimicen las operaciones industriales." },
-        { t:"Maintenance & Support", d: "Servicios de mantenimiento preventivo y correctivo para asegurar el funcionamiento óptimo de los sistemas automatizados." },
+        { title: t('services.service1'), desc: t('services.service1Desc') },
+        { title: t('services.service2'), desc: t('services.service2Desc') },
+        { title: t('services.service3'), desc: t('services.service3Desc') },
+        { title: t('services.service4'), desc: t('services.service4Desc') },
+        { title: t('services.service5'), desc: t('services.service5Desc') },
+        { title: t('services.service6'), desc: t('services.service6Desc') },
+        { title: t('services.service7'), desc: t('services.service7Desc') },
+        { title: t('services.service8'), desc: t('services.service8Desc') },
     ]; 
 
     return (
         <PageLayout>
             <section className="container pad">
-                <h1>Servicios</h1>
+                <h1>{t('services.title')}</h1>
                 <div className="grid">
                     {items.map((x,i)=>(
                     <div className="card" key={i}>
-                        <h3>{x.t}</h3>
-                        <p>{x.d}</p>
+                        <h3>{x.title}</h3>
+                        <p>{x.desc}</p>
                     </div>
                     ))}
                 </div>

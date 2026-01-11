@@ -1,8 +1,10 @@
+import { useTranslation } from 'react-i18next';
 import useMeta from '../hooks/useMeta'
 
 import PageLayout from '../layout/PageLayout';
 
 export default function About() {
+  const { t } = useTranslation();
   useMeta({
     title: "Nosotros | Norwest DS",
     description: "Equipo multidisciplinario con enfoque en resultados.",
@@ -35,9 +37,9 @@ export default function About() {
   return (
     <PageLayout>
       <section className="container">
-        <h1 className="section__title" style={{marginTop: 32}}>Sobre Nosotros</h1>
+        <h1 className="section__title" style={{marginTop: 32}}>{t('about.title')}</h1>
         <p className="section__lead">
-          Somos un equipo de ingeniería especializado en integración de sistemas y automatización industrial,
+          {t('about.lead')},
           comprometidos con la excelencia técnica y la innovación.
         </p>
 

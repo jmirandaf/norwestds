@@ -9,6 +9,7 @@
     "services": "Services",
     "servicesRobotics": "Robotics",
     "servicesQuality": "Quality Control",
+    "servicesTraining": "Training Center",
     "getStarted": "Get Started"
   },
   "home": {
@@ -69,5 +70,54 @@
     "ctaText": "Discover how we can help you achieve your goals",
     "ctaConsult": "Request consultation",
     "ctaSuccess": "View success stories"
+  },
+  "about": {
+    "title": "About Us",
+    "lead": "We are an engineering team specialized in systems integration and industrial automation",
+    "teamTitle": "Our Team"
+  },
+  "services": {
+    "title": "Services",
+    "service1": "Industrial Automation",
+    "service1Desc": "Implementation of control and automation systems to optimize industrial processes and improve operational efficiency.",
+    "service2": "Control Systems",
+    "service2Desc": "Design and integration of advanced control systems to efficiently supervise and manage industrial processes.",
+    "service3": "Robotics",
+    "service3Desc": "Development and implementation of customized robotic solutions to automate repetitive tasks and improve productivity.",
+    "service4": "PLC Programming",
+    "service4Desc": "Programming and configuration of programmable logic controllers (PLC) to automate complex industrial processes.",
+    "service5": "HMI/SCADA",
+    "service5Desc": "Design and implementation of human-machine interfaces (HMI) and supervisory control and data acquisition (SCADA) systems for efficient supervision.",
+    "service6": "Electrical Design",
+    "service6Desc": "Design and development of electrical systems for industrial projects, ensuring compliance with regulations and standards.",
+    "service7": "System Integration",
+    "service7Desc": "Integration of various systems and technologies to create cohesive solutions that optimize industrial operations.",
+    "service8": "Maintenance & Support",
+    "service8Desc": "Preventive and corrective maintenance services to ensure optimal operation of automated systems."
+  },
+  "projects": {
+    "title": "Projects"
+  },
+  "contact": {
+    "title": "Contact",
+    "lead": "Ready to automate? Tell us about your project and we'll respond within the next 24 business hours.",
+    "office": "Office",
+    "phone": "Phone",
+    "email": "Email"
+  },
+  "training": {
+    "title": "NDS Training Center",
+    "lead": "Specialized training center in industrial automation, robotics and control",
+    "course1": "PLC Programming",
+    "course1Desc": "Learn to program programmable logic controllers from beginner to advanced level.",
+    "course2": "Industrial Control",
+    "course2Desc": "Fundamentals and applications of control systems for industrial processes.",
+    "course3": "Vision Programming",
+    "course3Desc": "Development of artificial vision systems for inspection and quality control.",
+    "course4": "Industrial Networks",
+    "course4Desc": "Configuration and administration of industrial communication networks.",
+    "course5": "Industrial Robotics",
+    "course5Desc": "Training in programming and operation of FANUC industrial robots.",
+    "comingSoon": "Coming Soon"
   }
 }
