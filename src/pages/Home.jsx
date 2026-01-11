@@ -184,7 +184,10 @@ export default function Home() {
           <LogoLoop
             logos={[
               '/clientsLogo/jabilLogo.png',
-              '/clientsLogo/strykerLogo.png'
+              '/clientsLogo/strykerLogo.png',
+              '/clientsLogo/napsLogo.png',
+              '/clientsLogo/poseyLogo.png',
+              '/clientsLogo/tenmaLogo.png'
             ]}
             speed={40}
             direction="left"

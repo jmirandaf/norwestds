@@ -46,15 +46,22 @@ const LogoLoop = ({
 
       positionRef.current += movement;
 
-      const trackSize = isVertical ? track.offsetHeight : track.offsetWidth;
-      const containerSize = isVertical ? container.offsetHeight : container.offsetWidth;
-      const itemCount = logos.length;
-      const singleLoopSize = trackSize / 2;
+      // Calcula el tamaño de un set completo de logos
+      const firstChild = track.children[0];
+      if (!firstChild) return;
+      
+      const itemSize = isVertical ? firstChild.offsetHeight : firstChild.offsetWidth;
+      const singleSetSize = itemSize * logos.length;
 
-      if (positionRef.current <= -singleLoopSize) {
-        positionRef.current += singleLoopSize;
-      } else if (positionRef.current >= 0) {
-        positionRef.current -= singleLoopSize;
+      // Reset seamless cuando completa un ciclo
+      if (direction === 'left' || direction === 'up') {
+        if (positionRef.current <= -singleSetSize) {
+          positionRef.current = 0;
+        }
+      } else {
+        if (positionRef.current >= 0) {
+          positionRef.current = -singleSetSize;
+        }
       }
 
       if (isVertical) {
