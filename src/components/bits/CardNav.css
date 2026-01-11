@@ -165,14 +165,14 @@
   gap: 6px;
   padding: 6px 0;
   opacity: 1;
-  color: #000000 !important; /* negro para máximo contraste */
+  color: #004C71 !important; /* PANTONE P 141-16C - azul oscuro Norwest */
   font-weight: 500;
 }
 
 .nav-card-link:hover {
   opacity: 1;
   padding-left: 4px;
-  color: #000000 !important;
+  color: #007DAB !important; /* PANTONE P 174-16C - azul cyan Norwest */
   font-weight: 600;
 }
 
