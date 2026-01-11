@@ -21,35 +21,40 @@ const LogoLoop = ({
   const trackRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
   const animationRef = useRef(null);
+  const positionRef = useRef(0);
+  const speedRef = useRef(speed);
 
   const isVertical = direction === 'up' || direction === 'down';
-  const currentSpeed = isHovered && hoverSpeed !== undefined ? hoverSpeed : speed;
+
+  // Actualizar la velocidad sin reiniciar la animación
+  useEffect(() => {
+    speedRef.current = isHovered && hoverSpeed !== undefined ? hoverSpeed : speed;
+  }, [isHovered, speed, hoverSpeed]);
 
   useEffect(() => {
     const track = trackRef.current;
     if (!track || !logos.length) return;
 
-    let position = 0;
     let lastTime = performance.now();
 
     const animate = (currentTime) => {
       const deltaTime = (currentTime - lastTime) / 1000;
       lastTime = currentTime;
 
-      // Movimiento en píxeles por segundo
-      const movement = currentSpeed * deltaTime;
+      // Usar la velocidad actual del ref
+      const movement = speedRef.current * deltaTime;
       
       if (direction === 'left' || direction === 'up') {
-        position -= movement;
+        positionRef.current -= movement;
       } else {
-        position += movement;
+        positionRef.current += movement;
       }
 
       // Aplicar transformación
       if (isVertical) {
-        track.style.transform = `translateY(${position}px)`;
+        track.style.transform = `translateY(${positionRef.current}px)`;
       } else {
-        track.style.transform = `translateX(${position}px)`;
+        track.style.transform = `translateX(${positionRef.current}px)`;
       }
 
       animationRef.current = requestAnimationFrame(animate);
@@ -62,7 +67,7 @@ const LogoLoop = ({
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [currentSpeed, direction, isVertical, logos.length]);
+  }, [direction, isVertical, logos.length]);
 
   const defaultRenderItem = (item, key) => {
     const content = typeof item === 'string' ? (
