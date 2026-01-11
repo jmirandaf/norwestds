@@ -1,33 +1,36 @@
+import { useTranslation } from 'react-i18next';
 import CardNav from './bits/CardNav'
 import logo from '/logo.png'
 
 export default function Navbar() {
+  const { t } = useTranslation();
+  
   const items = [
     { 
-      label: "About",    
+      label: t('nav.about'),    
       bgColor: "#ffffff",
       textColor: "#00A7E1", // brand-light-blue
       links: [
-        { label: "Nuestra Historia", ariaLabel: "About Company", href: "/about" },
-        { label: "Equipo", ariaLabel: "About Team", href: "/about#team" }
+        { label: t('nav.aboutHistory'), ariaLabel: "About Company", href: "/about" },
+        { label: t('nav.aboutTeam'), ariaLabel: "About Team", href: "/about#team" }
       ]
     },
     { 
-      label: "Projects", 
+      label: t('nav.projects'), 
       bgColor: "#ffffff",
       textColor: "#00A7E1", // brand-light-blue
       links: [
-        { label: "Automatización", ariaLabel: "Automation Projects", href: "/projects#automation" },
-        { label: "Visión Artificial", ariaLabel: "Vision Projects", href: "/projects#vision" }
+        { label: t('nav.projectsAutomation'), ariaLabel: "Automation Projects", href: "/projects#automation" },
+        { label: t('nav.projectsVision'), ariaLabel: "Vision Projects", href: "/projects#vision" }
       ]
     },
     { 
-      label: "Services", 
+      label: t('nav.services'), 
       bgColor: "#ffffff",
       textColor: "#00A7E1", // brand-light-blue
       links: [
-        { label: "Robótica", ariaLabel: "Robotics Services", href: "/services#robotics" },
-        { label: "Control de Calidad", ariaLabel: "Quality Control", href: "/services#quality" }
+        { label: t('nav.servicesRobotics'), ariaLabel: "Robotics Services", href: "/services#robotics" },
+        { label: t('nav.servicesQuality'), ariaLabel: "Quality Control", href: "/services#quality" }
       ]
     }
   ]
