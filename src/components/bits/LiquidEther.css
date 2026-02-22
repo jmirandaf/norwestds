@@ -1,0 +1,36 @@
+.liquid-ether-container {
+  position: fixed;
+  overflow: hidden;
+  width: 100%;
+  height: 100vh;
+  inset: 0;
+  touch-action: none;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* El canvas que inyecta Three/renderer (primer hijo) va al fondo */
+.liquid-ether-container > canvas {
+  position: fixed !important;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  z-index: 0;
+  pointer-events: auto !important;
+}
+
+/* Nuestro contenido va por encima */
+.liquid-ether-content {
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+/* Aseguramos que los elementos interactivos mantengan sus eventos */
+a, button, input, select, textarea,
+[role="button"], [tabindex]:not([tabindex="-1"]) {
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 2;
+}

@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  admin
+  pm
+  client
+}
+
+enum ProjectStatus {
+  draft
+  planned
+  active
+  blocked
+  completed
+  on_hold
+}
+
+enum InviteStatus {
+  pending
+  accepted
+  expired
+  revoked
+}
+
+model User {
+  id          String    @id @default(cuid())
+  clerkUserId String    @unique
+  email       String    @unique
+  displayName String?
+  role        Role      @default(client)
+  active      Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  managedProjects Project[] @relation("ProjectPM")
+  clientProjects  Project[] @relation("ProjectClient")
+  schedulesAsPM   Schedule[] @relation("SchedulePM")
+  schedulesAsClient Schedule[] @relation("ScheduleClient")
+}
+
+model Project {
+  id          String        @id @default(cuid())
+  title       String
+  status      ProjectStatus @default(draft)
+  progressPct Int           @default(0)
+  priority    String?
+  riskLevel   String?
+  pmName      String?
+
+  pmId        String?
+  clientId    String?
+
+  pm          User?         @relation("ProjectPM", fields: [pmId], references: [id])
+  client      User?         @relation("ProjectClient", fields: [clientId], references: [id])
+
+  schedules   Schedule[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Schedule {
+  id          String   @id @default(cuid())
+  projectId   String?
+  projectName String?
+  milestone   String?
+  dueDate     DateTime?
+  status      String?
+
+  pmId        String?
+  clientId    String?
+
+  project     Project? @relation(fields: [projectId], references: [id])
+  pm          User?    @relation("SchedulePM", fields: [pmId], references: [id])
+  client      User?    @relation("ScheduleClient", fields: [clientId], references: [id])
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Invite {
+  id          String       @id @default(cuid())
+  email       String
+  role        Role
+  clientId    String?
+  token       String       @unique
+  oneTimeUse  Boolean      @default(true)
+  expiresAt   DateTime
+  status      InviteStatus @default(pending)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([email])
+  @@index([status])
+}
