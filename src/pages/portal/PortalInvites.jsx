@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { createInvite } from '../../services/portalService'
 import { ROLES } from '../../config/portalStandards'
+import PortalLayout from '../../components/PortalLayout'
 
 export default function PortalInvites() {
   const { getToken } = useAuth()
@@ -37,30 +38,36 @@ export default function PortalInvites() {
   }
 
   return (
-    <div style={{ padding: 24, maxWidth: 620 }}>
-      <h1>Invitaciones (Admin)</h1>
-      <p>Alta controlada de usuarios para portal NDS.</p>
-
-      <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 10, marginTop: 12 }}>
-        <label>Email
-          <input type='email' required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+    <PortalLayout title='Invitaciones' subtitle='Alta controlada de usuarios para portal NDS.'>
+      <form onSubmit={handleSubmit} className='portal-form'>
+        <label className='portal-field'>
+          <span>Email</span>
+          <input
+            className='dp-input'
+            type='email'
+            required
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+          />
         </label>
 
-        <label>Rol
-          <select value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}>
+        <label className='portal-field'>
+          <span>Rol</span>
+          <select className='dp-input' value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}>
             {ROLES.map((r) => <option key={r} value={r}>{r}</option>)}
           </select>
         </label>
 
-        <label>clientId (opcional, recomendado para client)
-          <input value={form.clientId} onChange={(e) => setForm({ ...form, clientId: e.target.value })} />
+        <label className='portal-field'>
+          <span>clientId (opcional, recomendado para client)</span>
+          <input className='dp-input' value={form.clientId} onChange={(e) => setForm({ ...form, clientId: e.target.value })} />
         </label>
 
-        <button type='submit' disabled={loading}>{loading ? 'Creando...' : 'Crear invitación'}</button>
+        <button className='btn-primary' type='submit' disabled={loading}>{loading ? 'Creando...' : 'Crear invitación'}</button>
       </form>
 
       {msg && <p style={{ color: 'green' }}>{msg}</p>}
-      {err && <p style={{ color: '#c33' }}>{err}</p>}
-    </div>
+      {err && <p className='portal-error'>{err}</p>}
+    </PortalLayout>
   )
 }

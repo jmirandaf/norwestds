@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { fetchSchedules } from '../../services/portalService'
 import { SCHEDULE_MILESTONES } from '../../config/portalStandards'
+import PortalLayout from '../../components/PortalLayout'
 
 export default function PortalSchedule() {
   const { currentUser, userData, getToken } = useAuth()
@@ -33,12 +34,7 @@ export default function PortalSchedule() {
   }, [currentUser, userData, getToken])
 
   return (
-    <div className='portal-shell'>
-      <div className='portal-header'>
-        <h1>Schedule</h1>
-        <p>Hitos y fechas de proyectos.</p>
-      </div>
-
+    <PortalLayout title='Schedule' subtitle='Hitos y fechas de proyectos.'>
       {loading && <p>Cargando schedule...</p>}
       {error && <p className='portal-error'>{error}</p>}
 
@@ -61,6 +57,6 @@ export default function PortalSchedule() {
           })}
         </div>
       )}
-    </div>
+    </PortalLayout>
   )
 }

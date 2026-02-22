@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { fetchProjects } from '../../services/portalService'
 import { PROJECT_REQUIRED_FIELDS, PROJECT_STATUSES } from '../../config/portalStandards'
+import PortalLayout from '../../components/PortalLayout'
 
 export default function PortalProjects() {
   const { currentUser, userData, getToken } = useAuth()
@@ -33,12 +34,7 @@ export default function PortalProjects() {
   }, [currentUser, userData, getToken])
 
   return (
-    <div className='portal-shell'>
-      <div className='portal-header'>
-        <h1>Proyectos</h1>
-        <p>Vista inicial para estatus, avance y entregables por cliente.</p>
-      </div>
-
+    <PortalLayout title='Proyectos' subtitle='Estatus, avance y entregables por cliente.'>
       {loading && <p>Cargando proyectos...</p>}
       {error && <p className='portal-error'>{error}</p>}
 
@@ -69,6 +65,6 @@ export default function PortalProjects() {
           })}
         </div>
       )}
-    </div>
+    </PortalLayout>
   )
 }

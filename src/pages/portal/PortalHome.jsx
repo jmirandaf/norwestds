@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import { fetchProjects, fetchSchedules } from '../../services/portalService'
+import PortalLayout from '../../components/PortalLayout'
 
 export default function PortalHome() {
   const { currentUser, userData, getToken } = useAuth()
@@ -40,12 +41,7 @@ export default function PortalHome() {
   }, [projects, schedules])
 
   return (
-    <div className='portal-shell'>
-      <div className='portal-header'>
-        <h1>Portal NDS</h1>
-        <p>Bienvenido al portal de clientes y proyectos.</p>
-      </div>
-
+    <PortalLayout title='Resumen' subtitle='Bienvenido al portal de clientes y proyectos.'>
       <div className='portal-kpi-grid'>
         <Card title='Proyectos activos' value={loading ? '...' : kpis.active} />
         <Card title='% avance promedio' value={loading ? '...' : `${kpis.avgProgress}%`} />
@@ -58,7 +54,7 @@ export default function PortalHome() {
         <Link className='portal-link-pill' to='/portal/designpro'>DesignPro by NDS</Link>
         {userData?.role === 'admin' && <Link className='portal-link-pill' to='/portal/admin/invites'>Invitar usuario</Link>}
       </div>
-    </div>
+    </PortalLayout>
   )
 }
 
