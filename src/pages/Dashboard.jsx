@@ -27,17 +27,17 @@ export default function Dashboard() {
               <div className="dashboard-card">
                 <h3>👥 Gestión de Usuarios</h3>
                 <p>Administra usuarios, roles y permisos</p>
-                <button className="card-button">Ver Usuarios</button>
+                <button className="card-button" onClick={() => navigate('/portal/admin/invites')}>Ver Usuarios</button>
               </div>
               <div className="dashboard-card">
                 <h3>📁 Proyectos</h3>
                 <p>Todos los proyectos de la empresa</p>
-                <button className="card-button">Ver Proyectos</button>
+                <button className="card-button" onClick={() => navigate('/portal/projects')}>Ver Proyectos</button>
               </div>
               <div className="dashboard-card">
                 <h3>📊 Estadísticas</h3>
                 <p>Reportes y métricas generales</p>
-                <button className="card-button">Ver Reportes</button>
+                <button className="card-button" onClick={() => navigate('/portal')}>Ver Reportes</button>
               </div>
             </div>
           </div>
@@ -51,17 +51,17 @@ export default function Dashboard() {
               <div className="dashboard-card">
                 <h3>📋 Mis Proyectos</h3>
                 <p>Proyectos asignados a tu gestión</p>
-                <button className="card-button">Ver Proyectos</button>
+                <button className="card-button" onClick={() => navigate('/portal/projects')}>Ver Proyectos</button>
               </div>
               <div className="dashboard-card">
                 <h3>👤 Clientes</h3>
                 <p>Gestiona tus clientes</p>
-                <button className="card-button">Ver Clientes</button>
+                <button className="card-button" onClick={() => navigate('/portal')}>Ver Clientes</button>
               </div>
               <div className="dashboard-card">
                 <h3>📄 Documentación</h3>
                 <p>Sube y gestiona documentos</p>
-                <button className="card-button">Ver Documentos</button>
+                <button className="card-button" onClick={() => navigate('/portal/schedule')}>Ver Documentos</button>
               </div>
             </div>
           </div>
@@ -75,17 +75,17 @@ export default function Dashboard() {
               <div className="dashboard-card">
                 <h3>🔧 Mis Proyectos</h3>
                 <p>Proyectos contratados</p>
-                <button className="card-button">Ver Proyectos</button>
+                <button className="card-button" onClick={() => navigate('/portal/projects')}>Ver Proyectos</button>
               </div>
               <div className="dashboard-card">
                 <h3>📥 Descargas</h3>
                 <p>Documentos y archivos disponibles</p>
-                <button className="card-button">Ver Archivos</button>
+                <button className="card-button" onClick={() => navigate('/portal/schedule')}>Ver Archivos</button>
               </div>
               <div className="dashboard-card">
                 <h3>💬 Soporte</h3>
                 <p>Contacta con tu Project Manager</p>
-                <button className="card-button">Contactar</button>
+                <button className="card-button" onClick={() => navigate('/contact')}>Contactar</button>
               </div>
             </div>
           </div>
