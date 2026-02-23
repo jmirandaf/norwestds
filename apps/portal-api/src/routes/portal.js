@@ -71,11 +71,41 @@ router.get('/schedules', async (req, res) => {
 })
 
 router.get('/downloads', async (req, res) => {
+  const q = String(req.query.q || '').trim()
+  const project = String(req.query.project || '').trim()
+  const type = String(req.query.type || '').trim()
+  const category = String(req.query.category || '').trim()
+  const sort = String(req.query.sort || 'date_desc')
+
+  const where = {
+    ...scopeWhereByRole(req.user.role, req.user.id),
+    ...(project ? { projectName: project } : {}),
+    ...(type ? { type: { equals: type, mode: 'insensitive' } } : {}),
+    ...(category ? { category } : {}),
+    ...(q
+      ? {
+          OR: [
+            { name: { contains: q, mode: 'insensitive' } },
+            { projectName: { contains: q, mode: 'insensitive' } },
+          ],
+        }
+      : {}),
+  }
+
+  const orderBy = sort === 'name_asc'
+    ? { name: 'asc' }
+    : sort === 'name_desc'
+      ? { name: 'desc' }
+      : sort === 'date_asc'
+        ? { updatedAt: 'asc' }
+        : { updatedAt: 'desc' }
+
   const downloads = await prisma.download.findMany({
-    where: scopeWhereByRole(req.user.role, req.user.id),
-    orderBy: { updatedAt: 'desc' },
-    take: 200,
+    where,
+    orderBy,
+    take: 300,
   })
+
   res.json(downloads)
 })
 

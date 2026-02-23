@@ -37,9 +37,9 @@ export async function createInvite({ payload, getToken }) {
   return data
 }
 
-export async function fetchDownloads({ getToken }) {
+export async function fetchDownloads({ getToken, query = {} }) {
   const headers = await authHeaders(getToken)
-  const { data } = await client.get('/api/portal/downloads', { headers })
+  const { data } = await client.get('/api/portal/downloads', { headers, params: query })
   return Array.isArray(data) ? data : []
 }
 

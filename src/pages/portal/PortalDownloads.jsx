@@ -9,6 +9,7 @@ const MOCK_FILES = [
     projectName: 'Línea Ensamble A',
     name: 'Plano_mecanico_v3.pdf',
     type: 'PDF',
+    category: 'plano',
     updatedAt: '2026-02-20',
     size: '2.1 MB',
     fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
@@ -18,6 +19,7 @@ const MOCK_FILES = [
     projectName: 'Célula Robotizada B',
     name: 'BOM_final.xlsx',
     type: 'XLSX',
+    category: 'bom',
     updatedAt: '2026-02-19',
     size: '410 KB',
   },
@@ -26,6 +28,7 @@ const MOCK_FILES = [
     projectName: 'Línea Ensamble A',
     name: 'Render_preliminar.png',
     type: 'PNG',
+    category: 'render',
     updatedAt: '2026-02-18',
     size: '1.3 MB',
     fileUrl: 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg',
@@ -40,6 +43,7 @@ export default function PortalDownloads() {
   const [query, setQuery] = useState('')
   const [project, setProject] = useState('all')
   const [type, setType] = useState('all')
+  const [category, setCategory] = useState('all')
   const [sortBy, setSortBy] = useState('date_desc')
   const [selectedId, setSelectedId] = useState(null)
 
@@ -48,7 +52,16 @@ export default function PortalDownloads() {
       try {
         setLoading(true)
         setError('')
-        const data = await fetchDownloads({ getToken })
+        const data = await fetchDownloads({
+          getToken,
+          query: {
+            q: query || undefined,
+            project: project !== 'all' ? project : undefined,
+            type: type !== 'all' ? type : undefined,
+            category: category !== 'all' ? category : undefined,
+            sort: sortBy,
+          },
+        })
         setFiles(data)
       } catch (e) {
         console.error(e)
@@ -59,7 +72,7 @@ export default function PortalDownloads() {
       }
     }
     load()
-  }, [getToken])
+  }, [getToken, query, project, type, category, sortBy])
 
   const projectOptions = useMemo(
     () => ['all', ...new Set(files.map((f) => f.projectName || 'Sin proyecto'))],
@@ -71,15 +84,22 @@ export default function PortalDownloads() {
     [files]
   )
 
+  const categoryOptions = useMemo(
+    () => ['all', ...new Set(files.map((f) => String(f.category || '').toLowerCase()).filter(Boolean))],
+    [files]
+  )
+
   const filtered = useMemo(() => {
     const base = files.filter((f) => {
       const pName = f.projectName || 'Sin proyecto'
       const fType = String(f.type || '').toUpperCase()
+      const fCategory = String(f.category || '').toLowerCase()
       const passProject = project === 'all' || pName === project
       const passType = type === 'all' || fType === type
+      const passCategory = category === 'all' || fCategory === category
       const q = query.trim().toLowerCase()
-      const passQuery = !q || `${f.name} ${fType} ${pName}`.toLowerCase().includes(q)
-      return passProject && passType && passQuery
+      const passQuery = !q || `${f.name} ${fType} ${fCategory} ${pName}`.toLowerCase().includes(q)
+      return passProject && passType && passCategory && passQuery
     })
 
     const sorted = [...base]
@@ -93,7 +113,7 @@ export default function PortalDownloads() {
     })
 
     return sorted
-  }, [query, project, type, sortBy, files])
+  }, [query, project, type, category, sortBy, files])
 
   const selectedFile = useMemo(
     () => filtered.find((f) => f.id === selectedId) || filtered[0] || null,
@@ -122,6 +142,12 @@ export default function PortalDownloads() {
           ))}
         </select>
 
+        <select className='dp-input' value={category} onChange={(e) => setCategory(e.target.value)}>
+          {categoryOptions.map((c) => (
+            <option key={c} value={c}>{c === 'all' ? 'todas las categorías' : c}</option>
+          ))}
+        </select>
+
         <select className='dp-input' value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
           <option value='date_desc'>más recientes</option>
           <option value='date_asc'>más antiguos</option>
@@ -142,6 +168,7 @@ export default function PortalDownloads() {
                   <th>Archivo</th>
                   <th>Proyecto</th>
                   <th>Tipo</th>
+                  <th>Categoría</th>
                   <th>Actualizado</th>
                   <th>Tamaño</th>
                   <th></th>
@@ -155,6 +182,7 @@ export default function PortalDownloads() {
                     </td>
                     <td>{f.projectName || 'Sin proyecto'}</td>
                     <td><span className='portal-type-badge'>{f.type || 'N/D'}</span></td>
+                    <td><span className='portal-category-badge'>{f.category || 'otro'}</span></td>
                     <td>{String(f.updatedAt || '').slice(0, 10) || 'N/D'}</td>
                     <td>{f.size || 'N/D'}</td>
                     <td>
@@ -178,6 +206,7 @@ export default function PortalDownloads() {
                 <div><strong>Nombre:</strong> {selectedFile.name}</div>
                 <div><strong>Proyecto:</strong> {selectedFile.projectName || 'Sin proyecto'}</div>
                 <div><strong>Tipo:</strong> {selectedFile.type || 'N/D'}</div>
+                <div><strong>Categoría:</strong> {selectedFile.category || 'otro'}</div>
                 <div><strong>Tamaño:</strong> {selectedFile.size || 'N/D'}</div>
                 <div><strong>Actualizado:</strong> {String(selectedFile.updatedAt || '').slice(0, 10) || 'N/D'}</div>
 

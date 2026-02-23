@@ -525,7 +525,7 @@ textarea.dp-input{resize:vertical}
 
 .portal-download-toolbar{
   display:grid;
-  grid-template-columns:2fr 1fr 1fr 1fr;
+  grid-template-columns:2fr 1fr 1fr 1fr 1fr;
   gap:10px;
   margin-bottom:12px;
 }
@@ -544,6 +544,15 @@ textarea.dp-input{resize:vertical}
   background:#eef9ff;
   color:#12557a;
   border:1px solid #cbe6f5;
+  border-radius:999px;
+  font-size:.8rem;
+  padding:2px 8px;
+}
+
+.portal-category-badge{
+  background:#f4f1ff;
+  color:#4c2d95;
+  border:1px solid #ddd6fe;
   border-radius:999px;
   font-size:.8rem;
   padding:2px 8px;

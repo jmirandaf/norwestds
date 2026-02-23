@@ -41,6 +41,14 @@ enum TicketStatus {
   closed
 }
 
+enum DownloadCategory {
+  plano
+  bom
+  manual
+  render
+  otro
+}
+
 model User {
   id          String    @id @default(cuid())
   clerkUserId String    @unique
@@ -101,11 +109,12 @@ model Schedule {
 }
 
 model Download {
-  id          String   @id @default(cuid())
+  id          String           @id @default(cuid())
   projectId   String?
   projectName String?
   name        String
   type        String?
+  category    DownloadCategory @default(otro)
   size        String?
   fileUrl     String?
 
