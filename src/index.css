@@ -494,6 +494,35 @@ body{
 }
 .portal-field span{font-size:.92rem;color:#334155}
 
+.portal-table-wrap{
+  overflow:auto;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:#fff;
+}
+
+.portal-table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:760px;
+}
+
+.portal-table th,
+.portal-table td{
+  text-align:left;
+  padding:10px 12px;
+  border-bottom:1px solid #edf2f7;
+}
+
+.portal-table th{
+  background:#f8fbff;
+  color:#334155;
+  font-size:.88rem;
+}
+
+.portal-table tr:last-child td{border-bottom:none}
+textarea.dp-input{resize:vertical}
+
 .dp-grid{
   margin-top:14px;
   display:grid;

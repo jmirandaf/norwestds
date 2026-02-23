@@ -61,7 +61,7 @@ export default function Dashboard() {
               <div className="dashboard-card">
                 <h3>📄 Documentación</h3>
                 <p>Sube y gestiona documentos</p>
-                <button className="card-button" onClick={() => navigate('/portal/schedule')}>Ver Documentos</button>
+                <button className="card-button" onClick={() => navigate('/portal/downloads')}>Ver Documentos</button>
               </div>
             </div>
           </div>
@@ -80,12 +80,12 @@ export default function Dashboard() {
               <div className="dashboard-card">
                 <h3>📥 Descargas</h3>
                 <p>Documentos y archivos disponibles</p>
-                <button className="card-button" onClick={() => navigate('/portal/schedule')}>Ver Archivos</button>
+                <button className="card-button" onClick={() => navigate('/portal/downloads')}>Ver Archivos</button>
               </div>
               <div className="dashboard-card">
                 <h3>💬 Soporte</h3>
                 <p>Contacta con tu Project Manager</p>
-                <button className="card-button" onClick={() => navigate('/contact')}>Contactar</button>
+                <button className="card-button" onClick={() => navigate('/portal/support')}>Contactar</button>
               </div>
             </div>
           </div>

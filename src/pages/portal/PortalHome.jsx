@@ -51,6 +51,8 @@ export default function PortalHome() {
       <div className='portal-quick-links'>
         <Link className='portal-link-pill' to='/portal/projects'>Ver proyectos</Link>
         <Link className='portal-link-pill' to='/portal/schedule'>Ver schedule</Link>
+        <Link className='portal-link-pill' to='/portal/downloads'>Ver descargas</Link>
+        <Link className='portal-link-pill' to='/portal/support'>Abrir soporte</Link>
         <Link className='portal-link-pill' to='/portal/designpro'>DesignPro by NDS</Link>
         {userData?.role === 'admin' && <Link className='portal-link-pill' to='/portal/admin/invites'>Invitar usuario</Link>}
       </div>

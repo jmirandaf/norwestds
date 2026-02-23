@@ -5,6 +5,8 @@ const navItems = [
   { to: '/portal', label: 'Inicio', end: true },
   { to: '/portal/projects', label: 'Proyectos' },
   { to: '/portal/schedule', label: 'Schedule' },
+  { to: '/portal/downloads', label: 'Descargas' },
+  { to: '/portal/support', label: 'Soporte' },
   { to: '/portal/designpro', label: 'DesignPro' },
 ]
 

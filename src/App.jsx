@@ -19,6 +19,8 @@ const PortalHome = lazy(() => import('./pages/portal/PortalHome.jsx'))
 const PortalProjects = lazy(() => import('./pages/portal/PortalProjects.jsx'))
 const PortalSchedule = lazy(() => import('./pages/portal/PortalSchedule.jsx'))
 const PortalDesignPro = lazy(() => import('./pages/portal/PortalDesignPro.jsx'))
+const PortalDownloads = lazy(() => import('./pages/portal/PortalDownloads.jsx'))
+const PortalSupport = lazy(() => import('./pages/portal/PortalSupport.jsx'))
 const PortalInvites = lazy(() => import('./pages/portal/PortalInvites.jsx'))
 
 function RouteFallback() {
@@ -83,6 +85,22 @@ export default function App() {
         element={
           <ProtectedRoute allowedRoles={['admin', 'pm', 'client']}>
             <PortalDesignPro />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/portal/downloads"
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'pm', 'client']}>
+            <PortalDownloads />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/portal/support"
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'pm', 'client']}>
+            <PortalSupport />
           </ProtectedRoute>
         }
       />
