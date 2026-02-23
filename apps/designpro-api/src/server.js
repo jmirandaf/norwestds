@@ -61,14 +61,14 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (method === 'GET' && pathname === '/designpro/jobs') {
-    const response = listJobsRoute(Object.fromEntries(url.searchParams.entries()))
+    const response = await listJobsRoute(Object.fromEntries(url.searchParams.entries()))
     return json(res, response.status, response.body)
   }
 
   if (method === 'POST' && pathname === '/designpro/jobs') {
     try {
       const body = await parseJsonBody(req)
-      const response = createJobRoute(body)
+      const response = await createJobRoute(body)
       return json(res, response.status, response.body)
     } catch (error) {
       return json(res, 400, { error: String(error.message || error) })
@@ -77,13 +77,13 @@ const server = http.createServer(async (req, res) => {
 
   const resultMatch = pathname.match(/^\/designpro\/jobs\/([^/]+)\/result$/)
   if (method === 'GET' && resultMatch) {
-    const response = getJobResultRoute(resultMatch[1])
+    const response = await getJobResultRoute(resultMatch[1])
     return json(res, response.status, response.body)
   }
 
   const jobMatch = pathname.match(/^\/designpro\/jobs\/([^/]+)$/)
   if (method === 'GET' && jobMatch) {
-    const response = getJobRoute(jobMatch[1])
+    const response = await getJobRoute(jobMatch[1])
     return json(res, response.status, response.body)
   }
 

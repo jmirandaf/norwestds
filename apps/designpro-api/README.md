@@ -4,7 +4,8 @@ API base de orquestación para DesignPro (sin generador real todavía).
 
 ## Estado actual
 - Contrato de jobs implementado.
-- Procesamiento stub en memoria (`queued -> processing -> done`).
+- Persistencia en Postgres con Prisma (`DesignProJob`, `DesignProArtifact`).
+- Procesamiento stub (`queued -> processing -> done`) para validar flujo sin generador real.
 - Catálogos base para tipos de estructura, formatos y prioridades.
 
 ## Endpoints

@@ -14,27 +14,25 @@ async function processLoop() {
   while (queue.length > 0) {
     const id = queue.shift()
 
-    updateJob(id, {
+    await updateJob(id, {
       status: 'processing',
-      startedAt: new Date().toISOString(),
+      startedAt: new Date(),
       error: null,
     })
 
     await sleep(1200)
 
-    appendArtifacts(id, [
+    await appendArtifacts(id, [
       {
-        id: `art_${Math.random().toString(36).slice(2, 10)}`,
         kind: 'report',
         name: 'job-summary.json',
         url: null,
-        createdAt: new Date().toISOString(),
       },
     ])
 
-    updateJob(id, {
+    await updateJob(id, {
       status: 'done',
-      finishedAt: new Date().toISOString(),
+      finishedAt: new Date(),
     })
   }
 
@@ -43,12 +41,14 @@ async function processLoop() {
 
 export function enqueueStubJob(id) {
   queue.push(id)
-  processLoop().catch((error) => {
+  processLoop().catch(async (error) => {
     console.error('[DesignProStubProcessor]', error)
-    updateJob(id, {
-      status: 'failed',
-      error: String(error?.message || error),
-      finishedAt: new Date().toISOString(),
-    })
+    try {
+      await updateJob(id, {
+        status: 'failed',
+        error: String(error?.message || error),
+        finishedAt: new Date(),
+      })
+    } catch {}
   })
 }

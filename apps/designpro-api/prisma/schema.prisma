@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum DesignProJobStatus {
+  queued
+  processing
+  done
+  failed
+}
+
+enum DesignProJobPriority {
+  low
+  normal
+  high
+}
+
+model DesignProJob {
+  id          String               @id @default(cuid())
+  type        String
+  status      DesignProJobStatus   @default(queued)
+  priority    DesignProJobPriority @default(normal)
+  requesterId String
+  source      String               @default("portal")
+  projectId   String?
+  projectName String?
+  params      Json?
+  error       String?
+  startedAt   DateTime?
+  finishedAt  DateTime?
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  artifacts   DesignProArtifact[]
+
+  @@index([status])
+  @@index([requesterId])
+  @@index([createdAt])
+}
+
+model DesignProArtifact {
+  id        String       @id @default(cuid())
+  jobId      String
+  job        DesignProJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  kind       String
+  name       String
+  url        String?
+  createdAt  DateTime     @default(now())
+
+  @@index([jobId])
+}

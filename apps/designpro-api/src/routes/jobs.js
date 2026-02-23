@@ -33,20 +33,20 @@ export function parseCreateJobPayload(body = {}) {
   }
 }
 
-export function createJobRoute(reqBody) {
+export async function createJobRoute(reqBody) {
   const parsed = parseCreateJobPayload(reqBody)
   if (parsed.error) return { status: 400, body: { error: parsed.error } }
 
-  const job = createJob(parsed.value)
+  const job = await createJob(parsed.value)
   enqueueStubJob(job.id)
   return { status: 201, body: job }
 }
 
-export function listJobsRoute(query = {}) {
+export async function listJobsRoute(query = {}) {
   const limit = Number(query.limit || 50)
   const safeLimit = Number.isFinite(limit) ? Math.min(Math.max(limit, 1), 200) : 50
 
-  const rows = listJobs({
+  const rows = await listJobs({
     status: query.status ? String(query.status) : undefined,
     requesterId: query.requesterId ? String(query.requesterId) : undefined,
     limit: safeLimit,
@@ -55,15 +55,15 @@ export function listJobsRoute(query = {}) {
   return { status: 200, body: rows }
 }
 
-export function getJobRoute(id) {
-  const job = getJob(id)
+export async function getJobRoute(id) {
+  const job = await getJob(id)
   if (!job) return { status: 404, body: { error: 'Job not found' } }
 
   return { status: 200, body: job }
 }
 
-export function getJobResultRoute(id) {
-  const job = getJob(id)
+export async function getJobResultRoute(id) {
+  const job = await getJob(id)
   if (!job) return { status: 404, body: { error: 'Job not found' } }
   if (job.status !== 'done') {
     return { status: 409, body: { error: 'Job not completed', status: job.status } }
