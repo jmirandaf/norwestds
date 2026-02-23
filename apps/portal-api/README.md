@@ -1,8 +1,8 @@
 # portal-api
 
-Backend del portal de clientes.
+Backend oficial del portal de clientes.
 
-> Estado: se copió el backend actual desde `backend/` a esta carpeta. Mantén ambos temporalmente para no romper despliegues mientras migramos scripts/CI y variables.
+> Estado: se copió el backend actual desde `backend/` a esta carpeta. Mantén ambos temporalmente solo por compatibilidad mientras se retira `backend/`.
 
 ## Endpoints objetivo
 - `GET /health`

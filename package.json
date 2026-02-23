@@ -7,7 +7,11 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "portal:dev": "npm --prefix apps/portal-api run dev",
+    "portal:start": "npm --prefix apps/portal-api run start",
+    "portal:prisma:generate": "npm --prefix apps/portal-api run prisma:generate",
+    "portal:prisma:deploy": "npm --prefix apps/portal-api run prisma:deploy"
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.28.0",
