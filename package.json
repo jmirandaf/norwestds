@@ -11,7 +11,9 @@
     "portal:dev": "npm --prefix apps/portal-api run dev",
     "portal:start": "npm --prefix apps/portal-api run start",
     "portal:prisma:generate": "npm --prefix apps/portal-api run prisma:generate",
-    "portal:prisma:deploy": "npm --prefix apps/portal-api run prisma:deploy"
+    "portal:prisma:deploy": "npm --prefix apps/portal-api run prisma:deploy",
+    "designpro:dev": "npm --prefix apps/designpro-api run dev",
+    "designpro:start": "npm --prefix apps/designpro-api run start"
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.28.0",
