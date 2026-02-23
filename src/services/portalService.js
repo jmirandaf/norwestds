@@ -49,6 +49,17 @@ export async function createDownload({ payload, getToken }) {
   return data
 }
 
+export async function updateDownload({ id, payload, getToken }) {
+  const headers = await authHeaders(getToken)
+  const { data } = await client.patch(`/api/portal/downloads/${id}`, payload, { headers })
+  return data
+}
+
+export async function deleteDownload({ id, getToken }) {
+  const headers = await authHeaders(getToken)
+  await client.delete(`/api/portal/downloads/${id}`, { headers })
+}
+
 export async function fetchTickets({ getToken }) {
   const headers = await authHeaders(getToken)
   const { data } = await client.get('/api/portal/tickets', { headers })

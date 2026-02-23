@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import PortalLayout from '../../components/PortalLayout'
 import { useAuth } from '../../contexts/AuthContext'
-import { createDownload, fetchDownloads } from '../../services/portalService'
+import { createDownload, deleteDownload, fetchDownloads, updateDownload } from '../../services/portalService'
 
 const MOCK_FILES = [
   {
@@ -47,7 +47,16 @@ export default function PortalDownloads() {
   const [sortBy, setSortBy] = useState('date_desc')
   const [selectedId, setSelectedId] = useState(null)
   const [createMsg, setCreateMsg] = useState('')
+  const [editMsg, setEditMsg] = useState('')
   const [createForm, setCreateForm] = useState({
+    projectName: '',
+    name: '',
+    type: '',
+    category: 'otro',
+    size: '',
+    fileUrl: '',
+  })
+  const [editForm, setEditForm] = useState({
     projectName: '',
     name: '',
     type: '',
@@ -131,6 +140,18 @@ export default function PortalDownloads() {
     [filtered, selectedId]
   )
 
+  useEffect(() => {
+    if (!selectedFile) return
+    setEditForm({
+      projectName: selectedFile.projectName || '',
+      name: selectedFile.name || '',
+      type: selectedFile.type || '',
+      category: selectedFile.category || 'otro',
+      size: selectedFile.size || '',
+      fileUrl: selectedFile.fileUrl || '',
+    })
+  }, [selectedFile?.id])
+
   const isPreviewable = (f) => {
     const t = String(f?.type || '').toLowerCase()
     return t === 'pdf' || t === 'png' || t === 'jpg' || t === 'jpeg' || t === 'webp' || t === 'svg'
@@ -165,6 +186,37 @@ export default function PortalDownloads() {
       setCreateForm({ projectName: '', name: '', type: '', category: 'otro', size: '', fileUrl: '' })
       setCreateMsg('Archivo agregado en modo local (mock).')
     }
+  }
+
+  const onUpdateDownload = async (e) => {
+    e.preventDefault()
+    if (!selectedFile) return
+    setEditMsg('')
+    try {
+      const updated = await updateDownload({ id: selectedFile.id, payload: editForm, getToken })
+      setFiles(files.map((f) => (f.id === updated.id ? updated : f)))
+      setEditMsg('Archivo actualizado.')
+    } catch (e) {
+      console.error(e)
+      setFiles(files.map((f) => (f.id === selectedFile.id ? { ...f, ...editForm } : f)))
+      setEditMsg('Archivo actualizado en modo local (mock).')
+    }
+  }
+
+  const onDeleteDownload = async () => {
+    if (!selectedFile) return
+    if (!confirm(`¿Eliminar archivo ${selectedFile.name}?`)) return
+
+    try {
+      await deleteDownload({ id: selectedFile.id, getToken })
+    } catch (e) {
+      console.error(e)
+    }
+
+    const remaining = files.filter((f) => f.id !== selectedFile.id)
+    setFiles(remaining)
+    setSelectedId(remaining[0]?.id || null)
+    setEditMsg('Archivo eliminado.')
   }
 
   return (
@@ -273,6 +325,29 @@ export default function PortalDownloads() {
                 <div><strong>Categoría:</strong> {selectedFile.category || 'otro'}</div>
                 <div><strong>Tamaño:</strong> {selectedFile.size || 'N/D'}</div>
                 <div><strong>Actualizado:</strong> {String(selectedFile.updatedAt || '').slice(0, 10) || 'N/D'}</div>
+
+                {canManageDownloads && (
+                  <form className='portal-download-edit' onSubmit={onUpdateDownload}>
+                    <h4>Editar archivo</h4>
+                    <input className='dp-input' value={editForm.projectName} onChange={(e) => setEditForm({ ...editForm, projectName: e.target.value })} placeholder='Proyecto' />
+                    <input className='dp-input' value={editForm.name} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} placeholder='Nombre' />
+                    <input className='dp-input' value={editForm.type} onChange={(e) => setEditForm({ ...editForm, type: e.target.value })} placeholder='Tipo' />
+                    <select className='dp-input' value={editForm.category} onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}>
+                      <option value='plano'>plano</option>
+                      <option value='bom'>bom</option>
+                      <option value='manual'>manual</option>
+                      <option value='render'>render</option>
+                      <option value='otro'>otro</option>
+                    </select>
+                    <input className='dp-input' value={editForm.size} onChange={(e) => setEditForm({ ...editForm, size: e.target.value })} placeholder='Tamaño' />
+                    <input className='dp-input' value={editForm.fileUrl} onChange={(e) => setEditForm({ ...editForm, fileUrl: e.target.value })} placeholder='URL' />
+                    <div className='portal-download-actions'>
+                      <button className='btn-primary' type='submit'>Guardar cambios</button>
+                      <button className='btn-ghost' type='button' onClick={onDeleteDownload}>Eliminar</button>
+                    </div>
+                    {editMsg && <small style={{ color: 'green' }}>{editMsg}</small>}
+                  </form>
+                )}
 
                 <div className='portal-preview-wrap'>
                   {selectedFile.fileUrl && isPreviewable(selectedFile) ? (

@@ -39,6 +39,11 @@ const downloadSchema = z.object({
   pmId: z.string().optional().nullable(),
 })
 
+const downloadUpdateSchema = downloadSchema.partial().refine(
+  (v) => Object.keys(v).length > 0,
+  { message: 'At least one field is required' }
+)
+
 const scopeWhereByRole = (role, userId) => role === 'client'
   ? { clientId: userId }
   : role === 'pm'
@@ -62,6 +67,22 @@ async function loadTicketOr403(req, res) {
   }
 
   return ticket
+}
+
+async function loadDownloadOr403(req, res) {
+  const download = await prisma.download.findUnique({ where: { id: req.params.id } })
+
+  if (!download) {
+    res.status(404).json({ error: 'Download not found' })
+    return null
+  }
+
+  if (req.user.role === 'pm' && download.pmId && download.pmId !== req.user.id) {
+    res.status(403).json({ error: 'Forbidden' })
+    return null
+  }
+
+  return download
 }
 
 router.get('/projects', async (req, res) => {
@@ -141,6 +162,40 @@ router.post('/downloads', requireRole(['admin', 'pm']), async (req, res) => {
   })
 
   res.status(201).json(created)
+})
+
+router.patch('/downloads/:id', requireRole(['admin', 'pm']), async (req, res) => {
+  const parsed = downloadUpdateSchema.safeParse(req.body)
+  if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() })
+
+  const current = await loadDownloadOr403(req, res)
+  if (!current) return
+
+  const payload = parsed.data
+  const updated = await prisma.download.update({
+    where: { id: current.id },
+    data: {
+      ...(payload.projectId !== undefined ? { projectId: payload.projectId || null } : {}),
+      ...(payload.projectName !== undefined ? { projectName: payload.projectName } : {}),
+      ...(payload.name !== undefined ? { name: payload.name } : {}),
+      ...(payload.type !== undefined ? { type: payload.type || null } : {}),
+      ...(payload.category !== undefined ? { category: payload.category } : {}),
+      ...(payload.size !== undefined ? { size: payload.size || null } : {}),
+      ...(payload.fileUrl !== undefined ? { fileUrl: payload.fileUrl || null } : {}),
+      ...(payload.clientId !== undefined ? { clientId: payload.clientId || null } : {}),
+      ...(req.user.role === 'admin' && payload.pmId !== undefined ? { pmId: payload.pmId || null } : {}),
+    },
+  })
+
+  res.json(updated)
+})
+
+router.delete('/downloads/:id', requireRole(['admin', 'pm']), async (req, res) => {
+  const current = await loadDownloadOr403(req, res)
+  if (!current) return
+
+  await prisma.download.delete({ where: { id: current.id } })
+  res.status(204).send()
 })
 
 router.get('/tickets', async (req, res) => {

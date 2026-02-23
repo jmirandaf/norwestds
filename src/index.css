@@ -589,9 +589,21 @@ textarea.dp-input{resize:vertical}
   .portal-download-create{grid-template-columns:1fr 1fr}
 }
 
+.portal-download-edit{
+  display:grid;
+  gap:8px;
+  margin-top:12px;
+}
+
+.portal-download-actions{
+  display:flex;
+  gap:8px;
+}
+
 @media (max-width: 640px){
   .portal-download-toolbar{grid-template-columns:1fr}
   .portal-download-create{grid-template-columns:1fr}
+  .portal-download-actions{flex-direction:column}
 }
 
 .dp-grid{
