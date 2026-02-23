@@ -4,8 +4,32 @@ import { useAuth } from '../../contexts/AuthContext'
 import { fetchDownloads } from '../../services/portalService'
 
 const MOCK_FILES = [
-  { id: 'f1', projectName: 'Línea Ensamble A', name: 'Plano_mecanico_v3.pdf', type: 'PDF', updatedAt: '2026-02-20', size: '2.1 MB' },
-  { id: 'f2', projectName: 'Célula Robotizada B', name: 'BOM_final.xlsx', type: 'XLSX', updatedAt: '2026-02-19', size: '410 KB' },
+  {
+    id: 'f1',
+    projectName: 'Línea Ensamble A',
+    name: 'Plano_mecanico_v3.pdf',
+    type: 'PDF',
+    updatedAt: '2026-02-20',
+    size: '2.1 MB',
+    fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+  },
+  {
+    id: 'f2',
+    projectName: 'Célula Robotizada B',
+    name: 'BOM_final.xlsx',
+    type: 'XLSX',
+    updatedAt: '2026-02-19',
+    size: '410 KB',
+  },
+  {
+    id: 'f3',
+    projectName: 'Línea Ensamble A',
+    name: 'Render_preliminar.png',
+    type: 'PNG',
+    updatedAt: '2026-02-18',
+    size: '1.3 MB',
+    fileUrl: 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg',
+  },
 ]
 
 export default function PortalDownloads() {
@@ -15,6 +39,9 @@ export default function PortalDownloads() {
   const [error, setError] = useState('')
   const [query, setQuery] = useState('')
   const [project, setProject] = useState('all')
+  const [type, setType] = useState('all')
+  const [sortBy, setSortBy] = useState('date_desc')
+  const [selectedId, setSelectedId] = useState(null)
 
   useEffect(() => {
     const load = async () => {
@@ -34,26 +61,72 @@ export default function PortalDownloads() {
     load()
   }, [getToken])
 
-  const projectOptions = useMemo(() => ['all', ...new Set(files.map((f) => f.projectName || 'Sin proyecto'))], [files])
+  const projectOptions = useMemo(
+    () => ['all', ...new Set(files.map((f) => f.projectName || 'Sin proyecto'))],
+    [files]
+  )
+
+  const typeOptions = useMemo(
+    () => ['all', ...new Set(files.map((f) => String(f.type || '').toUpperCase()).filter(Boolean))],
+    [files]
+  )
 
   const filtered = useMemo(() => {
-    return files.filter((f) => {
+    const base = files.filter((f) => {
       const pName = f.projectName || 'Sin proyecto'
+      const fType = String(f.type || '').toUpperCase()
       const passProject = project === 'all' || pName === project
+      const passType = type === 'all' || fType === type
       const q = query.trim().toLowerCase()
-      const passQuery = !q || `${f.name} ${f.type || ''} ${pName}`.toLowerCase().includes(q)
-      return passProject && passQuery
+      const passQuery = !q || `${f.name} ${fType} ${pName}`.toLowerCase().includes(q)
+      return passProject && passType && passQuery
     })
-  }, [query, project, files])
+
+    const sorted = [...base]
+    sorted.sort((a, b) => {
+      if (sortBy === 'name_asc') return String(a.name).localeCompare(String(b.name))
+      if (sortBy === 'name_desc') return String(b.name).localeCompare(String(a.name))
+
+      const aDate = new Date(a.updatedAt || 0).getTime()
+      const bDate = new Date(b.updatedAt || 0).getTime()
+      return sortBy === 'date_asc' ? aDate - bDate : bDate - aDate
+    })
+
+    return sorted
+  }, [query, project, type, sortBy, files])
+
+  const selectedFile = useMemo(
+    () => filtered.find((f) => f.id === selectedId) || filtered[0] || null,
+    [filtered, selectedId]
+  )
+
+  const isPreviewable = (f) => {
+    const t = String(f?.type || '').toLowerCase()
+    return t === 'pdf' || t === 'png' || t === 'jpg' || t === 'jpeg' || t === 'webp' || t === 'svg'
+  }
 
   return (
     <PortalLayout title='Descargas' subtitle='Documentos y archivos disponibles por proyecto.'>
-      <div className='portal-project-toolbar'>
+      <div className='portal-download-toolbar'>
         <input className='dp-input' placeholder='Buscar archivo...' value={query} onChange={(e) => setQuery(e.target.value)} />
+
         <select className='dp-input' value={project} onChange={(e) => setProject(e.target.value)}>
           {projectOptions.map((p) => (
             <option key={p} value={p}>{p === 'all' ? 'todos los proyectos' : p}</option>
           ))}
+        </select>
+
+        <select className='dp-input' value={type} onChange={(e) => setType(e.target.value)}>
+          {typeOptions.map((t) => (
+            <option key={t} value={t}>{t === 'all' ? 'todos los tipos' : t}</option>
+          ))}
+        </select>
+
+        <select className='dp-input' value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+          <option value='date_desc'>más recientes</option>
+          <option value='date_asc'>más antiguos</option>
+          <option value='name_asc'>nombre A-Z</option>
+          <option value='name_desc'>nombre Z-A</option>
         </select>
       </div>
 
@@ -61,7 +134,7 @@ export default function PortalDownloads() {
       {error && <p className='portal-error'>{error}</p>}
 
       {!loading && (
-        <>
+        <div className='portal-project-grid'>
           <div className='portal-table-wrap'>
             <table className='portal-table'>
               <thead>
@@ -76,10 +149,12 @@ export default function PortalDownloads() {
               </thead>
               <tbody>
                 {filtered.map((f) => (
-                  <tr key={f.id}>
-                    <td>{f.name}</td>
+                  <tr key={f.id} className={selectedFile?.id === f.id ? 'portal-row-selected' : ''}>
+                    <td>
+                      <button className='portal-link-button' onClick={() => setSelectedId(f.id)}>{f.name}</button>
+                    </td>
                     <td>{f.projectName || 'Sin proyecto'}</td>
-                    <td>{f.type || 'N/D'}</td>
+                    <td><span className='portal-type-badge'>{f.type || 'N/D'}</span></td>
                     <td>{String(f.updatedAt || '').slice(0, 10) || 'N/D'}</td>
                     <td>{f.size || 'N/D'}</td>
                     <td>
@@ -95,9 +170,35 @@ export default function PortalDownloads() {
             </table>
           </div>
 
-          {filtered.length === 0 && <p>Sin archivos con los filtros actuales.</p>}
-        </>
+          <div className='portal-card'>
+            <h3 style={{ marginTop: 0 }}>Detalle de archivo</h3>
+            {!selectedFile && <p>Selecciona un archivo para ver detalle.</p>}
+            {selectedFile && (
+              <>
+                <div><strong>Nombre:</strong> {selectedFile.name}</div>
+                <div><strong>Proyecto:</strong> {selectedFile.projectName || 'Sin proyecto'}</div>
+                <div><strong>Tipo:</strong> {selectedFile.type || 'N/D'}</div>
+                <div><strong>Tamaño:</strong> {selectedFile.size || 'N/D'}</div>
+                <div><strong>Actualizado:</strong> {String(selectedFile.updatedAt || '').slice(0, 10) || 'N/D'}</div>
+
+                <div className='portal-preview-wrap'>
+                  {selectedFile.fileUrl && isPreviewable(selectedFile) ? (
+                    selectedFile.type?.toLowerCase() === 'pdf' ? (
+                      <iframe title='preview-pdf' src={selectedFile.fileUrl} className='portal-preview-frame' />
+                    ) : (
+                      <img src={selectedFile.fileUrl} alt={selectedFile.name} className='portal-preview-image' />
+                    )
+                  ) : (
+                    <div className='portal-preview-empty'>Sin vista previa disponible para este archivo.</div>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
       )}
+
+      {!loading && filtered.length === 0 && <p>Sin archivos con los filtros actuales.</p>}
     </PortalLayout>
   )
 }
