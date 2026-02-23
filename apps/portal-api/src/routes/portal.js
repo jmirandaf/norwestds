@@ -27,6 +27,18 @@ const ticketCommentSchema = z.object({
   body: z.string().min(2),
 })
 
+const downloadSchema = z.object({
+  projectId: z.string().optional().nullable(),
+  projectName: z.string().min(2),
+  name: z.string().min(2),
+  type: z.string().optional().nullable(),
+  category: z.enum(['plano', 'bom', 'manual', 'render', 'otro']).default('otro'),
+  size: z.string().optional().nullable(),
+  fileUrl: z.string().url().optional().nullable(),
+  clientId: z.string().optional().nullable(),
+  pmId: z.string().optional().nullable(),
+})
+
 const scopeWhereByRole = (role, userId) => role === 'client'
   ? { clientId: userId }
   : role === 'pm'
@@ -107,6 +119,28 @@ router.get('/downloads', async (req, res) => {
   })
 
   res.json(downloads)
+})
+
+router.post('/downloads', requireRole(['admin', 'pm']), async (req, res) => {
+  const parsed = downloadSchema.safeParse(req.body)
+  if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() })
+
+  const payload = parsed.data
+  const created = await prisma.download.create({
+    data: {
+      projectId: payload.projectId || null,
+      projectName: payload.projectName,
+      name: payload.name,
+      type: payload.type || null,
+      category: payload.category,
+      size: payload.size || null,
+      fileUrl: payload.fileUrl || null,
+      clientId: payload.clientId || null,
+      pmId: req.user.role === 'pm' ? req.user.id : (payload.pmId || null),
+    },
+  })
+
+  res.status(201).json(created)
 })
 
 router.get('/tickets', async (req, res) => {

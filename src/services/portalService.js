@@ -43,6 +43,12 @@ export async function fetchDownloads({ getToken, query = {} }) {
   return Array.isArray(data) ? data : []
 }
 
+export async function createDownload({ payload, getToken }) {
+  const headers = await authHeaders(getToken)
+  const { data } = await client.post('/api/portal/downloads', payload, { headers })
+  return data
+}
+
 export async function fetchTickets({ getToken }) {
   const headers = await authHeaders(getToken)
   const { data } = await client.get('/api/portal/tickets', { headers })

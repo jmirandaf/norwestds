@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import PortalLayout from '../../components/PortalLayout'
 import { useAuth } from '../../contexts/AuthContext'
-import { fetchDownloads } from '../../services/portalService'
+import { createDownload, fetchDownloads } from '../../services/portalService'
 
 const MOCK_FILES = [
   {
@@ -36,7 +36,7 @@ const MOCK_FILES = [
 ]
 
 export default function PortalDownloads() {
-  const { getToken } = useAuth()
+  const { getToken, userData } = useAuth()
   const [files, setFiles] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -46,6 +46,17 @@ export default function PortalDownloads() {
   const [category, setCategory] = useState('all')
   const [sortBy, setSortBy] = useState('date_desc')
   const [selectedId, setSelectedId] = useState(null)
+  const [createMsg, setCreateMsg] = useState('')
+  const [createForm, setCreateForm] = useState({
+    projectName: '',
+    name: '',
+    type: '',
+    category: 'otro',
+    size: '',
+    fileUrl: '',
+  })
+
+  const canManageDownloads = userData?.role === 'admin' || userData?.role === 'pm'
 
   useEffect(() => {
     const load = async () => {
@@ -125,8 +136,61 @@ export default function PortalDownloads() {
     return t === 'pdf' || t === 'png' || t === 'jpg' || t === 'jpeg' || t === 'webp' || t === 'svg'
   }
 
+  const onCreateDownload = async (e) => {
+    e.preventDefault()
+    setCreateMsg('')
+    try {
+      const created = await createDownload({
+        getToken,
+        payload: {
+          projectName: createForm.projectName,
+          name: createForm.name,
+          type: createForm.type || null,
+          category: createForm.category,
+          size: createForm.size || null,
+          fileUrl: createForm.fileUrl || null,
+        },
+      })
+      setFiles([created, ...files])
+      setCreateForm({ projectName: '', name: '', type: '', category: 'otro', size: '', fileUrl: '' })
+      setCreateMsg('Archivo agregado correctamente.')
+    } catch (e) {
+      console.error(e)
+      const local = {
+        id: `local-${Date.now()}`,
+        ...createForm,
+        updatedAt: new Date().toISOString(),
+      }
+      setFiles([local, ...files])
+      setCreateForm({ projectName: '', name: '', type: '', category: 'otro', size: '', fileUrl: '' })
+      setCreateMsg('Archivo agregado en modo local (mock).')
+    }
+  }
+
   return (
     <PortalLayout title='Descargas' subtitle='Documentos y archivos disponibles por proyecto.'>
+      {canManageDownloads && (
+        <div className='portal-card' style={{ marginBottom: 12 }}>
+          <h3 style={{ marginTop: 0 }}>Agregar archivo (admin/pm)</h3>
+          <form className='portal-download-create' onSubmit={onCreateDownload}>
+            <input className='dp-input' placeholder='Proyecto' required value={createForm.projectName} onChange={(e) => setCreateForm({ ...createForm, projectName: e.target.value })} />
+            <input className='dp-input' placeholder='Nombre de archivo' required value={createForm.name} onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })} />
+            <input className='dp-input' placeholder='Tipo (PDF, XLSX...)' value={createForm.type} onChange={(e) => setCreateForm({ ...createForm, type: e.target.value })} />
+            <select className='dp-input' value={createForm.category} onChange={(e) => setCreateForm({ ...createForm, category: e.target.value })}>
+              <option value='plano'>plano</option>
+              <option value='bom'>bom</option>
+              <option value='manual'>manual</option>
+              <option value='render'>render</option>
+              <option value='otro'>otro</option>
+            </select>
+            <input className='dp-input' placeholder='Tamaño (ej. 2.1 MB)' value={createForm.size} onChange={(e) => setCreateForm({ ...createForm, size: e.target.value })} />
+            <input className='dp-input' placeholder='URL archivo (opcional)' value={createForm.fileUrl} onChange={(e) => setCreateForm({ ...createForm, fileUrl: e.target.value })} />
+            <button className='btn-primary' type='submit'>Agregar</button>
+          </form>
+          {createMsg && <p style={{ color: 'green' }}>{createMsg}</p>}
+        </div>
+      )}
+
       <div className='portal-download-toolbar'>
         <input className='dp-input' placeholder='Buscar archivo...' value={query} onChange={(e) => setQuery(e.target.value)} />
 

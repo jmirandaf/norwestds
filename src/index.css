@@ -578,12 +578,20 @@ textarea.dp-input{resize:vertical}
   background:#fff;
 }
 
+.portal-download-create{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+}
+
 @media (max-width: 960px){
   .portal-download-toolbar{grid-template-columns:1fr 1fr}
+  .portal-download-create{grid-template-columns:1fr 1fr}
 }
 
 @media (max-width: 640px){
   .portal-download-toolbar{grid-template-columns:1fr}
+  .portal-download-create{grid-template-columns:1fr}
 }
 
 .dp-grid{
