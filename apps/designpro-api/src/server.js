@@ -8,7 +8,12 @@ import {
 } from './routes/jobs.js'
 
 function json(res, status, body) {
-  res.writeHead(status, { 'content-type': 'application/json' })
+  res.writeHead(status, {
+    'content-type': 'application/json',
+    'access-control-allow-origin': '*',
+    'access-control-allow-methods': 'GET,POST,PATCH,DELETE,OPTIONS',
+    'access-control-allow-headers': 'Content-Type, Authorization',
+  })
   res.end(JSON.stringify(body))
 }
 
@@ -42,6 +47,10 @@ const server = http.createServer(async (req, res) => {
   const method = req.method || 'GET'
   const url = parseUrl(req)
   const pathname = url.pathname
+
+  if (method === 'OPTIONS') {
+    return json(res, 204, {})
+  }
 
   if (method === 'GET' && pathname === '/health') {
     return json(res, 200, { ok: true, service: 'designpro-api' })

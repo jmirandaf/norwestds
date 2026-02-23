@@ -1,12 +1,17 @@
-import { useMemo, useState } from 'react'
-import { generateDesignPro } from '../../services/designProService'
+import { useEffect, useMemo, useState } from 'react'
+import {
+  createDesignProJob,
+  fetchDesignProCatalogs,
+  getDesignProJob,
+  getDesignProJobResult,
+  listDesignProJobs,
+} from '../../services/designProService'
 
 const STRUCTURES = [
-  { id: 'workbench', name: 'Mesa de trabajo' },
-  { id: 'mobile_cart', name: 'Carro móvil' },
-  { id: 'industrial_rack', name: 'Rack industrial' },
-  { id: 'machine_guarding', name: 'Guarda de máquina' },
-  { id: 'machine_base', name: 'Base de máquina' },
+  { id: 'rack-selectivo', name: 'Rack selectivo' },
+  { id: 'rack-drivein', name: 'Rack drive-in' },
+  { id: 'mezzanine', name: 'Mezzanine' },
+  { id: 'conveyor-line', name: 'Conveyor line' },
 ]
 
 const STEPS = ['Tipo', 'Dimensiones', 'Opciones', 'Resumen', 'Generar']
@@ -15,9 +20,12 @@ export default function PortalDesignPro() {
   const [step, setStep] = useState(0)
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState(null)
+  const [jobs, setJobs] = useState([])
+  const [currentJobId, setCurrentJobId] = useState(null)
+  const [catalogs, setCatalogs] = useState(null)
 
   const [form, setForm] = useState({
-    structureType: 'workbench',
+    structureType: 'rack-selectivo',
     provider: 'tjsd',
     length: 1200,
     width: 800,
@@ -28,23 +36,69 @@ export default function PortalDesignPro() {
     doorType: 'none',
   })
 
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const [cats, rows] = await Promise.all([
+          fetchDesignProCatalogs(),
+          listDesignProJobs({ limit: 20 }),
+        ])
+        setCatalogs(cats)
+        setJobs(rows)
+      } catch (e) {
+        console.error(e)
+      }
+    }
+    load()
+  }, [])
+
+  useEffect(() => {
+    if (!currentJobId) return
+
+    const timer = setInterval(async () => {
+      try {
+        const job = await getDesignProJob(currentJobId)
+        setResult(job)
+        setJobs((prev) => {
+          const rest = prev.filter((j) => j.id !== job.id)
+          return [job, ...rest]
+        })
+
+        if (job.status === 'done' || job.status === 'failed') {
+          clearInterval(timer)
+          setLoading(false)
+        }
+      } catch (e) {
+        console.error(e)
+        clearInterval(timer)
+        setLoading(false)
+      }
+    }, 1200)
+
+    return () => clearInterval(timer)
+  }, [currentJobId])
+
   const payload = useMemo(() => ({
-    project_name: `designpro_${Date.now()}`,
-    provider: form.provider,
-    structure_type: form.structureType,
-    dimensions: {
-      length: Number(form.length),
-      width: Number(form.width),
-      height: Number(form.height),
-    },
-    options: {
+    type: 'structure_generate',
+    priority: 'normal',
+    requesterId: 'portal_user_demo',
+    source: 'portal',
+    projectName: `DesignPro ${new Date().toISOString().slice(0, 10)}`,
+    params: {
+      structureType: form.structureType,
       provider: form.provider,
-      profile_series: form.profileSeries,
-      load_class: form.loadClass,
-      panel_type: form.panelType,
-      door_type: form.doorType,
+      dimensions: {
+        length: Number(form.length),
+        width: Number(form.width),
+        height: Number(form.height),
+      },
+      options: {
+        profileSeries: form.profileSeries,
+        loadClass: form.loadClass,
+        panelType: form.panelType,
+        doorType: form.doorType,
+      },
     },
-    render: { enabled: true, engine: 'blender' },
   }), [form])
 
   const onChange = (k, v) => setForm((p) => ({ ...p, [k]: v }))
@@ -53,14 +107,25 @@ export default function PortalDesignPro() {
     setLoading(true)
     setResult(null)
     try {
-      const apiResult = await generateDesignPro(payload)
-      setResult(apiResult)
+      const job = await createDesignProJob(payload)
+      setCurrentJobId(job.id)
+      setResult(job)
+      setJobs((prev) => [job, ...prev.filter((j) => j.id !== job.id)])
       setStep(4)
     } catch (err) {
       console.error(err)
       setResult({ ok: false, error: err?.response?.data || err?.message })
-    } finally {
       setLoading(false)
+    }
+  }
+
+  const refreshResult = async () => {
+    if (!currentJobId) return
+    try {
+      const data = await getDesignProJobResult(currentJobId)
+      setResult((prev) => ({ ...prev, resultData: data }))
+    } catch (e) {
+      console.error(e)
     }
   }
 
@@ -68,7 +133,7 @@ export default function PortalDesignPro() {
     <div className='portal-shell'>
       <div className='portal-header'>
         <h1>Design Pro by NDS</h1>
-        <p>Configurador interactivo estilo librería técnica (MVP).</p>
+        <p>Backend de jobs activo (stub). Flujo listo para conectar worker real.</p>
       </div>
 
       <div className='dp-grid'>
@@ -134,19 +199,19 @@ export default function PortalDesignPro() {
           {step === 4 && (
             <section>
               <h3>Resultado</h3>
-              {!result && <p>Presiona generar para obtener artefactos.</p>}
-              {result?.ok && (
+              {!result && <p>Presiona generar para crear un job.</p>}
+              {result?.id && (
                 <div className='portal-stack'>
-                  <div><strong>Request ID:</strong> {result.request_id}</div>
-                  <div><strong>Estatus:</strong> Generado correctamente</div>
-                  {result?.artifacts?.step_url ? (
-                    <a href={result.artifacts.step_url} target='_blank' rel='noreferrer'>Descargar STEP</a>
-                  ) : (
-                    <span>STEP no disponible</span>
+                  <div><strong>Job ID:</strong> {result.id}</div>
+                  <div><strong>Estatus:</strong> {result.status}</div>
+                  <div><strong>Creado:</strong> {String(result.createdAt || '').slice(0, 19).replace('T', ' ')}</div>
+                  {result.status === 'done' && (
+                    <button className='btn-ghost' onClick={refreshResult}>Ver payload de resultado</button>
                   )}
+                  {result.resultData && <pre className='dp-pre'>{JSON.stringify(result.resultData, null, 2)}</pre>}
                 </div>
               )}
-              {result && !result.ok && (
+              {result && !result.id && (
                 <pre className='dp-pre'>{JSON.stringify(result, null, 2)}</pre>
               )}
             </section>
@@ -156,18 +221,27 @@ export default function PortalDesignPro() {
             <button className='btn-ghost' onClick={() => setStep((s) => Math.max(0, s - 1))} disabled={step === 0}>Atrás</button>
             <button className='btn-ghost' onClick={() => setStep((s) => Math.min(4, s + 1))} disabled={step === 4}>Siguiente</button>
             <button className='btn-primary' onClick={handleGenerate} disabled={loading}>
-              {loading ? 'Generando...' : 'Generar'}
+              {loading ? 'Generando...' : 'Generar Job'}
             </button>
           </div>
         </section>
 
         <aside className='portal-card'>
-          <h3>Preview</h3>
-          {result?.render?.url ? (
-            <img src={result.render.url} alt='render' className='dp-preview-img' />
-          ) : (
-            <div className='dp-preview-empty'>Aquí aparecerá el render</div>
-          )}
+          <h3>Jobs recientes</h3>
+          {!jobs.length && <p>Sin jobs aún.</p>}
+          <div className='portal-stack'>
+            {jobs.slice(0, 8).map((j) => (
+              <button key={j.id} className='portal-link-button' onClick={() => { setCurrentJobId(j.id); setResult(j); setStep(4) }}>
+                {j.id} · {j.status}
+              </button>
+            ))}
+          </div>
+
+          <hr style={{ margin: '12px 0' }} />
+          <h4>Catálogos</h4>
+          <pre className='dp-pre' style={{ maxHeight: 180, overflow: 'auto' }}>
+            {JSON.stringify(catalogs || {}, null, 2)}
+          </pre>
 
           <div className='dp-summary'>
             <div><strong>Tipo:</strong> {form.structureType}</div>
