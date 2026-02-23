@@ -2,7 +2,7 @@
 
 Backend del portal de clientes.
 
-> Nota: el backend actual vive en `backend/`. Esta carpeta es el destino objetivo para migración gradual.
+> Estado: se copió el backend actual desde `backend/` a esta carpeta. Mantén ambos temporalmente para no romper despliegues mientras migramos scripts/CI y variables.
 
 ## Endpoints objetivo
 - `GET /health`
