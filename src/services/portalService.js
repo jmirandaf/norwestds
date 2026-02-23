@@ -36,3 +36,21 @@ export async function createInvite({ payload, getToken }) {
   const { data } = await client.post('/api/portal/invites', payload, { headers })
   return data
 }
+
+export async function fetchDownloads({ getToken }) {
+  const headers = await authHeaders(getToken)
+  const { data } = await client.get('/api/portal/downloads', { headers })
+  return Array.isArray(data) ? data : []
+}
+
+export async function fetchTickets({ getToken }) {
+  const headers = await authHeaders(getToken)
+  const { data } = await client.get('/api/portal/tickets', { headers })
+  return Array.isArray(data) ? data : []
+}
+
+export async function createTicket({ payload, getToken }) {
+  const headers = await authHeaders(getToken)
+  const { data } = await client.post('/api/portal/tickets', payload, { headers })
+  return data
+}
