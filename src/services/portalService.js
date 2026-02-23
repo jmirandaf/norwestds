@@ -54,3 +54,15 @@ export async function createTicket({ payload, getToken }) {
   const { data } = await client.post('/api/portal/tickets', payload, { headers })
   return data
 }
+
+export async function updateTicketStatus({ ticketId, status, getToken }) {
+  const headers = await authHeaders(getToken)
+  const { data } = await client.patch(`/api/portal/tickets/${ticketId}/status`, { status }, { headers })
+  return data
+}
+
+export async function addTicketComment({ ticketId, body, getToken }) {
+  const headers = await authHeaders(getToken)
+  const { data } = await client.post(`/api/portal/tickets/${ticketId}/comments`, { body }, { headers })
+  return data
+}

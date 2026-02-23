@@ -121,17 +121,28 @@ model Download {
 }
 
 model SupportTicket {
-  id          String         @id @default(cuid())
+  id          String          @id @default(cuid())
   subject     String
   message     String
-  priority    TicketPriority @default(medium)
-  status      TicketStatus   @default(open)
+  priority    TicketPriority  @default(medium)
+  status      TicketStatus    @default(open)
 
   requesterId String
-  requester   User           @relation(fields: [requesterId], references: [id])
+  requester   User            @relation(fields: [requesterId], references: [id])
+  comments    TicketComment[]
 
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+}
+
+model TicketComment {
+  id        String        @id @default(cuid())
+  ticketId  String
+  ticket    SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  body      String
+  authorId  String
+  author    String?
+  createdAt DateTime      @default(now())
 }
 
 model Invite {
