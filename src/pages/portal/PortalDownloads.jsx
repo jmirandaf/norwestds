@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import PortalLayout from '../../components/PortalLayout'
 import { useAuth } from '../../contexts/AuthContext'
 import { createDownload, deleteDownload, fetchDownloads, updateDownload } from '../../services/portalService'
+import { uploadFile } from '../../services/uploadService'
 
 const MOCK_FILES = [
   {
@@ -48,6 +49,8 @@ export default function PortalDownloads() {
   const [selectedId, setSelectedId] = useState(null)
   const [createMsg, setCreateMsg] = useState('')
   const [editMsg, setEditMsg] = useState('')
+  const [uploading, setUploading] = useState(false)
+  const fileInputRef = useRef(null)
   const [createForm, setCreateForm] = useState({
     projectName: '',
     name: '',
@@ -157,6 +160,31 @@ export default function PortalDownloads() {
     return t === 'pdf' || t === 'png' || t === 'jpg' || t === 'jpeg' || t === 'webp' || t === 'svg'
   }
 
+  const onFileChange = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploading(true)
+    setCreateMsg('')
+    try {
+      const { url, bytes } = await uploadFile(file)
+      const ext = file.name.split('.').pop().toUpperCase()
+      const sizeMB = bytes < 1024 * 1024
+        ? `${(bytes / 1024).toFixed(0)} KB`
+        : `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+      setCreateForm(f => ({
+        ...f,
+        name: f.name || file.name,
+        type: f.type || ext,
+        size: sizeMB,
+        fileUrl: url,
+      }))
+    } catch (err) {
+      setCreateMsg(`Error al subir: ${err.message}`)
+    } finally {
+      setUploading(false)
+    }
+  }
+
   const onCreateDownload = async (e) => {
     e.preventDefault()
     setCreateMsg('')
@@ -174,6 +202,7 @@ export default function PortalDownloads() {
       })
       setFiles([created, ...files])
       setCreateForm({ projectName: '', name: '', type: '', category: 'otro', size: '', fileUrl: '' })
+      if (fileInputRef.current) fileInputRef.current.value = ''
       setCreateMsg('Archivo agregado correctamente.')
     } catch (e) {
       console.error(e)
@@ -236,10 +265,36 @@ export default function PortalDownloads() {
               <option value='otro'>otro</option>
             </select>
             <input className='dp-input' placeholder='Tamaño (ej. 2.1 MB)' value={createForm.size} onChange={(e) => setCreateForm({ ...createForm, size: e.target.value })} />
-            <input className='dp-input' placeholder='URL archivo (opcional)' value={createForm.fileUrl} onChange={(e) => setCreateForm({ ...createForm, fileUrl: e.target.value })} />
-            <button className='btn-primary' type='submit'>Agregar</button>
+            {/* File upload */}
+            <div style={{ gridColumn: '1 / -1', display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <input
+                ref={fileInputRef}
+                type='file'
+                accept='.pdf,.png,.jpg,.jpeg,.webp,.svg,.xlsx,.xls,.zip'
+                style={{ display: 'none' }}
+                onChange={onFileChange}
+              />
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                <button type='button' className='btn-ghost' onClick={() => fileInputRef.current?.click()} disabled={uploading}>
+                  {uploading ? 'Subiendo…' : '📎 Seleccionar archivo'}
+                </button>
+                {createForm.fileUrl && (
+                  <span style={{ fontSize: '.8rem', color: 'var(--nds-teal-deep)', fontWeight: 600 }}>
+                    ✓ Archivo listo
+                  </span>
+                )}
+              </div>
+              {createForm.fileUrl && (
+                <input className='dp-input' style={{ fontSize: '.8rem' }} readOnly value={createForm.fileUrl} />
+              )}
+            </div>
+            <button className='btn-primary' type='submit' disabled={uploading}>Agregar</button>
           </form>
-          {createMsg && <p style={{ color: 'green' }}>{createMsg}</p>}
+          {createMsg && (
+            <p style={{ color: createMsg.startsWith('Error') ? '#dc2626' : 'var(--nds-teal-deep)', marginTop: 8, fontSize: '.88rem' }}>
+              {createMsg}
+            </p>
+          )}
         </div>
       )}
 

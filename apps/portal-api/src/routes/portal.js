@@ -1,8 +1,11 @@
 import { Router } from 'express'
 import { randomUUID } from 'node:crypto'
 import { z } from 'zod'
+import { createClerkClient } from '@clerk/backend'
 import { prisma } from '../db.js'
 import { requireAuth, requireRole } from '../middleware/auth.js'
+
+const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY })
 
 const router = Router()
 
@@ -336,20 +339,22 @@ router.post('/invites/redeem', async (req, res) => {
       return res.status(403).json({ error: 'Este enlace no corresponde a tu cuenta' })
     }
 
-    // Apply role + clientId and mark invite accepted
+    // Apply role in DB and mark invite accepted
     await prisma.$transaction([
       prisma.user.update({
         where: { id: req.user.id },
-        data: {
-          role: invite.role,
-          ...(invite.clientId ? { clientId: invite.clientId } : {}),
-        },
+        data: { role: invite.role },
       }),
       prisma.invite.update({
         where: { id: invite.id },
         data: { status: 'accepted' },
       }),
     ])
+
+    // Sync role to Clerk publicMetadata so frontend reflects new role immediately
+    await clerk.users.updateUserMetadata(req.auth.clerkUserId, {
+      publicMetadata: { role: invite.role },
+    })
 
     res.json({ role: invite.role, message: 'Invitación aceptada correctamente' })
   } catch (err) {
