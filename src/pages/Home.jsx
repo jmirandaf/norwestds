@@ -36,7 +36,9 @@ function MarqueeRow({ logos, direction = 'lr', label }) {
       <div className="ns-marquee-track">
         <div className={`ns-marquee-inner ${direction === 'rl' ? 'ns-marquee-rl' : 'ns-marquee-lr'}`}>
           {doubled.map((src, i) => (
-            <img key={i} src={src} alt="" className="ns-marquee-logo" loading="lazy" />
+            <div key={i} className="ns-marquee-logo-wrap">
+              <img src={src} alt="" className="ns-marquee-logo" loading="lazy" />
+            </div>
           ))}
         </div>
       </div>
