@@ -83,3 +83,15 @@ export async function addTicketComment({ ticketId, body, getToken }) {
   const { data } = await client.post(`/api/portal/tickets/${ticketId}/comments`, { body }, { headers })
   return data
 }
+
+export async function validateInviteToken(token) {
+  const { data } = await client.get(`/api/portal/invites/validate/${token}`)
+  return data // { email, role }
+}
+
+export async function redeemInvite({ token, getToken }) {
+  const headers = await authHeaders(getToken)
+  const { data } = await client.post('/api/portal/invites/redeem', { token }, { headers })
+  return data // { role, message }
+}
+

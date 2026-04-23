@@ -5,6 +5,27 @@ import { prisma } from '../db.js'
 import { requireAuth, requireRole } from '../middleware/auth.js'
 
 const router = Router()
+
+// ── Public invite endpoints (no auth required) ────────
+router.get('/invites/validate/:token', async (req, res) => {
+  try {
+    const invite = await prisma.invite.findUnique({
+      where: { token: req.params.token },
+    })
+    if (!invite) return res.status(404).json({ error: 'Invitación no encontrada' })
+    if (invite.status !== 'pending') return res.status(410).json({ error: 'Esta invitación ya fue usada o fue revocada' })
+    if (new Date() > invite.expiresAt) {
+      await prisma.invite.update({ where: { id: invite.id }, data: { status: 'expired' } })
+      return res.status(410).json({ error: 'Esta invitación ha expirado' })
+    }
+    res.json({ email: invite.email, role: invite.role })
+  } catch (err) {
+    console.error('[validate-invite]', err)
+    res.status(500).json({ error: 'Error interno' })
+  }
+})
+
+// ── Auth-required routes ───────────────────────────────
 router.use(requireAuth)
 
 const inviteSchema = z.object({
@@ -295,6 +316,46 @@ router.post('/invites', requireRole(['admin']), async (req, res) => {
     token: invite.token,
     message: `Invitación creada. Token: ${invite.token} (expira en 72h)`,
   })
+})
+
+// POST /invites/redeem — authenticated user redeems their invite token
+router.post('/invites/redeem', async (req, res) => {
+  const { token } = req.body
+  if (!token) return res.status(400).json({ error: 'Token requerido' })
+
+  try {
+    const invite = await prisma.invite.findUnique({ where: { token } })
+    if (!invite) return res.status(404).json({ error: 'Invitación no encontrada' })
+    if (invite.status !== 'pending') return res.status(410).json({ error: 'Invitación ya usada o revocada' })
+    if (new Date() > invite.expiresAt) {
+      await prisma.invite.update({ where: { id: invite.id }, data: { status: 'expired' } })
+      return res.status(410).json({ error: 'Invitación expirada' })
+    }
+    // Verify the authenticated user's email matches the invite
+    if (req.user.email.toLowerCase() !== invite.email.toLowerCase()) {
+      return res.status(403).json({ error: 'Este enlace no corresponde a tu cuenta' })
+    }
+
+    // Apply role + clientId and mark invite accepted
+    await prisma.$transaction([
+      prisma.user.update({
+        where: { id: req.user.id },
+        data: {
+          role: invite.role,
+          ...(invite.clientId ? { clientId: invite.clientId } : {}),
+        },
+      }),
+      prisma.invite.update({
+        where: { id: invite.id },
+        data: { status: 'accepted' },
+      }),
+    ])
+
+    res.json({ role: invite.role, message: 'Invitación aceptada correctamente' })
+  } catch (err) {
+    console.error('[redeem-invite]', err)
+    res.status(500).json({ error: 'Error interno' })
+  }
 })
 
 export default router

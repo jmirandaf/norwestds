@@ -12,6 +12,7 @@ const Contact = lazy(() => import('./pages/Contact.jsx'))
 const TrainingCenter = lazy(() => import('./pages/TrainingCenter.jsx'))
 const Login = lazy(() => import('./pages/Login.jsx'))
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword.jsx'))
+const AcceptInvite = lazy(() => import('./pages/AcceptInvite.jsx'))
 const Register = lazy(() => import('./pages/Register.jsx'))
 const Dashboard = lazy(() => import('./pages/Dashboard.jsx'))
 const NotFound = lazy(() => import('./pages/NotFound.jsx'))
@@ -44,6 +45,7 @@ export default function App() {
       <Route path="/login/*" element={<Login />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/register/*" element={<Register />} />
+      <Route path="/invite/:token" element={<AcceptInvite />} />
 
       {/* Legacy dashboard */}
       <Route
