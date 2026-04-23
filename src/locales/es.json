@@ -71,7 +71,19 @@
     "ctaTitle": "¿Listo para optimizar tus procesos?",
     "ctaText": "Descubre cómo podemos ayudarte a alcanzar tus objetivos",
     "ctaConsult": "Solicitar consultoría",
-    "ctaSuccess": "Ver casos de éxito"
+    "ctaSuccess": "Ver casos de éxito",
+    "heroOverline": "Ingeniería de Automatización Industrial",
+    "heroAvailability": "Respuesta en 24h",
+    "heroCoverage": "Disponibles MX · USA",
+    "heroClientsLabel": "Clientes",
+    "heroPartnersLabel": "Partners tecnológicos",
+    "infoCat1": "Robótica & Visión",
+    "infoCat2": "Control Industrial",
+    "infoCat3": "Safety & Compliance",
+    "infoStat1Num": "50+",
+    "infoStat1Lbl": "Proyectos exitosos",
+    "infoStat2Num": "10+",
+    "infoStat2Lbl": "Años de experiencia"
   },
   "about": {
     "title": "Sobre Nosotros",
@@ -142,5 +154,24 @@
     "expertise2": "Asuntos Legales y Gestión de Proyectos",
     "expertise3": "Diseño e Ingeniería",
     "expertise4": "Control e Ingeniería"
+  },
+  "footer": {
+    "tagline": "Ingeniería de automatización industrial — integramos robótica, visión artificial y control.",
+    "company": "Compañía",
+    "about": "Nosotros",
+    "team": "Equipo",
+    "contact": "Contacto",
+    "solutions": "Soluciones",
+    "services": "Servicios",
+    "projects": "Proyectos",
+    "training": "Training Center",
+    "designPro": "DesignPro Portal",
+    "contactTitle": "Contacto",
+    "phone": "+52 664 685 3430",
+    "email": "ventas@norwestds.com",
+    "location": "Tijuana, MX · San Diego, USA",
+    "rights": "Todos los derechos reservados.",
+    "privacy": "Privacidad",
+    "terms": "Términos"
   }
 }

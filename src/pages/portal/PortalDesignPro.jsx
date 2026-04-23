@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import PortalLayout from '../../components/PortalLayout'
 import {
   createDesignProJob,
   fetchDesignProCatalogs,
@@ -130,12 +131,7 @@ export default function PortalDesignPro() {
   }
 
   return (
-    <div className='portal-shell'>
-      <div className='portal-header'>
-        <h1>Design Pro by NDS</h1>
-        <p>Backend de jobs activo (stub). Flujo listo para conectar worker real.</p>
-      </div>
-
+    <PortalLayout title="Design Pro by NDS" subtitle="Backend de jobs activo (stub). Flujo listo para conectar worker real.">
       <div className='dp-grid'>
         <aside className='portal-card'>
           <h3>Pasos</h3>
@@ -251,7 +247,7 @@ export default function PortalDesignPro() {
           </div>
         </aside>
       </div>
-    </div>
+    </PortalLayout>
   )
 }
 

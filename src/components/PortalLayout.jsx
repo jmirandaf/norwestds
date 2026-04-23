@@ -1,53 +1,104 @@
 import { NavLink } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 
-const navItems = [
-  { to: '/portal', label: 'Inicio', end: true },
-  { to: '/portal/projects', label: 'Proyectos' },
-  { to: '/portal/schedule', label: 'Schedule' },
-  { to: '/portal/downloads', label: 'Descargas' },
-  { to: '/portal/support', label: 'Soporte' },
-  { to: '/portal/designpro', label: 'DesignPro' },
+const NAV_ITEMS = [
+  {
+    to: '/portal', end: true, label: 'Inicio',
+    icon: <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>,
+  },
+  {
+    to: '/portal/projects', label: 'Proyectos',
+    icon: <><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></>,
+  },
+  {
+    to: '/portal/schedule', label: 'Schedule',
+    icon: <><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></>,
+  },
+  {
+    to: '/portal/downloads', label: 'Descargas',
+    icon: <><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></>,
+  },
+  {
+    to: '/portal/support', label: 'Soporte',
+    icon: <><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></>,
+  },
+  {
+    to: '/portal/designpro', label: 'DesignPro',
+    icon: <><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></>,
+  },
 ]
 
+function NavIcon({ d }) {
+  return (
+    <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
+      {d}
+    </svg>
+  )
+}
+
 export default function PortalLayout({ title, subtitle, children }) {
-  const { userData } = useAuth()
+  const { userData, logout } = useAuth()
 
   return (
-    <div className='portal-shell'>
-      <div className='portal-topbar'>
-        <div>
-          <h1 className='portal-brand'>Portal NDS</h1>
-          <p className='portal-user'>
-            {userData?.displayName || 'Usuario'} · {userData?.role || 'client'}
-          </p>
+    <div className="nds-portal-shell">
+      {/* ── Sidebar ── */}
+      <aside className="nds-portal-sidebar">
+        <NavLink to="/" className="nds-portal-logo">
+          <img src="/logo.png" alt="NDS" onError={e => { e.target.style.display = 'none' }} />
+          <span className="nds-portal-logo-text">NDS</span>
+          <span className="nds-portal-logo-badge">Portal</span>
+        </NavLink>
+
+        <div className="nds-portal-user">
+          <div className="nds-portal-user-name">{userData?.displayName || 'Usuario'}</div>
+          <div className="nds-portal-user-role">{userData?.role || 'client'}</div>
         </div>
 
-        <nav className='portal-nav'>
-          {navItems.map((item) => (
+        <nav className="nds-portal-nav">
+          {NAV_ITEMS.map(({ to, end, label, icon }) => (
             <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.end}
-              className={({ isActive }) => `portal-nav-link ${isActive ? 'active' : ''}`}
+              key={to}
+              to={to}
+              end={end}
+              className={({ isActive }) => `nds-portal-nav-link${isActive ? ' active' : ''}`}
             >
-              {item.label}
+              <NavIcon d={icon} />
+              {label}
             </NavLink>
           ))}
+
           {userData?.role === 'admin' && (
-            <NavLink to='/portal/admin/invites' className={({ isActive }) => `portal-nav-link ${isActive ? 'active' : ''}`}>
-              Invitaciones
-            </NavLink>
+            <>
+              <div className="nds-portal-nav-divider" />
+              <NavLink
+                to="/portal/admin/invites"
+                className={({ isActive }) => `nds-portal-nav-link${isActive ? ' active' : ''}`}
+              >
+                <NavIcon d={<><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></>} />
+                Invitaciones
+              </NavLink>
+            </>
           )}
         </nav>
-      </div>
 
-      <div className='portal-header'>
-        <h2>{title}</h2>
-        {subtitle && <p>{subtitle}</p>}
-      </div>
+        <button className="nds-portal-logout" onClick={logout}>
+          <NavIcon d={<><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></>} />
+          Cerrar sesión
+        </button>
+      </aside>
 
-      {children}
+      {/* ── Main ── */}
+      <main className="nds-portal-main">
+        {(title || subtitle) && (
+          <div className="nds-portal-header">
+            {title && <h1>{title}</h1>}
+            {subtitle && <p>{subtitle}</p>}
+          </div>
+        )}
+        <div className="nds-portal-content">
+          {children}
+        </div>
+      </main>
     </div>
   )
 }

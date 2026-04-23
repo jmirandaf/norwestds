@@ -1,0 +1,294 @@
+/* ============================================================
+   NORWEST DYNAMIC SYSTEMS — Design Tokens
+   ============================================================ */
+
+/* --- Web Fonts --- */
+@font-face {
+  font-family: 'Walkway';
+  src: url('/fonts/Walkway Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Walkway';
+  src: url('/fonts/Walkway Expand Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ============================================================
+   COLOR TOKENS
+   ============================================================ */
+:root {
+  /* Brand primaries */
+  --nds-teal:          #007DA6;
+  --nds-teal-deep:     #004C71;
+  --nds-teal-light:    #12A6CC;
+  --nds-teal-ink:      #EAF6FB;
+  --nds-teal-wash:     #EFF8FF;
+
+  /* Dark hero surface */
+  --nds-dark:          #071e30;
+  --nds-dark-deep:     #04131f;
+
+  /* Neutrals */
+  --nds-charcoal:      #3D3D3D;
+  --nds-gray:          #8892A0;
+  --nds-text:          #0F172A;
+  --nds-muted:         #64748B;
+  --nds-border:        #DBE3EE;
+  --nds-bg:            #F4F7FB;
+  --nds-surface:       #FFFFFF;
+
+  /* Semantic */
+  --nds-success:       #16A34A;
+  --nds-warning:       #D97706;
+  --nds-error:         #B42318;
+  --nds-info:          #007DA6;
+
+  /* Gradients */
+  --nds-grad-hero:     linear-gradient(180deg, rgba(0,125,166,.08), rgba(0,76,113,.06));
+  --nds-grad-cta:      linear-gradient(180deg, rgba(0,125,166,.08), rgba(0,76,113,.06));
+  --nds-grad-banner:   linear-gradient(135deg, rgba(0,76,113,0.97), rgba(0,167,225,0.9));
+  --nds-grad-metrics:  linear-gradient(180deg, #fff, #f8f9fa);
+
+  /* Elevation / Shadow */
+  --nds-shadow-sm:     0 2px 8px rgba(2,32,71,0.06);
+  --nds-shadow-md:     0 10px 28px rgba(2,32,71,0.08);
+  --nds-shadow-lg:     0 16px 36px rgba(0,76,113,0.14);
+  --nds-shadow-focus:  0 0 0 3px rgba(0,125,166,0.18);
+
+  /* Border radius */
+  --nds-radius-xs:     6px;
+  --nds-radius-sm:     10px;
+  --nds-radius-md:     14px;
+  --nds-radius-lg:     16px;
+  --nds-radius-pill:   999px;
+
+  /* Spacing */
+  --nds-space-1:  4px;
+  --nds-space-2:  8px;
+  --nds-space-3:  12px;
+  --nds-space-4:  16px;
+  --nds-space-5:  24px;
+  --nds-space-6:  32px;
+  --nds-space-7:  48px;
+  --nds-space-8:  64px;
+  --nds-space-9:  72px;
+
+  /* Typography */
+  --nds-font-brand:    'Walkway', 'Walkway Bold', sans-serif;
+  --nds-font-ui:       Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --nds-font-mono:     'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+
+  /* Type scale */
+  --nds-text-xs:       0.75rem;
+  --nds-text-sm:       0.875rem;
+  --nds-text-base:     1rem;
+  --nds-text-lg:       1.125rem;
+  --nds-text-xl:       1.25rem;
+  --nds-text-2xl:      1.5rem;
+  --nds-text-3xl:      2rem;
+  --nds-text-4xl:      2.4rem;
+  --nds-text-hero:     clamp(2rem, 5vw, 3rem);
+
+  /* Line heights */
+  --nds-leading-tight:  1.1;
+  --nds-leading-snug:   1.3;
+  --nds-leading-base:   1.5;
+  --nds-leading-loose:  1.7;
+
+  /* Font weights */
+  --nds-weight-normal:  400;
+  --nds-weight-medium:  500;
+  --nds-weight-semi:    600;
+  --nds-weight-bold:    700;
+  --nds-weight-black:   900;
+
+  /* Letter spacing */
+  --nds-tracking-tight:  -0.02em;
+  --nds-tracking-wide:    0.08em;
+
+  /* Legacy brand aliases (compat con index.css existente) */
+  --brand:  var(--nds-teal);
+  --brand2: var(--nds-teal-deep);
+}
+
+/* ============================================================
+   SEMANTIC TYPE STYLES
+   ============================================================ */
+
+.nds-hero-title {
+  font-family: var(--nds-font-ui);
+  font-size: var(--nds-text-hero);
+  font-weight: var(--nds-weight-bold);
+  line-height: var(--nds-leading-tight);
+  letter-spacing: var(--nds-tracking-tight);
+  color: var(--nds-text);
+}
+.nds-hero-title .accent { color: var(--nds-teal); }
+
+.nds-h1 {
+  font-family: var(--nds-font-ui);
+  font-size: var(--nds-text-3xl);
+  font-weight: var(--nds-weight-bold);
+  line-height: var(--nds-leading-tight);
+  letter-spacing: var(--nds-tracking-tight);
+  color: var(--nds-text);
+  margin: 0 0 var(--nds-space-4);
+}
+.nds-h2 {
+  font-family: var(--nds-font-ui);
+  font-size: var(--nds-text-2xl);
+  font-weight: var(--nds-weight-bold);
+  line-height: var(--nds-leading-snug);
+  color: var(--nds-text);
+  margin: 0 0 var(--nds-space-3);
+}
+.nds-h3 {
+  font-family: var(--nds-font-ui);
+  font-size: var(--nds-text-xl);
+  font-weight: var(--nds-weight-semi);
+  line-height: var(--nds-leading-snug);
+  color: var(--nds-text);
+  margin: 0 0 var(--nds-space-3);
+}
+
+.nds-body-lg {
+  font-family: var(--nds-font-ui);
+  font-size: var(--nds-text-lg);
+  line-height: var(--nds-leading-base);
+  color: var(--nds-text);
+}
+.nds-body {
+  font-family: var(--nds-font-ui);
+  font-size: var(--nds-text-base);
+  line-height: var(--nds-leading-base);
+  color: var(--nds-text);
+}
+.nds-body-sm {
+  font-family: var(--nds-font-ui);
+  font-size: var(--nds-text-sm);
+  line-height: var(--nds-leading-base);
+  color: var(--nds-muted);
+}
+
+.nds-label {
+  font-family: var(--nds-font-ui);
+  font-size: var(--nds-text-xs);
+  font-weight: var(--nds-weight-semi);
+  letter-spacing: var(--nds-tracking-wide);
+  text-transform: uppercase;
+  color: var(--nds-muted);
+}
+
+.nds-code {
+  font-family: var(--nds-font-mono);
+  font-size: var(--nds-text-sm);
+  background: #0b1220;
+  color: #d4e5ff;
+  border-radius: var(--nds-radius-sm);
+  padding: 2px 6px;
+}
+
+.nds-brand {
+  font-family: var(--nds-font-brand);
+  font-weight: var(--nds-weight-black);
+  letter-spacing: var(--nds-tracking-tight);
+}
+
+/* ============================================================
+   COMPONENT BASE STYLES (utility)
+   ============================================================ */
+
+.nds-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--nds-space-2);
+  padding: 10px 16px;
+  border-radius: var(--nds-radius-md);
+  font-family: var(--nds-font-ui);
+  font-size: var(--nds-text-base);
+  font-weight: var(--nds-weight-semi);
+  text-decoration: none;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: filter .15s ease, background .15s ease;
+}
+.nds-btn-primary {
+  background: var(--nds-teal);
+  color: #fff;
+  border-color: var(--nds-teal);
+}
+.nds-btn-primary:hover { filter: brightness(1.08); }
+.nds-btn-outline {
+  background: transparent;
+  color: var(--nds-teal);
+  border-color: var(--nds-teal);
+}
+.nds-btn-outline:hover { background: var(--nds-teal-wash); }
+.nds-btn-ghost {
+  background: #fff;
+  color: var(--nds-text);
+  border-color: var(--nds-border);
+}
+.nds-btn-ghost:hover { background: var(--nds-bg); }
+.nds-btn-deep {
+  background: var(--nds-teal-deep);
+  color: #fff;
+  border-color: var(--nds-teal-deep);
+}
+.nds-btn-deep:hover { filter: brightness(1.1); }
+
+.nds-input {
+  border: 1px solid var(--nds-border);
+  border-radius: var(--nds-radius-sm);
+  padding: 10px 12px;
+  font-family: var(--nds-font-ui);
+  font-size: var(--nds-text-base);
+  background: var(--nds-surface);
+  color: var(--nds-text);
+  transition: border-color .15s, box-shadow .15s;
+}
+.nds-input:focus {
+  outline: none;
+  border-color: var(--nds-teal);
+  box-shadow: var(--nds-shadow-focus);
+}
+
+.nds-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--nds-radius-pill);
+  font-size: var(--nds-text-xs);
+  font-weight: var(--nds-weight-semi);
+  padding: 2px 10px;
+}
+.nds-badge-teal {
+  background: var(--nds-teal-wash);
+  color: #12557A;
+  border: 1px solid #CBE6F5;
+}
+.nds-badge-purple {
+  background: #F4F1FF;
+  color: #4C2D95;
+  border: 1px solid #DDD6FE;
+}
+
+.nds-pill {
+  text-decoration: none;
+  color: var(--nds-teal-deep);
+  border: 1px solid var(--nds-border);
+  background: #F8FBFF;
+  border-radius: var(--nds-radius-pill);
+  padding: 8px 14px;
+  font-weight: var(--nds-weight-semi);
+  font-size: var(--nds-text-sm);
+  transition: border-color .15s, background .15s;
+}
+.nds-pill:hover {
+  border-color: var(--nds-teal);
+  background: var(--nds-teal-wash);
+}
