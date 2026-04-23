@@ -47,9 +47,9 @@ export default function Services() {
       {/* ── DESIGNPRO FEATURE ── */}
       <section className="ns-section ns-section--dark">
         <div className="ns-section-inner">
-          <div style={{ background: 'linear-gradient(135deg, rgba(0,76,113,0.97), rgba(0,167,225,0.9))', borderRadius: 20, padding: '40px 36px', border: '1px solid rgba(255,255,255,0.12)', position: 'relative', overflow: 'hidden' }}>
-            <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '60px 60px', pointerEvents: 'none' }} />
-            <div style={{ position: 'relative', zIndex: 1 }}>
+          <div className="ns-dp-feature-card">
+            <div className="ns-dp-feature-grid" />
+            <div className="ns-dp-feature-body">
               <div className="ns-eyebrow" style={{ marginBottom: 16 }}><span className="ns-eyebrow-dot" />Product Suite</div>
               <h2 style={{ fontSize: '1.9rem', fontWeight: 700, color: '#fff', marginBottom: 10, letterSpacing: '-0.02em' }}>{t('services.designProTitle')}</h2>
               <p style={{ color: 'rgba(234,246,251,0.85)', fontSize: '1.05rem', maxWidth: 680, marginBottom: 20 }}>{t('services.designProValue')}</p>
