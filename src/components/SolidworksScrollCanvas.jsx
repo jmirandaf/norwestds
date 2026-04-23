@@ -5,17 +5,16 @@ import { useEffect, useRef } from 'react';
 // Scroll-driven frame animation for SolidWorks image sequences.
 //
 // HOW TO ADD REAL FRAMES:
-//   1. In SolidWorks: Animation → Save Animation → PNG sequence (e.g. frame_000.png…)
-//   2. Place all frames in /public/sw-frames/ (or import them as modules)
-//   3. Build the array:
-//        const FRAMES = Array.from({ length: 120 }, (_, i) =>
+//   1. In SolidWorks: Animation → Save Animation → PNG sequence (frame_000.png…)
+//   2. Place frames in /public/sw-frames/
+//   3. Build the array in Projects.jsx:
+//        const SW_FRAMES = Array.from({ length: 120 }, (_, i) =>
 //          `/sw-frames/frame_${String(i).padStart(3, '0')}.png`
 //        );
 //   4. Pass to component:
-//        <SolidworksScrollCanvas frames={FRAMES} scrollHeight={4} />
+//        <SolidworksScrollCanvas frames={SW_FRAMES} scrollHeight={4} />
 //
-// The `scrollHeight` prop controls how many viewport-heights tall the scroll
-// section is (default 3 → 300vh). More frames → increase scrollHeight.
+// `scrollHeight` controls how many viewport-heights tall the scroll section is.
 // ────────────────────────────────────────────────────────────────────────────
 
 export default function SolidworksScrollCanvas({ frames = [], scrollHeight = 3 }) {
@@ -27,12 +26,11 @@ export default function SolidworksScrollCanvas({ frames = [], scrollHeight = 3 }
   // Pre-load frames when provided
   useEffect(() => {
     if (!frames.length) { imagesRef.current = []; return; }
-    const imgs = frames.map(src => {
+    imagesRef.current = frames.map(src => {
       const img = new Image();
       img.src = src;
       return img;
     });
-    imagesRef.current = imgs;
   }, [frames]);
 
   useEffect(() => {
@@ -43,21 +41,12 @@ export default function SolidworksScrollCanvas({ frames = [], scrollHeight = 3 }
     const ctx = canvas.getContext('2d');
     const dpr = window.devicePixelRatio || 1;
 
-    const setSize = () => {
-      const r = canvas.getBoundingClientRect();
-      canvas.width = Math.round(r.width * dpr);
-      canvas.height = Math.round(r.height * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      render(progressRef.current);
-    };
-
-    const ro = new ResizeObserver(setSize);
-    ro.observe(canvas);
-    setSize();
+    // ── All functions defined first to avoid temporal-dead-zone errors ──
 
     const drawPlaceholder = (p) => {
       const W = canvas.width / dpr;
       const H = canvas.height / dpr;
+      if (W <= 0 || H <= 0) return;
       const cx = W / 2;
       const cy = H / 2;
 
@@ -91,7 +80,6 @@ export default function SolidworksScrollCanvas({ frames = [], scrollHeight = 3 }
       ctx.fillStyle = glow;
       ctx.beginPath(); ctx.arc(cx, cy, 140, 0, Math.PI * 2); ctx.fill();
 
-      // Scroll-driven rotation angle
       const angle = p * Math.PI * 3;
 
       // Outer ring
@@ -99,7 +87,7 @@ export default function SolidworksScrollCanvas({ frames = [], scrollHeight = 3 }
       ctx.lineWidth = 1;
       ctx.beginPath(); ctx.arc(cx, cy, 110, 0, Math.PI * 2); ctx.stroke();
 
-      // Rotating tick marks
+      // Tick marks
       for (let i = 0; i < 16; i++) {
         const theta = angle + (i / 16) * Math.PI * 2;
         const major = i % 4 === 0;
@@ -112,7 +100,7 @@ export default function SolidworksScrollCanvas({ frames = [], scrollHeight = 3 }
         ctx.stroke();
       }
 
-      // Mid ring (counter-rotates)
+      // Mid ring
       ctx.strokeStyle = 'rgba(18,166,204,0.35)';
       ctx.lineWidth = 1.5;
       ctx.beginPath(); ctx.arc(cx, cy, 75, 0, Math.PI * 2); ctx.stroke();
@@ -134,7 +122,7 @@ export default function SolidworksScrollCanvas({ frames = [], scrollHeight = 3 }
       ctx.lineWidth = 1;
       ctx.beginPath(); ctx.arc(cx, cy, 30, 0, Math.PI * 2); ctx.stroke();
 
-      // Center dot
+      // Center dot with glow
       const dotGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, 10);
       dotGlow.addColorStop(0, 'rgba(18,166,204,1)');
       dotGlow.addColorStop(1, 'rgba(18,166,204,0)');
@@ -143,7 +131,7 @@ export default function SolidworksScrollCanvas({ frames = [], scrollHeight = 3 }
       ctx.fillStyle = '#12A6CC';
       ctx.beginPath(); ctx.arc(cx, cy, 4, 0, Math.PI * 2); ctx.fill();
 
-      // Horizontal scan line
+      // Scan line
       const scanY = H * p;
       const sg = ctx.createLinearGradient(0, scanY - 50, 0, scanY + 50);
       sg.addColorStop(0, 'rgba(18,166,204,0)');
@@ -165,7 +153,7 @@ export default function SolidworksScrollCanvas({ frames = [], scrollHeight = 3 }
 
       // Frame counter
       ctx.fillStyle = 'rgba(18,166,204,0.55)';
-      ctx.font = `11px "JetBrains Mono", monospace`;
+      ctx.font = '11px "JetBrains Mono", monospace';
       ctx.textAlign = 'left';
       ctx.fillText(`FRAME  ${String(Math.round(p * 100)).padStart(3, '0')} / 100`, bP, H - bP);
 
@@ -206,6 +194,15 @@ export default function SolidworksScrollCanvas({ frames = [], scrollHeight = 3 }
       drawPlaceholder(p);
     };
 
+    const setSize = () => {
+      const r = canvas.getBoundingClientRect();
+      if (r.width === 0 || r.height === 0) return;
+      canvas.width = Math.round(r.width * dpr);
+      canvas.height = Math.round(r.height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      render(progressRef.current);
+    };
+
     const onScroll = () => {
       const rect = container.getBoundingClientRect();
       const scrollable = container.offsetHeight - window.innerHeight;
@@ -215,6 +212,10 @@ export default function SolidworksScrollCanvas({ frames = [], scrollHeight = 3 }
       render(p);
     };
 
+    // ── Wire up after all functions are defined ──
+    const ro = new ResizeObserver(setSize);
+    ro.observe(canvas);
+    setSize();
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
 
@@ -231,7 +232,6 @@ export default function SolidworksScrollCanvas({ frames = [], scrollHeight = 3 }
           ref={canvasRef}
           style={{ display: 'block', width: '100%', height: '100%' }}
         />
-        {/* Scroll hint */}
         <div style={{
           position: 'absolute',
           bottom: 32,
