@@ -32,6 +32,7 @@ export default function Navbar() {
       '/team': () => import('../pages/Team.jsx'),
       '/contact': () => import('../pages/Contact.jsx'),
       '/training': () => import('../pages/TrainingCenter.jsx'),
+      '/portal': () => import('../pages/portal/PortalHome.jsx'),
       '/portal/designpro': () => import('../pages/portal/PortalDesignPro.jsx'),
     };
     const importer = prefetchMap[href];
@@ -58,9 +59,10 @@ export default function Navbar() {
       ],
     },
     {
-      label: t('nav.tools'),
-      href: '/portal/designpro',
+      label: t('nav.portal'),
+      href: '/portal',
       links: [
+        { label: t('nav.portalClient'), href: '/portal' },
         { label: t('nav.designPro'), href: '/portal/designpro' },
       ],
     },

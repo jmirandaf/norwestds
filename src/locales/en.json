@@ -11,7 +11,9 @@
     "servicesField": "Field Services",
     "servicesTraining": "Training Center",
     "tools": "Tools",
-    "designPro": "DesignPro Portal",
+    "portal": "Portal",
+    "portalClient": "Client Portal",
+    "designPro": "DesignPro",
     "getStarted": "Get Started"
   },
   "home": {
