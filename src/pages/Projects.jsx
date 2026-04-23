@@ -2,6 +2,13 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import useMeta from '../hooks/useMeta';
 import PageLayout from '../layout/PageLayout';
+import SolidworksScrollCanvas from '../components/SolidworksScrollCanvas';
+
+// To add real SolidWorks frames, build the array here and pass it as `frames`:
+// const SW_FRAMES = Array.from({ length: 120 }, (_, i) =>
+//   `/sw-frames/frame_${String(i).padStart(3, '0')}.png`
+// );
+const SW_FRAMES = [];
 
 const projects = [
   {
@@ -52,6 +59,20 @@ export default function Projects() {
           <p className="ns-page-lead">Conoce algunos de nuestros casos de éxito en implementación de soluciones de automatización industrial.</p>
         </div>
       </div>
+
+      {/* ── SOLIDWORKS ANIMATION ── */}
+      <section className="ns-section--dark ns-section--tight">
+        <div className="ns-section-inner">
+          <div className="ns-eyebrow"><span className="ns-eyebrow-dot" />Ingeniería 3D</div>
+          <h2 className="ns-section-title" style={{ color: '#fff', marginBottom: 8 }}>
+            Diseño e Ingeniería en SolidWorks
+          </h2>
+          <p className="ns-section-lead" style={{ marginBottom: 0 }}>
+            Cada proyecto parte de un modelo 3D detallado. Desplázate para explorar el proceso de diseño.
+          </p>
+        </div>
+      </section>
+      <SolidworksScrollCanvas frames={SW_FRAMES} scrollHeight={3} />
 
       {/* ── PROYECTOS ── */}
       <section className="ns-section">
