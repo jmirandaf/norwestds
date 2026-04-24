@@ -30,6 +30,14 @@ const TOOLS_NAV = [
     to: '/portal/designpro', label: 'DesignPro',
     icon: <><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></>,
   },
+  {
+    to: '/portal/roi', label: 'Calc. ROI',
+    icon: <><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></>,
+  },
+  {
+    to: '/portal/safety', label: 'Safety / PL',
+    icon: <><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></>,
+  },
 ]
 
 function NavIcon({ d }) {
