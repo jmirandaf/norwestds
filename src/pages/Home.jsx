@@ -50,9 +50,9 @@ export default function Home() {
   const { t } = useTranslation();
 
   useMeta({
-    title: 'Norwest DS | Automatización a la medida',
-    description: 'Celdas robóticas, visión artificial, pick-and-place e integración industrial.',
-    ogImage: '/og-default.jpg',
+    title: 'Automatización Industrial Tijuana | Norwest Dynamic Systems',
+    description: 'Empresa de automatización industrial en Tijuana, BC. Integradores certificados FANUC, visión artificial Keyence/Cognex, control PLC/SCADA. Proyectos en México y San Diego, CA.',
+    ogImage: 'https://norwestds.com/og-default.jpg',
     url: 'https://norwestds.com/',
   });
 

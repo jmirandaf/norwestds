@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /portal
+Disallow: /lms
+Disallow: /dashboard
+Disallow: /login
+Disallow: /register
+Disallow: /invite
+Disallow: /forgot-password
+
+Sitemap: https://norwestds.com/sitemap.xml

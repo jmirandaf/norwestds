@@ -7,8 +7,8 @@ import ChromaGrid from '../components/bits/ChromaGrid';
 export default function Team() {
   const { t } = useTranslation();
   useMeta({
-    title: 'Equipo | Norwest DS',
-    description: 'Conoce al equipo de Norwest Dynamic Systems',
+    title: 'Nuestro Equipo | Norwest DS Tijuana',
+    description: 'Conoce al equipo de ingenieros especializados en robótica, visión artificial y control industrial de Norwest Dynamic Systems en Tijuana, BC.',
     url: 'https://norwestds.com/team',
   });
 

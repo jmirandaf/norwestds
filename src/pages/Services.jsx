@@ -17,8 +17,8 @@ const SERVICE_ICONS = [
 export default function Services() {
   const { t } = useTranslation();
   useMeta({
-    title: 'Servicios | Norwest DS',
-    description: 'Soluciones de automatización industrial: robótica, visión, control, PLCs y más.',
+    title: 'Servicios de Automatización Industrial en Tijuana | Norwest DS',
+    description: 'Robótica FANUC, visión artificial, control industrial y diseño eléctrico. Servicio en Tijuana, BC y San Diego, CA. 8+ años de experiencia.',
     url: 'https://norwestds.com/services',
   });
 

@@ -20,8 +20,8 @@ const whyUs = [
 export default function About() {
   const { t } = useTranslation();
   useMeta({
-    title: 'Nosotros | Norwest DS',
-    description: 'Equipo multidisciplinario con enfoque en resultados.',
+    title: 'Quiénes Somos | Norwest DS — Integradora en Tijuana',
+    description: 'Equipo de ingenieros especializados en automatización industrial. 8+ años de experiencia. Sede en Tijuana, BC con presencia en San Diego, CA.',
     url: 'https://norwestds.com/about',
   });
 
