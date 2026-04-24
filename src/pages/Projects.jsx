@@ -44,8 +44,8 @@ const projects = [
 export default function Projects() {
   const { t } = useTranslation();
   useMeta({
-    title: 'Proyectos | Norwest DS',
-    description: 'Casos reales de integración y automatización.',
+    title: 'Proyectos de Automatización Industrial | Norwest DS Tijuana',
+    description: '10+ proyectos exitosos en automotriz Tier 1, industria médica, manufactura electrónica y alimentos. Casos de éxito en México y EUA.',
     url: 'https://norwestds.com/projects',
   });
 

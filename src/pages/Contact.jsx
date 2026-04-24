@@ -40,8 +40,8 @@ const contactMethods = [
 export default function Contact() {
   const { t } = useTranslation();
   useMeta({
-    title: 'Contacto | Norwest DS',
-    description: 'Cuéntanos tu reto y lo convertimos en solución.',
+    title: 'Contacto | Norwest Dynamic Systems Tijuana',
+    description: 'Contáctanos para tu proyecto de automatización. Tijuana, BC · San Diego, CA · +52 664 685 3430 · ventas@norwestds.com',
     url: 'https://norwestds.com/contact',
   });
 
