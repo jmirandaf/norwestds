@@ -16,6 +16,8 @@ const AcceptInvite = lazy(() => import('./pages/AcceptInvite.jsx'))
 const Register = lazy(() => import('./pages/Register.jsx'))
 const Dashboard = lazy(() => import('./pages/Dashboard.jsx'))
 const NotFound = lazy(() => import('./pages/NotFound.jsx'))
+
+// Portal
 const PortalHome = lazy(() => import('./pages/portal/PortalHome.jsx'))
 const PortalProjects = lazy(() => import('./pages/portal/PortalProjects.jsx'))
 const PortalSchedule = lazy(() => import('./pages/portal/PortalSchedule.jsx'))
@@ -23,6 +25,13 @@ const PortalDesignPro = lazy(() => import('./pages/portal/PortalDesignPro.jsx'))
 const PortalDownloads = lazy(() => import('./pages/portal/PortalDownloads.jsx'))
 const PortalSupport = lazy(() => import('./pages/portal/PortalSupport.jsx'))
 const PortalInvites = lazy(() => import('./pages/portal/PortalInvites.jsx'))
+const PortalROI = lazy(() => import('./pages/portal/PortalROI.jsx'))
+const PortalSafety = lazy(() => import('./pages/portal/PortalSafety.jsx'))
+
+// LMS — Training Center (rol: estudiante)
+const LMSHome = lazy(() => import('./pages/lms/LMSHome.jsx'))
+const LMSCourse = lazy(() => import('./pages/lms/LMSCourse.jsx'))
+const LMSLesson = lazy(() => import('./pages/lms/LMSLesson.jsx'))
 
 function RouteFallback() {
   return <div className="route-loading">Cargando…</div>
@@ -107,10 +116,52 @@ export default function App() {
         }
       />
       <Route
+        path="/portal/roi"
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'pm', 'client']}>
+            <PortalROI />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/portal/safety"
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'pm', 'client']}>
+            <PortalSafety />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/portal/admin/invites"
         element={
           <ProtectedRoute allowedRoles={['admin']}>
             <PortalInvites />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* LMS — Training Center (rol: estudiante + admin) */}
+      <Route
+        path="/lms"
+        element={
+          <ProtectedRoute allowedRoles={['estudiante', 'admin']}>
+            <LMSHome />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/lms/course/:courseId"
+        element={
+          <ProtectedRoute allowedRoles={['estudiante', 'admin']}>
+            <LMSCourse />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/lms/lesson/:courseId/:lessonId"
+        element={
+          <ProtectedRoute allowedRoles={['estudiante', 'admin']}>
+            <LMSLesson />
           </ProtectedRoute>
         }
       />
