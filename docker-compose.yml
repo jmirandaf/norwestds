@@ -97,6 +97,7 @@ services:
       PORT: 5432
       USER: ${POSTGRES_USER}
       PASSWORD: ${POSTGRES_PASSWORD}
+      ADMIN_PASSWD: ${ODOO_ADMIN_PASSWORD}
     volumes:
       - odoo-data:/var/lib/odoo
     depends_on:
