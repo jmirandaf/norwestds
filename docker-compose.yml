@@ -92,7 +92,7 @@ services:
   # ── CRM ───────────────────────────────────────────────────────────
   odoo:
     image: odoo:17
-    command: odoo --db-filter=norwestds --no-database-list
+    command: odoo --db-filter=norwestds_crm --no-database-list
     environment:
       HOST: postgres
       PORT: 5432
