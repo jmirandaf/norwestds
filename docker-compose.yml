@@ -92,13 +92,13 @@ services:
   # ── CRM ───────────────────────────────────────────────────────────
   odoo:
     image: odoo:17
+    command: odoo --db-filter=norwestds --no-database-list
     environment:
       HOST: postgres
       PORT: 5432
       USER: ${POSTGRES_USER}
       PASSWORD: ${POSTGRES_PASSWORD}
       ADMIN_PASSWD: ${ODOO_ADMIN_PASSWORD}
-      DATABASE: norwestds
     volumes:
       - odoo-data:/var/lib/odoo
     depends_on:
