@@ -1,10 +1,8 @@
-FROM ubuntu:24.04
+FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# System packages + FreeCAD (headless via xvfb)
-# universe repo required for freecad on Ubuntu 24.04
-# libgl1-mesa-glx was renamed to libgl1 in Ubuntu 22.04+
+# FreeCAD está en universe en Ubuntu 22.04 (removido de 24.04)
 RUN apt-get update && apt-get install -y software-properties-common \
     && add-apt-repository universe \
     && apt-get update && apt-get install -y \
@@ -13,7 +11,7 @@ RUN apt-get update && apt-get install -y software-properties-common \
     python3-pip \
     wget \
     xvfb \
-    libgl1 \
+    libgl1-mesa-glx \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
