@@ -1,0 +1,113 @@
+name: norwestds
+
+services:
+
+  # ── Reverse proxy + SSL ────────────────────────────────────────────
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - certbot-certs:/etc/letsencrypt:ro
+      - certbot-www:/var/www/certbot
+    depends_on:
+      - portal-api
+      - designpro-api
+      - odoo
+    restart: unless-stopped
+
+  # Auto-renews Let's Encrypt certificates every 12 h
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - certbot-certs:/etc/letsencrypt
+      - certbot-www:/var/www/certbot
+    entrypoint: >
+      /bin/sh -c "trap exit TERM;
+        while :; do
+          certbot renew --webroot -w /var/www/certbot --quiet;
+          sleep 12h & wait $${!};
+        done"
+    restart: unless-stopped
+
+  # ── Shared database ────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./infra/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Portal API (Express) ───────────────────────────────────────────
+  portal-api:
+    build: ./apps/portal-api
+    environment:
+      PORT: 8787
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/norwestds_portal
+      FRONTEND_URL: ${FRONTEND_URL}
+      CLERK_SECRET_KEY: ${CLERK_SECRET_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    mem_limit: 512m
+
+  # ── DesignPro API (Node http) ──────────────────────────────────────
+  designpro-api:
+    build: ./apps/designpro-api
+    environment:
+      PORT: 8788
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/norwestds_designpro
+      WORKER_SECRET: ${WORKER_SECRET}
+    volumes:
+      - uploads-data:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    mem_limit: 512m
+
+  # ── DesignPro Worker (Python + FreeCAD + Blender) ─────────────────
+  designpro-worker:
+    build: ./apps/designpro-worker
+    environment:
+      DESIGNPRO_API_URL: http://designpro-api:8788
+      WORKER_SECRET: ${WORKER_SECRET}
+      POLL_INTERVAL: 5
+    depends_on:
+      - designpro-api
+    restart: unless-stopped
+    mem_limit: 4g
+
+  # ── CRM ───────────────────────────────────────────────────────────
+  odoo:
+    image: odoo:17
+    environment:
+      HOST: postgres
+      PORT: 5432
+      USER: ${POSTGRES_USER}
+      PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - odoo-data:/var/lib/odoo
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    mem_limit: 2g
+
+volumes:
+  postgres-data:
+  uploads-data:
+  odoo-data:
+  certbot-certs:
+  certbot-www:
