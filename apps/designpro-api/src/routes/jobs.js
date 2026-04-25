@@ -1,5 +1,9 @@
+import fs from 'node:fs/promises'
+import path from 'node:path'
 import { enqueueStubJob } from '../jobs/stubProcessor.js'
-import { createJob, getJob, listJobs } from '../services/store.js'
+import { claimNextJob, createArtifact, createJob, getJob, listJobs, updateJob } from '../services/store.js'
+
+const UPLOAD_DIR = path.join(process.cwd(), 'uploads')
 
 const ALLOWED_TYPES = new Set(['structure_generate', 'structure_validate', 'estimate_preview'])
 const ALLOWED_PRIORITIES = new Set(['low', 'normal', 'high'])
@@ -77,4 +81,50 @@ export async function getJobResultRoute(id) {
       generatedAt: job.finishedAt,
     },
   }
+}
+
+// ─── Worker routes ─────────────────────────────────────────────────
+
+export async function workerClaimRoute() {
+  const job = await claimNextJob()
+  if (!job) return { status: 204, body: null }
+  return { status: 200, body: job }
+}
+
+export async function workerUploadRoute(id, reqBody) {
+  const job = await getJob(id)
+  if (!job) return { status: 404, body: { error: 'Job not found' } }
+  if (job.status !== 'processing') return { status: 409, body: { error: 'Job is not processing' } }
+
+  const { kind, name, data } = reqBody
+  if (!kind || !name || !data) return { status: 400, body: { error: 'kind, name, and data are required' } }
+
+  const safeFilename = `${id}_${name.replace(/[^a-zA-Z0-9._-]/g, '_')}`
+  await fs.mkdir(UPLOAD_DIR, { recursive: true })
+  await fs.writeFile(path.join(UPLOAD_DIR, safeFilename), Buffer.from(data, 'base64'))
+
+  const artifact = await createArtifact({ jobId: id, kind, name, url: `/files/${safeFilename}` })
+  return { status: 201, body: artifact }
+}
+
+export async function workerCompleteRoute(id, reqBody) {
+  const job = await getJob(id)
+  if (!job) return { status: 404, body: { error: 'Job not found' } }
+  const updated = await updateJob(id, {
+    status: 'done',
+    finishedAt: new Date(),
+    params: { ...(job.params || {}), result: reqBody.result || {} },
+  })
+  return { status: 200, body: updated }
+}
+
+export async function workerFailRoute(id, reqBody) {
+  const job = await getJob(id)
+  if (!job) return { status: 404, body: { error: 'Job not found' } }
+  const updated = await updateJob(id, {
+    status: 'failed',
+    error: String(reqBody.error || 'Worker reported failure'),
+    finishedAt: new Date(),
+  })
+  return { status: 200, body: updated }
 }

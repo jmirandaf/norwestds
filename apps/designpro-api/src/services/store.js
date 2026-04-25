@@ -61,3 +61,24 @@ export async function appendArtifacts(id, newArtifacts = []) {
 
   return getJob(id)
 }
+
+export async function createArtifact(data) {
+  return prisma.designProArtifact.create({ data })
+}
+
+export async function claimNextJob() {
+  const job = await prisma.designProJob.findFirst({
+    where: { status: 'queued' },
+    orderBy: { createdAt: 'asc' },
+  })
+  if (!job) return null
+  try {
+    return await prisma.designProJob.update({
+      where: { id: job.id, status: 'queued' },
+      data: { status: 'processing', startedAt: new Date() },
+      include: { artifacts: { orderBy: { createdAt: 'asc' } } },
+    })
+  } catch {
+    return null
+  }
+}

@@ -1,11 +1,25 @@
+import fs from 'node:fs/promises'
 import http from 'node:http'
+import path from 'node:path'
 import { catalogs } from './routes/catalogs.js'
 import {
   createJobRoute,
   getJobResultRoute,
   getJobRoute,
   listJobsRoute,
+  workerClaimRoute,
+  workerCompleteRoute,
+  workerFailRoute,
+  workerUploadRoute,
 } from './routes/jobs.js'
+
+const UPLOAD_DIR = path.join(process.cwd(), 'uploads')
+const WORKER_SECRET = process.env.WORKER_SECRET || ''
+
+function isWorkerAuth(req) {
+  if (!WORKER_SECRET) return true
+  return req.headers['x-worker-secret'] === WORKER_SECRET
+}
 
 function json(res, status, body) {
   res.writeHead(status, {
@@ -17,12 +31,12 @@ function json(res, status, body) {
   res.end(JSON.stringify(body))
 }
 
-function parseJsonBody(req) {
+function parseJsonBody(req, maxBytes = 1_000_000) {
   return new Promise((resolve, reject) => {
     let raw = ''
     req.on('data', (chunk) => {
       raw += chunk
-      if (raw.length > 1_000_000) {
+      if (raw.length > maxBytes) {
         reject(new Error('Payload too large'))
       }
     })
@@ -85,6 +99,87 @@ const server = http.createServer(async (req, res) => {
   if (method === 'GET' && jobMatch) {
     const response = await getJobRoute(jobMatch[1])
     return json(res, response.status, response.body)
+  }
+
+  // ── Worker endpoints ─────────────────────────────────────────────
+
+  if (method === 'GET' && pathname === '/designpro/jobs/next') {
+    if (!isWorkerAuth(req)) return json(res, 401, { error: 'Unauthorized' })
+    const response = await workerClaimRoute()
+    if (response.status === 204) {
+      res.writeHead(204, { 'access-control-allow-origin': '*' })
+      return res.end()
+    }
+    return json(res, response.status, response.body)
+  }
+
+  const uploadMatch = pathname.match(/^\/designpro\/jobs\/([^/]+)\/upload$/)
+  if (method === 'POST' && uploadMatch) {
+    if (!isWorkerAuth(req)) return json(res, 401, { error: 'Unauthorized' })
+    try {
+      const body = await parseJsonBody(req, 50_000_000)
+      const response = await workerUploadRoute(uploadMatch[1], body)
+      return json(res, response.status, response.body)
+    } catch (error) {
+      return json(res, 400, { error: String(error.message || error) })
+    }
+  }
+
+  const completeMatch = pathname.match(/^\/designpro\/jobs\/([^/]+)\/complete$/)
+  if (method === 'POST' && completeMatch) {
+    if (!isWorkerAuth(req)) return json(res, 401, { error: 'Unauthorized' })
+    try {
+      const body = await parseJsonBody(req)
+      const response = await workerCompleteRoute(completeMatch[1], body)
+      return json(res, response.status, response.body)
+    } catch (error) {
+      return json(res, 400, { error: String(error.message || error) })
+    }
+  }
+
+  const failMatch = pathname.match(/^\/designpro\/jobs\/([^/]+)\/fail$/)
+  if (method === 'POST' && failMatch) {
+    if (!isWorkerAuth(req)) return json(res, 401, { error: 'Unauthorized' })
+    try {
+      const body = await parseJsonBody(req)
+      const response = await workerFailRoute(failMatch[1], body)
+      return json(res, response.status, response.body)
+    } catch (error) {
+      return json(res, 400, { error: String(error.message || error) })
+    }
+  }
+
+  // ── Static file serving ──────────────────────────────────────────
+
+  const fileMatch = pathname.match(/^\/files\/([^/]+)$/)
+  if (method === 'GET' && fileMatch) {
+    const filename = decodeURIComponent(fileMatch[1])
+    if (filename.includes('..') || /[/\\]/.test(filename)) {
+      return json(res, 400, { error: 'Invalid filename' })
+    }
+    try {
+      const data = await fs.readFile(path.join(UPLOAD_DIR, filename))
+      const ext = path.extname(filename).toLowerCase()
+      const contentType = {
+        '.json': 'application/json',
+        '.step': 'application/octet-stream',
+        '.stp': 'application/octet-stream',
+        '.glb': 'model/gltf-binary',
+        '.gltf': 'model/gltf+json',
+        '.pdf': 'application/pdf',
+        '.png': 'image/png',
+        '.jpg': 'image/jpeg',
+      }[ext] || 'application/octet-stream'
+      res.writeHead(200, {
+        'content-type': contentType,
+        'content-length': data.length,
+        'access-control-allow-origin': '*',
+        'cache-control': 'public, max-age=86400',
+      })
+      return res.end(data)
+    } catch {
+      return json(res, 404, { error: 'File not found' })
+    }
   }
 
   return json(res, 404, { error: 'Not Found' })

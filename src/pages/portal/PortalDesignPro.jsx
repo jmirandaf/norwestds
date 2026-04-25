@@ -8,105 +8,139 @@ import {
   listDesignProJobs,
 } from '../../services/designProService'
 
+// ─── Estructura definitions ────────────────────────────────────────
 const STRUCTURE_DEFS = [
   {
     id: 'rack-selectivo',
     name: 'Rack Selectivo',
     desc: 'Acceso directo a cada pallet',
-    icon: (
-      <>
-        <rect x="2" y="3" width="20" height="4" rx="1"/>
-        <rect x="2" y="10" width="20" height="4" rx="1"/>
-        <rect x="2" y="17" width="20" height="4" rx="1"/>
-        <line x1="7" y1="3" x2="7" y2="21"/>
-        <line x1="17" y1="3" x2="17" y2="21"/>
-      </>
-    ),
+    params: ['provider', 'profileSeries', 'loadClass', 'panelType', 'doorType'],
+    icon: <><rect x="2" y="4" width="20" height="3" rx="1"/><rect x="2" y="10" width="20" height="3" rx="1"/><rect x="2" y="16" width="20" height="3" rx="1"/><line x1="7" y1="4" x2="7" y2="21" strokeWidth="1"/><line x1="17" y1="4" x2="17" y2="21" strokeWidth="1"/></>,
   },
   {
     id: 'rack-drivein',
     name: 'Rack Drive-In',
     desc: 'Máxima densidad de almacenamiento',
-    icon: (
-      <>
-        <path d="M3 3h18v18H3z" strokeWidth="1.5"/>
-        <path d="M3 9h18M3 15h18M9 3v18M15 3v18" strokeWidth="1"/>
-      </>
-    ),
+    params: ['provider', 'profileSeries', 'loadClass', 'levels'],
+    icon: <><rect x="2" y="2" width="20" height="20" rx="1" strokeWidth="1.5"/><line x1="8" y1="2" x2="8" y2="22" strokeWidth="1"/><line x1="16" y1="2" x2="16" y2="22" strokeWidth="1"/><line x1="2" y1="8" x2="22" y2="8" strokeWidth="1"/><line x1="2" y1="14" x2="22" y2="14" strokeWidth="1"/></>,
   },
   {
     id: 'mezzanine',
     name: 'Mezzanine',
     desc: 'Plataforma elevada de trabajo',
-    icon: (
-      <>
-        <rect x="2" y="14" width="20" height="3" rx="1"/>
-        <path d="M6 14V5M18 14V5"/>
-        <path d="M2 17v4M22 17v4"/>
-        <line x1="6" y1="8" x2="18" y2="8" strokeDasharray="2 2"/>
-      </>
-    ),
+    params: ['provider', 'profileSeries', 'loadClass', 'floorType', 'handrailType', 'stairType', 'panelType'],
+    icon: <><rect x="2" y="13" width="20" height="3" rx="1"/><path d="M6 13V5M18 13V5"/><path d="M2 16v5M22 16v5"/><line x1="6" y1="8" x2="18" y2="8" strokeDasharray="3 2"/></>,
   },
   {
     id: 'conveyor-line',
     name: 'Línea Conveyor',
     desc: 'Transporte automatizado de material',
-    icon: (
-      <>
-        <rect x="2" y="10" width="20" height="4" rx="1"/>
-        <circle cx="6" cy="18" r="2"/>
-        <circle cx="18" cy="18" r="2"/>
-        <path d="M6 16v-2M18 16v-2"/>
-        <path d="M8 7l4-4 4 4" strokeWidth="1.5"/>
-      </>
-    ),
+    params: ['conveyorType', 'beltMaterial', 'driveType', 'loadClass'],
+    icon: <><rect x="2" y="9" width="20" height="5" rx="1"/><circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><line x1="5" y1="15.5" x2="5" y2="18"/><line x1="19" y1="15.5" x2="19" y2="18"/></>,
+  },
+  {
+    id: 'mesa-trabajo',
+    name: 'Mesa de Trabajo',
+    desc: 'Superficie de trabajo industrial',
+    params: ['provider', 'profileSeries', 'loadClass', 'tableTop', 'adjustable'],
+    icon: <><rect x="2" y="8" width="20" height="3" rx="1"/><path d="M5 11v9M19 11v9"/><line x1="5" y1="17" x2="9" y2="17"/><line x1="19" y1="17" x2="15" y2="17"/></>,
+  },
+  {
+    id: 'celda-robotica',
+    name: 'Celda Robótica',
+    desc: 'Enclosure para celda de robot industrial',
+    params: ['provider', 'profileSeries', 'panelType', 'doorType', 'robotClearance'],
+    icon: <><rect x="2" y="2" width="20" height="20" rx="2" strokeWidth="1.5"/><circle cx="12" cy="14" r="3"/><path d="M12 11V7M10 7h4"/><path d="M9.5 16.5L7 19M14.5 16.5L17 19"/></>,
+  },
+  {
+    id: 'guardas-seguridad',
+    name: 'Guardas de Seguridad',
+    desc: 'Cercado perimetral de seguridad',
+    params: ['provider', 'profileSeries', 'panelType', 'doorType', 'plLevel'],
+    icon: <><path d="M12 2l8 3v7c0 5-8 10-8 10S4 17 4 12V5l8-3z" strokeWidth="1.5"/><path d="M9 12l2 2 4-4" strokeWidth="2"/></>,
+  },
+  {
+    id: 'armario-electrico',
+    name: 'Armario Eléctrico',
+    desc: 'Gabinete de control y potencia',
+    params: ['cabinetType', 'ipRating', 'mountingPlate', 'cooling'],
+    icon: <><rect x="4" y="2" width="16" height="20" rx="2" strokeWidth="1.5"/><rect x="7" y="5" width="4" height="5" rx="1" strokeWidth="1"/><rect x="13" y="5" width="4" height="5" rx="1" strokeWidth="1"/><line x1="7" y1="14" x2="17" y2="14"/><line x1="7" y1="17" x2="13" y2="17"/></>,
+  },
+  {
+    id: 'estructura-soporte',
+    name: 'Estructura de Soporte',
+    desc: 'Marco de soporte para equipos',
+    params: ['provider', 'profileSeries', 'loadClass', 'mountingType'],
+    icon: <><path d="M4 20V8l8-6 8 6v12"/><path d="M9 20v-6h6v6"/><line x1="4" y1="13" x2="20" y2="13" strokeWidth="1"/></>,
+  },
+  {
+    id: 'plataforma-elevacion',
+    name: 'Plataforma de Elevación',
+    desc: 'Plataforma elevada de acceso',
+    params: ['provider', 'profileSeries', 'loadClass', 'handrailType', 'stairType'],
+    icon: <><rect x="2" y="10" width="20" height="3" rx="1"/><path d="M2 10L8 4M22 10l-6-6"/><path d="M5 13v7M19 13v7"/><path d="M5 17h14" strokeWidth="1"/></>,
   },
 ]
 
-const PROVIDER_LABELS  = { tjsd: 'TJSD', modular: 'Modular', item: 'item' }
-const SERIES_LABELS    = { '30': 'Serie 30 (30×30 mm)', '40': 'Serie 40 (40×40 mm)', '45': 'Serie 45 (45×45 mm)' }
-const LOAD_LABELS      = { light: 'Ligera (< 50 kg)', medium: 'Media (50–150 kg)', heavy: 'Pesada (> 150 kg)' }
-const PANEL_LABELS     = { none: 'Sin panel', mesh: 'Malla metálica', polycarbonate: 'Policarbonato' }
-const DOOR_LABELS      = { none: 'Sin puerta', hinged: 'Bisagra', sliding: 'Corredera' }
-const STATUS_LABELS    = { queued: 'En cola', processing: 'Procesando', done: 'Completado', failed: 'Error' }
+// ─── Param definitions ─────────────────────────────────────────────
+const PARAM_DEFS = {
+  provider:       { label: 'Proveedor',          hint: 'Sistema de perfiles',          options: { tjsd: 'TJSD', modular: 'Modular', item: 'item' },                                                              default: 'tjsd' },
+  profileSeries:  { label: 'Serie de perfil',    hint: 'Sección transversal',          options: { '30': 'Serie 30 (30×30 mm)', '40': 'Serie 40 (40×40 mm)', '45': 'Serie 45 (45×45 mm)' },                      default: '40' },
+  loadClass:      { label: 'Clase de carga',     hint: 'Capacidad estructural',        options: { light: 'Ligera (< 50 kg)', medium: 'Media (50–150 kg)', heavy: 'Pesada (> 150 kg)' },                          default: 'medium' },
+  panelType:      { label: 'Panel lateral',      hint: 'Tipo de cerramiento',          options: { none: 'Sin panel', mesh: 'Malla metálica', polycarbonate: 'Policarbonato', solid: 'Chapa sólida' },            default: 'none' },
+  doorType:       { label: 'Puerta de acceso',   hint: 'Tipo de acceso',               options: { none: 'Sin puerta', hinged: 'Bisagra', sliding: 'Corredera', swinging: 'Vaivén' },                             default: 'none' },
+  levels:         { label: 'Niveles',            hint: 'Número de niveles de almacenamiento', options: { '2': '2 niveles', '3': '3 niveles', '4': '4 niveles', '5': '5 niveles' },                               default: '3' },
+  floorType:      { label: 'Piso',               hint: 'Material de superficie de piso',      options: { grating: 'Rejilla metálica', chequerplate: 'Antideslizante', plywood: 'Madera contrachapada' },         default: 'grating' },
+  handrailType:   { label: 'Barandal',           hint: 'Tipo de protección lateral',   options: { none: 'Sin barandal', single: 'Simple', double: 'Doble' },                                                     default: 'single' },
+  stairType:      { label: 'Escalera',           hint: 'Tipo de escalera de acceso',   options: { none: 'Sin escalera', straight: 'Recta', alternating: 'Alternante' },                                          default: 'straight' },
+  conveyorType:   { label: 'Tipo de conveyor',   hint: 'Sistema de transporte',        options: { belt: 'Banda', roller: 'Rodillos', chain: 'Cadena', slat: 'Tablillas' },                                        default: 'belt' },
+  beltMaterial:   { label: 'Material de banda',  hint: 'Superficie de transporte',     options: { pvc: 'PVC', rubber: 'Hule', modular: 'Modular plástico', stainless: 'Acero inoxidable' },                      default: 'pvc' },
+  driveType:      { label: 'Accionamiento',      hint: 'Sistema de motor y transmisión', options: { gearmotor: 'Motorreductor', vfd: 'Variador + motor', servo: 'Servomotor' },                                  default: 'gearmotor' },
+  tableTop:       { label: 'Superficie',         hint: 'Material de la superficie de trabajo', options: { steel: 'Acero inoxidable', esd: 'Anti-estático (ESD)', wood: 'MDF', granite: 'Granito' },              default: 'steel' },
+  adjustable:     { label: 'Altura',             hint: 'Mecanismo de ajuste de altura', options: { fixed: 'Fija', manual: 'Ajuste manual', electric: 'Eléctrico' },                                              default: 'fixed' },
+  robotClearance: { label: 'Holgura de robot',   hint: 'Espacio libre sobre el robot', options: { '300': '300 mm (compacto)', '500': '500 mm (estándar)', '800': '800 mm (amplio)' },                            default: '500' },
+  plLevel:        { label: 'Nivel PL requerido', hint: 'Seguridad ISO 13849',          options: { c: 'PL c', d: 'PL d', e: 'PL e' },                                                                             default: 'd' },
+  cabinetType:    { label: 'Tipo de armario',    hint: 'Configuración del gabinete',   options: { floor: 'Piso (freestanding)', wall: 'Pared', desktop: 'Sobremesa' },                                           default: 'floor' },
+  ipRating:       { label: 'Grado IP',           hint: 'Protección polvo / agua',      options: { ip54: 'IP54', ip65: 'IP65', ip66: 'IP66', ip67: 'IP67' },                                                      default: 'ip65' },
+  mountingPlate:  { label: 'Placa de montaje',   hint: 'Configuración interna',        options: { single: 'Simple', double: 'Doble', din: 'Rieles DIN' },                                                        default: 'single' },
+  cooling:        { label: 'Climatización',      hint: 'Control de temperatura',       options: { none: 'Sin climatización', fan: 'Ventilador', ac: 'Aire acondicionado', heatExchanger: 'Intercambiador' },     default: 'fan' },
+  mountingType:   { label: 'Anclaje',            hint: 'Método de fijación',           options: { floor: 'Piso', wall: 'Pared', ceiling: 'Techo', freestanding: 'Independiente' },                               default: 'floor' },
+}
 
-const STEPS = [
-  'Tipo de estructura',
-  'Dimensiones',
-  'Opciones',
-  'Resumen',
-  'Resultado',
-]
+const STATUS_LABELS = { queued: 'En cola', processing: 'Procesando', done: 'Completado', failed: 'Error' }
+
+const STEPS = ['Tipo de estructura', 'Dimensiones', 'Opciones', 'Resumen', 'Resultado']
 
 const ARTIFACT_ICONS = {
-  bom: <><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></>,
-  step: <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></>,
-  pdf:  <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></>,
+  bom:    <><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></>,
+  step:   <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></>,
+  pdf:    <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></>,
   render: <><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></>,
+}
+
+function getDefaultOptions(structureId) {
+  const struct = STRUCTURE_DEFS.find(s => s.id === structureId)
+  const opts = {}
+  for (const p of struct?.params || []) {
+    opts[p] = PARAM_DEFS[p]?.default ?? ''
+  }
+  return opts
 }
 
 export default function PortalDesignPro() {
   const { currentUser } = useAuth()
-  const [step, setStep] = useState(0)
-  const [loading, setLoading] = useState(false)
-  const [result, setResult] = useState(null)
-  const [jobs, setJobs] = useState([])
+  const [step, setStep]           = useState(0)
+  const [loading, setLoading]     = useState(false)
+  const [error, setError]         = useState(null)
+  const [result, setResult]       = useState(null)
+  const [jobs, setJobs]           = useState([])
   const [currentJobId, setCurrentJobId] = useState(null)
-
-  const [form, setForm] = useState({
-    structureType: 'rack-selectivo',
-    provider: 'tjsd',
-    length: 1200,
-    width: 800,
-    height: 900,
-    profileSeries: '40',
-    loadClass: 'medium',
-    panelType: 'none',
-    doorType: 'none',
-  })
+  const [structureType, setStructureType] = useState('rack-selectivo')
+  const [dimensions, setDimensions] = useState({ length: 1200, width: 800, height: 900 })
+  const [options, setOptions]     = useState(getDefaultOptions('rack-selectivo'))
 
   useEffect(() => {
-    listDesignProJobs({ limit: 20 }).then(setJobs).catch(console.error)
+    listDesignProJobs({ limit: 20 }).then(setJobs).catch(() => {})
   }, [])
 
   useEffect(() => {
@@ -124,15 +158,24 @@ export default function PortalDesignPro() {
         console.error(e)
         clearInterval(timer)
         setLoading(false)
+        setError('Error al obtener el estado del job. Verifica que el servicio esté activo.')
       }
     }, 1200)
     return () => clearInterval(timer)
   }, [currentJobId])
 
-  const onChange = (k, v) => setForm(p => ({ ...p, [k]: v }))
+  const onStructureChange = (id) => {
+    setStructureType(id)
+    setOptions(getDefaultOptions(id))
+    setStep(1)
+  }
+
+  const onDim = (k, v) => setDimensions(p => ({ ...p, [k]: Number(v) || 0 }))
+  const onOpt = (k, v) => setOptions(p => ({ ...p, [k]: v }))
 
   const handleGenerate = async () => {
     setLoading(true)
+    setError(null)
     setResult(null)
     try {
       const job = await createDesignProJob({
@@ -140,22 +183,8 @@ export default function PortalDesignPro() {
         priority: 'normal',
         requesterId: currentUser?.uid || 'portal_user',
         source: 'portal',
-        projectName: `DesignPro ${new Date().toISOString().slice(0, 10)}`,
-        params: {
-          structureType: form.structureType,
-          provider: form.provider,
-          dimensions: {
-            length: Number(form.length),
-            width: Number(form.width),
-            height: Number(form.height),
-          },
-          options: {
-            profileSeries: form.profileSeries,
-            loadClass: form.loadClass,
-            panelType: form.panelType,
-            doorType: form.doorType,
-          },
-        },
+        projectName: `${STRUCTURE_DEFS.find(s => s.id === structureType)?.name} ${new Date().toISOString().slice(0, 10)}`,
+        params: { structureType, dimensions, options },
       })
       setCurrentJobId(job.id)
       setResult(job)
@@ -164,16 +193,28 @@ export default function PortalDesignPro() {
     } catch (err) {
       console.error(err)
       setLoading(false)
+      setError('No se pudo conectar con el servicio DesignPro. Verifica que el worker esté activo.')
     }
   }
 
-  const activeStruct = STRUCTURE_DEFS.find(s => s.id === form.structureType)
+  const activeStruct = STRUCTURE_DEFS.find(s => s.id === structureType)
+  const activeParams = activeStruct?.params || []
 
   return (
     <PortalLayout
       title="DesignPro by NDS"
-      subtitle="Genera especificaciones técnicas para estructuras industriales"
+      subtitle="Genera especificaciones técnicas y renders 3D para estructuras industriales"
     >
+      {error && (
+        <div className="nds-dp-error-banner">
+          <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          {error}
+          <button className="nds-dp-error-close" onClick={() => setError(null)}>✕</button>
+        </div>
+      )}
+
       <div className="nds-dp-wizard">
 
         {/* ── Stepper ── */}
@@ -201,18 +242,19 @@ export default function PortalDesignPro() {
         {/* ── Main panel ── */}
         <section className="nds-dp-panel">
 
+          {/* Step 0 — Tipo */}
           {step === 0 && (
             <>
               <div className="nds-dp-panel-header">
                 <h2 className="nds-dp-panel-title">¿Qué tipo de estructura necesitas?</h2>
-                <p className="nds-dp-panel-sub">Selecciona el tipo — avanza automáticamente al siguiente paso</p>
+                <p className="nds-dp-panel-sub">Selecciona el tipo — los parámetros se adaptan automáticamente</p>
               </div>
-              <div className="nds-dp-struct-grid">
+              <div className="nds-dp-struct-grid nds-dp-struct-grid--5col">
                 {STRUCTURE_DEFS.map(s => (
                   <button
                     key={s.id}
-                    className={`nds-dp-struct-btn${form.structureType === s.id ? ' active' : ''}`}
-                    onClick={() => { onChange('structureType', s.id); setStep(1) }}
+                    className={`nds-dp-struct-btn${structureType === s.id ? ' active' : ''}`}
+                    onClick={() => onStructureChange(s.id)}
                   >
                     <span className="nds-dp-struct-icon">
                       <svg width="26" height="26" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" aria-hidden="true">
@@ -227,65 +269,80 @@ export default function PortalDesignPro() {
             </>
           )}
 
+          {/* Step 1 — Dimensiones */}
           {step === 1 && (
             <>
               <div className="nds-dp-panel-header">
-                <h2 className="nds-dp-panel-title">Dimensiones de la estructura</h2>
-                <p className="nds-dp-panel-sub">Ingresa las dimensiones externas en milímetros</p>
+                <h2 className="nds-dp-panel-title">Dimensiones — {activeStruct?.name}</h2>
+                <p className="nds-dp-panel-sub">Dimensiones externas en milímetros</p>
               </div>
               <div className="nds-dp-dim-grid">
-                <DimField label="Largo" hint="Dimensión frontal" value={form.length} onChange={v => onChange('length', v)} />
-                <DimField label="Ancho" hint="Profundidad / lateral" value={form.width} onChange={v => onChange('width', v)} />
-                <DimField label="Alto" hint="Dimensión vertical total" value={form.height} onChange={v => onChange('height', v)} />
+                <DimField label="Largo" hint="Dimensión frontal" value={dimensions.length} onChange={v => onDim('length', v)} />
+                <DimField label="Ancho" hint="Profundidad / lateral" value={dimensions.width} onChange={v => onDim('width', v)} />
+                <DimField label="Alto" hint="Dimensión vertical total" value={dimensions.height} onChange={v => onDim('height', v)} />
               </div>
             </>
           )}
 
+          {/* Step 2 — Opciones (parametros dependientes del tipo) */}
           {step === 2 && (
             <>
               <div className="nds-dp-panel-header">
-                <h2 className="nds-dp-panel-title">Especificaciones técnicas</h2>
-                <p className="nds-dp-panel-sub">Configura los materiales y componentes de la estructura</p>
+                <h2 className="nds-dp-panel-title">Especificaciones — {activeStruct?.name}</h2>
+                <p className="nds-dp-panel-sub">{activeParams.length} parámetros para este tipo de estructura</p>
               </div>
               <div className="nds-dp-opts-grid">
-                <SelectField label="Proveedor" hint="Sistema de perfiles a utilizar" value={form.provider} onChange={v => onChange('provider', v)} options={PROVIDER_LABELS} />
-                <SelectField label="Serie de perfil" hint="Sección transversal del perfil" value={form.profileSeries} onChange={v => onChange('profileSeries', v)} options={SERIES_LABELS} />
-                <SelectField label="Clase de carga" hint="Capacidad de carga estructural" value={form.loadClass} onChange={v => onChange('loadClass', v)} options={LOAD_LABELS} />
-                <SelectField label="Panel lateral" hint="Tipo de cerramiento" value={form.panelType} onChange={v => onChange('panelType', v)} options={PANEL_LABELS} />
-                <SelectField label="Tipo de puerta" hint="Acceso a la estructura" value={form.doorType} onChange={v => onChange('doorType', v)} options={DOOR_LABELS} />
+                {activeParams.map(paramId => {
+                  const def = PARAM_DEFS[paramId]
+                  if (!def) return null
+                  return (
+                    <SelectField
+                      key={paramId}
+                      label={def.label}
+                      hint={def.hint}
+                      value={options[paramId] ?? def.default}
+                      onChange={v => onOpt(paramId, v)}
+                      options={def.options}
+                    />
+                  )
+                })}
               </div>
             </>
           )}
 
+          {/* Step 3 — Resumen */}
           {step === 3 && (
             <>
               <div className="nds-dp-panel-header">
                 <h2 className="nds-dp-panel-title">Resumen de configuración</h2>
-                <p className="nds-dp-panel-sub">Revisa los parámetros antes de generar las especificaciones</p>
+                <p className="nds-dp-panel-sub">Revisa los parámetros antes de enviar al worker</p>
               </div>
               <div className="nds-dp-summary-grid">
                 <SummaryRow label="Tipo de estructura" value={activeStruct?.name} />
-                <SummaryRow label="Proveedor" value={PROVIDER_LABELS[form.provider]} />
-                <SummaryRow label="Dimensiones" value={`${form.length} × ${form.width} × ${form.height} mm`} />
-                <SummaryRow label="Serie de perfil" value={SERIES_LABELS[form.profileSeries]} />
-                <SummaryRow label="Clase de carga" value={LOAD_LABELS[form.loadClass]} />
-                <SummaryRow label="Panel lateral" value={PANEL_LABELS[form.panelType]} />
-                <SummaryRow label="Tipo de puerta" value={DOOR_LABELS[form.doorType]} />
+                <SummaryRow label="Dimensiones" value={`${dimensions.length} × ${dimensions.width} × ${dimensions.height} mm`} />
+                {activeParams.map(paramId => {
+                  const def = PARAM_DEFS[paramId]
+                  if (!def) return null
+                  const val = options[paramId]
+                  return <SummaryRow key={paramId} label={def.label} value={def.options[val] ?? val} />
+                })}
               </div>
             </>
           )}
 
+          {/* Step 4 — Resultado */}
           {step === 4 && (
             <>
               <div className="nds-dp-panel-header">
-                <h2 className="nds-dp-panel-title">Especificaciones generadas</h2>
+                <h2 className="nds-dp-panel-title">Resultado</h2>
               </div>
 
               {loading && (
                 <div className="nds-dp-loading">
                   <div className="nds-dp-spinner" />
-                  <p>Procesando especificaciones…</p>
+                  <p>Worker procesando — FreeCAD generando modelo…</p>
                   <div className="nds-dp-progress-bar"><div className="nds-dp-progress-fill" /></div>
+                  <span className="nds-dp-loading-hint">El worker en la VM está procesando la solicitud</span>
                 </div>
               )}
 
@@ -295,22 +352,9 @@ export default function PortalDesignPro() {
                 return (
                   <>
                     <div className="nds-dp-result-kpis">
-                      <ResultKpi
-                        label="Dimensiones"
-                        value={`${dims.length}×${dims.width}×${dims.height}`}
-                        unit="mm"
-                      />
-                      <ResultKpi
-                        label="Peso estimado"
-                        value={res.weightKg != null ? res.weightKg.toFixed(1) : '—'}
-                        unit="kg"
-                        accent
-                      />
-                      <ResultKpi
-                        label="Perfiles requeridos"
-                        value={res.profileCount ?? '—'}
-                        unit="piezas"
-                      />
+                      <ResultKpi label="Dimensiones" value={`${dims.length}×${dims.width}×${dims.height}`} unit="mm" />
+                      <ResultKpi label="Peso estimado" value={res.weightKg != null ? res.weightKg.toFixed(1) : '—'} unit="kg" accent />
+                      <ResultKpi label="Perfiles requeridos" value={res.profileCount ?? '—'} unit="piezas" />
                     </div>
                     <div className="nds-dp-artifact-list">
                       <div className="nds-dp-artifact-header">Archivos generados</div>
@@ -326,7 +370,7 @@ export default function PortalDesignPro() {
                           <button
                             className="nds-dp-artifact-dl"
                             disabled={!a.url}
-                            title={a.url ? 'Descargar archivo' : 'Disponible próximamente'}
+                            title={a.url ? 'Descargar archivo' : 'Disponible cuando el worker complete el render'}
                             onClick={() => a.url && window.open(a.url)}
                           >
                             <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
@@ -334,7 +378,7 @@ export default function PortalDesignPro() {
                               <polyline points="7 10 12 15 17 10"/>
                               <line x1="12" y1="15" x2="12" y2="3"/>
                             </svg>
-                            {a.url ? 'Descargar' : 'Próximamente'}
+                            {a.url ? 'Descargar' : 'Pendiente'}
                           </button>
                         </div>
                       ))}
@@ -345,13 +389,27 @@ export default function PortalDesignPro() {
 
               {!loading && result?.status === 'failed' && (
                 <div className="nds-dp-error">
-                  <p>Ocurrió un error al procesar el job.</p>
+                  <p>{result.error || 'El worker reportó un error al procesar el job.'}</p>
                   <button className="nds-btn nds-btn-ghost" onClick={() => setStep(3)}>← Intentar de nuevo</button>
                 </div>
               )}
 
+              {!loading && result?.status === 'processing' && (
+                <div className="nds-dp-loading">
+                  <div className="nds-dp-spinner" />
+                  <p>El worker está procesando este job…</p>
+                </div>
+              )}
+
+              {!loading && result?.status === 'queued' && (
+                <div className="nds-dp-loading">
+                  <div className="nds-dp-spinner" style={{ borderTopColor: '#f59e0b' }} />
+                  <p>Job en cola — esperando worker disponible</p>
+                </div>
+              )}
+
               {!loading && !result && (
-                <p className="nds-dp-empty">Presiona "Generar especificaciones" para iniciar.</p>
+                <p className="nds-dp-empty">Presiona "Enviar al worker" para iniciar la generación.</p>
               )}
             </>
           )}
@@ -372,7 +430,7 @@ export default function PortalDesignPro() {
             )}
             {step === 3 && (
               <button className="nds-btn nds-btn-primary" onClick={handleGenerate} disabled={loading}>
-                {loading ? 'Generando…' : 'Generar especificaciones →'}
+                {loading ? 'Enviando…' : 'Enviar al worker →'}
               </button>
             )}
           </div>
@@ -383,10 +441,17 @@ export default function PortalDesignPro() {
           <div className="nds-dp-side-summary">
             <div className="nds-dp-side-title">Configuración actual</div>
             <div className="nds-dp-side-row"><span>Tipo</span><strong>{activeStruct?.name}</strong></div>
-            <div className="nds-dp-side-row"><span>Proveedor</span><strong>{PROVIDER_LABELS[form.provider]}</strong></div>
-            <div className="nds-dp-side-row"><span>Perfil</span><strong>Serie {form.profileSeries}</strong></div>
-            <div className="nds-dp-side-row"><span>Dims</span><strong>{form.length}×{form.width}×{form.height} mm</strong></div>
-            <div className="nds-dp-side-row"><span>Carga</span><strong>{LOAD_LABELS[form.loadClass]}</strong></div>
+            <div className="nds-dp-side-row"><span>Dims</span><strong>{dimensions.length}×{dimensions.width}×{dimensions.height} mm</strong></div>
+            {activeParams.slice(0, 3).map(paramId => {
+              const def = PARAM_DEFS[paramId]
+              if (!def) return null
+              return (
+                <div key={paramId} className="nds-dp-side-row">
+                  <span>{def.label}</span>
+                  <strong>{def.options[options[paramId]] ?? options[paramId]}</strong>
+                </div>
+              )
+            })}
           </div>
 
           <div className="nds-dp-side-section">
@@ -401,9 +466,7 @@ export default function PortalDesignPro() {
                 <div className="nds-dp-job-name">{j.projectName || j.type}</div>
                 <div className="nds-dp-job-meta">
                   <span>{String(j.createdAt || '').slice(0, 10)}</span>
-                  <span className={`nds-dp-badge nds-dp-badge--${j.status}`}>
-                    {STATUS_LABELS[j.status] || j.status}
-                  </span>
+                  <span className={`nds-dp-badge nds-dp-badge--${j.status}`}>{STATUS_LABELS[j.status] || j.status}</span>
                 </div>
               </button>
             ))}
@@ -415,21 +478,13 @@ export default function PortalDesignPro() {
   )
 }
 
+// ─── Sub-components ────────────────────────────────────────────────
 function DimField({ label, hint, value, onChange }) {
   return (
     <div className="nds-tool-field">
-      <label className="nds-tool-label">
-        {label}
-        <span className="nds-tool-hint">{hint}</span>
-      </label>
+      <label className="nds-tool-label">{label}<span className="nds-tool-hint">{hint}</span></label>
       <div className="nds-tool-input-wrap">
-        <input
-          type="number"
-          className="nds-tool-input"
-          value={value}
-          min={1}
-          onChange={e => onChange(e.target.value)}
-        />
+        <input type="number" className="nds-tool-input" value={value} min={1} onChange={e => onChange(e.target.value)} />
         <span className="nds-tool-unit nds-tool-unit--post">mm</span>
       </div>
     </div>
@@ -439,19 +494,10 @@ function DimField({ label, hint, value, onChange }) {
 function SelectField({ label, hint, value, onChange, options }) {
   return (
     <div className="nds-tool-field">
-      <label className="nds-tool-label">
-        {label}
-        <span className="nds-tool-hint">{hint}</span>
-      </label>
+      <label className="nds-tool-label">{label}<span className="nds-tool-hint">{hint}</span></label>
       <div className="nds-tool-input-wrap">
-        <select
-          className="nds-tool-input"
-          value={value}
-          onChange={e => onChange(e.target.value)}
-        >
-          {Object.entries(options).map(([k, v]) => (
-            <option key={k} value={k}>{v}</option>
-          ))}
+        <select className="nds-tool-input" value={value} onChange={e => onChange(e.target.value)}>
+          {Object.entries(options).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
         </select>
       </div>
     </div>
