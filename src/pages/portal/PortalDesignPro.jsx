@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import PortalLayout from '../../components/PortalLayout'
 import { useAuth } from '../../contexts/AuthContext'
+import '../../styles/tools.css'
 import {
   createDesignProJob,
   getDesignProJob,

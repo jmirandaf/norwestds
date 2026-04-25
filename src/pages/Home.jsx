@@ -228,31 +228,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── STATS BAND ── */}
-      <div className="ns-stats-band">
-        <div className="ns-stats-band-inner">
-          <div className="ns-stat-item">
-            <div className="ns-stat-num">8+</div>
-            <div className="ns-stat-label">Años de experiencia</div>
-            <div className="ns-stat-sub">Desde 2016 en la industria</div>
-          </div>
-          <div className="ns-stat-item">
-            <div className="ns-stat-num">10+</div>
-            <div className="ns-stat-label">Proyectos exitosos</div>
-            <div className="ns-stat-sub">Automotriz, médica, electrónica, alimentos</div>
-          </div>
-          <div className="ns-stat-item">
-            <div className="ns-stat-num">2</div>
-            <div className="ns-stat-label">Países</div>
-            <div className="ns-stat-sub">México · San Diego, CA</div>
-          </div>
-          <div className="ns-stat-item">
-            <div className="ns-stat-num">100%</div>
-            <div className="ns-stat-label">Certificados FANUC</div>
-            <div className="ns-stat-sub">Integrador oficial FANUC</div>
-          </div>
-        </div>
-      </div>
     </PageLayout>
   );
 }
