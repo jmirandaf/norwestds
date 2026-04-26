@@ -28,6 +28,7 @@ def build_model_freecad(params, output_path):
     """Build a parametric box model as a stand-in for the real structural geometry."""
     import FreeCAD   # noqa: F401 — only available inside FreeCAD runtime
     import Part
+    import Mesh
 
     dims = params.get('dimensions', {})
     L = float(dims.get('length', 1200))
@@ -44,8 +45,15 @@ def build_model_freecad(params, output_path):
     )
     frame = box.cut(inner)
 
+    # Export STEP (for download)
     Part.export([frame], str(output_path))
     print(f'[freecad_gen] exported STEP: {output_path} ({output_path.stat().st_size} bytes)', flush=True)
+
+    # Export STL (for Blender import — native format, no add-on needed)
+    stl_path = output_path.with_suffix('.stl')
+    mesh = Mesh.Mesh(frame.tessellate(0.1))
+    mesh.write(str(stl_path))
+    print(f'[freecad_gen] exported STL: {stl_path} ({stl_path.stat().st_size} bytes)', flush=True)
 
 
 def write_stub_step(params, output_path):
