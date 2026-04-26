@@ -53,8 +53,8 @@ export default function LMSLayout({ title, subtitle, children }) {
             {(userData?.displayName?.[0] || 'E').toUpperCase()}
           </div>
           <div>
-            <div className="nds-lms-user-name">{userData?.displayName || 'Estudiante'}</div>
-            <div className="nds-lms-user-role">Estudiante</div>
+            <div className="nds-lms-user-name">{userData?.displayName || 'Usuario'}</div>
+            <div className="nds-lms-user-role">{userData?.role === 'admin' ? 'Administrador' : 'Estudiante'}</div>
           </div>
         </div>
 

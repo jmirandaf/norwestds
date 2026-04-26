@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
+import { useUser } from '@clerk/clerk-react'
 import { validateInviteToken, redeemInvite } from '../services/portalService'
 import { useAuth } from '../contexts/AuthContext'
 
-const ROLE_LABELS = { admin: 'Administrador', pm: 'Project Manager', client: 'Cliente' }
+const ROLE_LABELS = { admin: 'Administrador', pm: 'Project Manager', client: 'Cliente', estudiante: 'Estudiante' }
+const ROLE_REDIRECT = { estudiante: '/lms' }
 
 export default function AcceptInvite() {
   const { token } = useParams()
   const navigate = useNavigate()
   const { currentUser, getToken } = useAuth()
+  const { user } = useUser()
 
   const [invite, setInvite] = useState(null)   // { email, role }
   const [status, setStatus] = useState('loading') // loading | valid | invalid | redeeming | done | error
@@ -27,9 +30,11 @@ export default function AcceptInvite() {
   async function handleRedeem() {
     setStatus('redeeming')
     try {
-      await redeemInvite({ token, getToken })
+      const { role } = await redeemInvite({ token, getToken })
+      await user?.reload()
       setStatus('done')
-      setTimeout(() => navigate('/portal'), 2200)
+      const destination = ROLE_REDIRECT[role] || '/portal'
+      setTimeout(() => navigate(destination), 2200)
     } catch (err) {
       setErrorMsg(err.response?.data?.error || 'Error al aceptar la invitación')
       setStatus('error')

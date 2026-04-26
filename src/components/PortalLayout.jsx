@@ -131,6 +131,14 @@ export default function PortalLayout({ title, subtitle, children }) {
               <div className="nds-portal-nav-divider" />
               <div className="nds-portal-nav-section-label">Admin</div>
               <NavLink
+                to="/lms"
+                onClick={closeMobile}
+                className={({ isActive }) => `nds-portal-nav-link${isActive ? ' active' : ''}`}
+              >
+                <NavIcon d={<><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></>} />
+                Academia
+              </NavLink>
+              <NavLink
                 to="/portal/admin/invites"
                 onClick={closeMobile}
                 className={({ isActive }) => `nds-portal-nav-link${isActive ? ' active' : ''}`}

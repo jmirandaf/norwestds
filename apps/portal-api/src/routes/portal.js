@@ -33,7 +33,7 @@ router.use(requireAuth)
 
 const inviteSchema = z.object({
   email: z.string().email(),
-  role: z.enum(['admin', 'pm', 'client']),
+  role: z.enum(['admin', 'pm', 'client', 'estudiante']),
   clientId: z.string().nullable().optional(),
 })
 
