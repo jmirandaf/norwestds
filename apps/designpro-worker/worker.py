@@ -111,7 +111,7 @@ def run_freecad(job, workdir):
     params_file.write_text(json.dumps(job.get('params', {}), ensure_ascii=False))
 
     result = subprocess.run(
-        [FREECAD_BIN, '--console',
+        [FREECAD_BIN,
          str(SCRIPTS_DIR / 'freecad_gen.py'), '--',
          str(params_file), str(step_file)],
         capture_output=True,

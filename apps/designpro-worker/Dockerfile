@@ -10,15 +10,12 @@ RUN apt-get update && apt-get install -y software-properties-common \
     python3 \
     python3-pip \
     wget \
-    xvfb \
     libgl1-mesa-glx \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
-# Headless wrapper — FreeCAD needs a virtual display even in --console mode
-RUN printf '#!/bin/bash\nexec xvfb-run -a FreeCAD "$@"\n' \
-    > /usr/local/bin/freecad-headless \
-    && chmod +x /usr/local/bin/freecad-headless
+# freecadcmd is the true headless CLI — no display/xvfb needed
+RUN ln -sf "$(which freecadcmd)" /usr/local/bin/freecad-headless
 
 # Blender (background rendering works without display)
 ENV BLENDER_VERSION=4.2.3
