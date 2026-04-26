@@ -26,6 +26,8 @@ const PortalDownloads = lazy(() => import('./pages/portal/PortalDownloads.jsx'))
 const PortalSupport = lazy(() => import('./pages/portal/PortalSupport.jsx'))
 const PortalInvites = lazy(() => import('./pages/portal/PortalInvites.jsx'))
 const PortalCatalog = lazy(() => import('./pages/portal/PortalCatalog.jsx'))
+const PortalPrices  = lazy(() => import('./pages/portal/PortalPrices.jsx'))
+const PortalQuotes  = lazy(() => import('./pages/portal/PortalQuotes.jsx'))
 const PortalROI = lazy(() => import('./pages/portal/PortalROI.jsx'))
 const PortalSafety = lazy(() => import('./pages/portal/PortalSafety.jsx'))
 
@@ -145,6 +147,22 @@ export default function App() {
         element={
           <ProtectedRoute allowedRoles={['admin']}>
             <PortalCatalog />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/portal/admin/precios"
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <PortalPrices />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/portal/cotizaciones"
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'pm', 'client']}>
+            <PortalQuotes />
           </ProtectedRoute>
         }
       />

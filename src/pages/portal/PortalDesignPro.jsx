@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import PortalLayout from '../../components/PortalLayout'
 import { useAuth } from '../../contexts/AuthContext'
+
+const API = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8787'
 import '../../styles/tools.css'
 import {
   createDesignProJob,
@@ -129,6 +132,7 @@ function getDefaultOptions(structureId) {
 
 export default function PortalDesignPro() {
   const { currentUser } = useAuth()
+  const navigate = useNavigate()
   const [step, setStep]           = useState(0)
   const [loading, setLoading]     = useState(false)
   const [error, setError]         = useState(null)
@@ -138,6 +142,7 @@ export default function PortalDesignPro() {
   const [structureType, setStructureType] = useState('rack-selectivo')
   const [dimensions, setDimensions] = useState({ length: 1200, width: 800, height: 900 })
   const [options, setOptions]     = useState(getDefaultOptions('rack-selectivo'))
+  const [quoteModal, setQuoteModal] = useState(false)
 
   useEffect(() => {
     listDesignProJobs({ limit: 20 }).then(setJobs).catch(() => {})
@@ -201,6 +206,7 @@ export default function PortalDesignPro() {
   const activeParams = activeStruct?.params || []
 
   return (
+    <>
     <PortalLayout
       title="DesignPro by NDS"
       subtitle="Genera especificaciones técnicas y renders 3D para estructuras industriales"
@@ -383,6 +389,17 @@ export default function PortalDesignPro() {
                         </div>
                       ))}
                     </div>
+
+                    <div style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-end' }}>
+                      <button className="nds-btn nds-btn-primary" onClick={() => setQuoteModal(true)}>
+                        <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ marginRight: 6 }}>
+                          <path d="M9 17H5a2 2 0 0 0-2 2v0a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v0a2 2 0 0 0-2-2h-4"/>
+                          <rect x="9" y="3" width="6" height="11" rx="1"/>
+                          <path d="M9 14l3 3 3-3"/>
+                        </svg>
+                        Solicitar cotización
+                      </button>
+                    </div>
                   </>
                 )
               })()}
@@ -475,6 +492,151 @@ export default function PortalDesignPro() {
 
       </div>
     </PortalLayout>
+
+    {quoteModal && result?.status === 'done' && (
+      <QuoteModal
+        jobId={result.id}
+        jobResult={result.params?.result || {}}
+        onClose={() => setQuoteModal(false)}
+        onSuccess={() => { setQuoteModal(false); navigate('/portal/cotizaciones') }}
+      />
+    )}
+    </>
+  )
+}
+
+// ─── QuoteModal ────────────────────────────────────────────────────
+
+function QuoteModal({ jobId, jobResult, onClose, onSuccess }) {
+  const { getToken } = useAuth()
+  const [materials, setMaterials]     = useState([])
+  const [selected, setSelected]       = useState({})   // { [materialId]: qty }
+  const [notes, setNotes]             = useState('')
+  const [generating, setGenerating]   = useState(false)
+  const [loadingMats, setLoadingMats] = useState(true)
+  const [err, setErr]                 = useState('')
+
+  useEffect(() => {
+    fetch(`${API}/api/materials`)
+      .then(r => r.json())
+      .then(d => setMaterials(Array.isArray(d) ? d : []))
+      .catch(() => {})
+      .finally(() => setLoadingMats(false))
+  }, [])
+
+  function toggleMaterial(id) {
+    setSelected(s => {
+      if (s[id] != null) { const n = { ...s }; delete n[id]; return n }
+      return { ...s, [id]: 1 }
+    })
+  }
+  function setQty(id, val) {
+    setSelected(s => ({ ...s, [id]: Math.max(1, Number(val) || 1) }))
+  }
+
+  async function generate() {
+    setGenerating(true); setErr('')
+    try {
+      const token = await getToken()
+      const extraMaterials = Object.entries(selected).map(([id, qty]) => ({ id, qty }))
+      const r = await fetch(`${API}/api/quotes`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body:    JSON.stringify({ jobId, extraMaterials, notes }),
+      })
+      const data = await r.json()
+      if (!r.ok) throw new Error(data?.error || `HTTP ${r.status}`)
+      onSuccess()
+    } catch (e) {
+      setErr(e.message || 'Error al generar cotización')
+    } finally { setGenerating(false) }
+  }
+
+  const byCategory = materials.reduce((acc, m) => {
+    ;(acc[m.category] = acc[m.category] || []).push(m)
+    return acc
+  }, {})
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="portal-card" style={{ width: 520, maxWidth: '95vw', maxHeight: '85vh', overflowY: 'auto' }}
+        onClick={e => e.stopPropagation()}>
+        <h3 style={{ marginBottom: 4, color: 'var(--nds-teal-deep)' }}>Solicitar cotización</h3>
+        <p style={{ color: 'var(--nds-muted)', fontSize: '0.85rem', marginBottom: 18 }}>
+          Se generará una cotización preliminar con los costos estimados de la estructura.
+        </p>
+
+        {/* Resumen del job */}
+        <div style={{ background: 'var(--nds-bg)', borderRadius: 8, padding: '12px 14px', marginBottom: 18,
+          display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, fontSize: '0.85rem' }}>
+          <div>
+            <div style={{ color: 'var(--nds-muted)', fontSize: '0.75rem', marginBottom: 2 }}>Perfiles totales</div>
+            <div style={{ fontWeight: 700 }}>{jobResult.totalMeters?.toFixed(1) ?? '—'} m</div>
+          </div>
+          <div>
+            <div style={{ color: 'var(--nds-muted)', fontSize: '0.75rem', marginBottom: 2 }}>Piezas</div>
+            <div style={{ fontWeight: 700 }}>{jobResult.profileCount ?? '—'}</div>
+          </div>
+          <div>
+            <div style={{ color: 'var(--nds-muted)', fontSize: '0.75rem', marginBottom: 2 }}>Proveedor / Serie</div>
+            <div style={{ fontWeight: 700 }}>{jobResult.provider ?? '—'} / {jobResult.series ?? '—'}</div>
+          </div>
+        </div>
+
+        {/* Materiales adicionales */}
+        <div style={{ marginBottom: 16 }}>
+          <div style={{ fontWeight: 600, fontSize: '0.9rem', marginBottom: 10 }}>
+            Materiales adicionales <span style={{ fontWeight: 400, color: 'var(--nds-muted)', fontSize: '0.82rem' }}>(opcional)</span>
+          </div>
+          {loadingMats && <p style={{ color: 'var(--nds-muted)', fontSize: '0.85rem' }}>Cargando…</p>}
+          {!loadingMats && materials.length === 0 && (
+            <p style={{ color: 'var(--nds-muted)', fontSize: '0.85rem' }}>No hay materiales adicionales configurados.</p>
+          )}
+          {Object.entries(byCategory).map(([cat, mats]) => (
+            <div key={cat} style={{ marginBottom: 10 }}>
+              <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--nds-muted)', fontWeight: 600, marginBottom: 6 }}>
+                {cat}
+              </div>
+              {mats.map(m => (
+                <div key={m.id} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
+                  <input type="checkbox" id={`mat-${m.id}`}
+                    checked={selected[m.id] != null}
+                    onChange={() => toggleMaterial(m.id)} />
+                  <label htmlFor={`mat-${m.id}`} style={{ flex: 1, fontSize: '0.85rem', cursor: 'pointer' }}>
+                    {m.name}
+                    <span style={{ color: 'var(--nds-muted)', marginLeft: 6 }}>${m.priceMxn.toLocaleString('es-MX', { minimumFractionDigits: 2 })} / {m.unit}</span>
+                  </label>
+                  {selected[m.id] != null && (
+                    <input type="number" min="1" value={selected[m.id]}
+                      onChange={e => setQty(m.id, e.target.value)}
+                      style={{ width: 60, padding: '3px 6px', border: '1px solid var(--nds-border)', borderRadius: 6, fontSize: '0.85rem', textAlign: 'center' }} />
+                  )}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+
+        {/* Notas */}
+        <div style={{ marginBottom: 16 }}>
+          <label style={{ fontSize: '0.8rem', color: 'var(--nds-muted)', display: 'block', marginBottom: 4 }}>
+            Notas adicionales
+          </label>
+          <textarea className="dp-input" rows={2} style={{ resize: 'vertical', fontSize: '0.85rem' }}
+            placeholder="Requerimientos especiales, acabados, plazos…"
+            value={notes} onChange={e => setNotes(e.target.value)} />
+        </div>
+
+        {err && <p className="portal-error" style={{ marginBottom: 12 }}>{err}</p>}
+
+        <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+          <button className="btn-ghost" onClick={onClose} disabled={generating}>Cancelar</button>
+          <button className="btn-primary" onClick={generate} disabled={generating}>
+            {generating ? 'Generando…' : 'Generar cotización'}
+          </button>
+        </div>
+      </div>
+    </div>
   )
 }
 

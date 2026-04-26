@@ -106,3 +106,40 @@ model Accessory {
   @@index([providerId])
   @@map("accessories")
 }
+
+model MaterialPrice {
+  id        String   @id @default(cuid())
+  sku       String   @unique
+  name      String
+  category  String
+  unit      String   @default("pza")
+  priceMxn  Float
+  active    Boolean  @default(true)
+  updatedAt DateTime @updatedAt
+
+  @@map("material_prices")
+}
+
+enum QuoteStatus {
+  draft
+  sent
+  accepted
+  rejected
+}
+
+model Quote {
+  id          String      @id @default(cuid())
+  jobId       String      @unique
+  requesterId String
+  status      QuoteStatus @default(draft)
+  items       Json
+  subtotal    Float
+  tax         Float       @default(0)
+  total       Float
+  notes       String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([requesterId])
+  @@map("quotes")
+}

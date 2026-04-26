@@ -21,6 +21,18 @@ import {
   createAccessoryRoute,
   updateAccessoryRoute,
 } from './routes/catalog.js'
+import {
+  listMaterialsRoute,
+  createMaterialRoute,
+  updateMaterialRoute,
+} from './routes/materials.js'
+import {
+  generateQuoteRoute,
+  listQuotesRoute,
+  getQuoteRoute,
+  getQuoteByJobRoute,
+  updateQuoteStatusRoute,
+} from './routes/quotes.js'
 
 const UPLOAD_DIR = path.join(process.cwd(), 'uploads')
 const WORKER_SECRET = process.env.WORKER_SECRET || ''
@@ -123,6 +135,68 @@ const server = http.createServer(async (req, res) => {
     if (!isWorkerAuth(req)) return json(res, 401, { error: 'Unauthorized' })
     const body = await parseJsonBody(req)
     const r = await updateAccessoryRoute(accMatch[1], body)
+    return json(res, r.status, r.body)
+  }
+
+  // ── Material prices ──────────────────────────────────────────────
+
+  if (method === 'GET' && pathname === '/designpro/materials') {
+    const all = url.searchParams.get('all') === 'true'
+    const r = await listMaterialsRoute(all && isWorkerAuth(req))
+    return json(res, r.status, r.body)
+  }
+
+  if (method === 'POST' && pathname === '/designpro/materials') {
+    if (!isWorkerAuth(req)) return json(res, 401, { error: 'Unauthorized' })
+    const body = await parseJsonBody(req)
+    const r = await createMaterialRoute(body)
+    return json(res, r.status, r.body)
+  }
+
+  const matMatch = pathname.match(/^\/designpro\/materials\/([^/]+)$/)
+  if (method === 'PATCH' && matMatch) {
+    if (!isWorkerAuth(req)) return json(res, 401, { error: 'Unauthorized' })
+    const body = await parseJsonBody(req)
+    const r = await updateMaterialRoute(matMatch[1], body)
+    return json(res, r.status, r.body)
+  }
+
+  // ── Quotes ────────────────────────────────────────────────────────
+
+  if (method === 'POST' && pathname === '/designpro/quotes') {
+    if (!isWorkerAuth(req)) return json(res, 401, { error: 'Unauthorized' })
+    const body = await parseJsonBody(req)
+    const r = await generateQuoteRoute(body)
+    return json(res, r.status, r.body)
+  }
+
+  if (method === 'GET' && pathname === '/designpro/quotes') {
+    if (!isWorkerAuth(req)) return json(res, 401, { error: 'Unauthorized' })
+    const requesterId = url.searchParams.get('requesterId') || ''
+    const isAdmin = url.searchParams.get('admin') === 'true'
+    const r = await listQuotesRoute(requesterId, isAdmin)
+    return json(res, r.status, r.body)
+  }
+
+  const quoteJobMatch = pathname.match(/^\/designpro\/quotes\/by-job\/([^/]+)$/)
+  if (method === 'GET' && quoteJobMatch) {
+    if (!isWorkerAuth(req)) return json(res, 401, { error: 'Unauthorized' })
+    const r = await getQuoteByJobRoute(quoteJobMatch[1])
+    return json(res, r.status, r.body)
+  }
+
+  const quoteStatusMatch = pathname.match(/^\/designpro\/quotes\/([^/]+)\/status$/)
+  if (method === 'PATCH' && quoteStatusMatch) {
+    if (!isWorkerAuth(req)) return json(res, 401, { error: 'Unauthorized' })
+    const body = await parseJsonBody(req)
+    const r = await updateQuoteStatusRoute(quoteStatusMatch[1], body.status)
+    return json(res, r.status, r.body)
+  }
+
+  const quoteMatch = pathname.match(/^\/designpro\/quotes\/([^/]+)$/)
+  if (method === 'GET' && quoteMatch) {
+    if (!isWorkerAuth(req)) return json(res, 401, { error: 'Unauthorized' })
+    const r = await getQuoteRoute(quoteMatch[1])
     return json(res, r.status, r.body)
   }
 
