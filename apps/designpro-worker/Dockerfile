@@ -12,6 +12,11 @@ RUN apt-get update && apt-get install -y software-properties-common \
     wget \
     libgl1-mesa-glx \
     libglib2.0-0 \
+    libpango-1.0-0 \
+    libpangoft2-1.0-0 \
+    libharfbuzz0b \
+    libffi-dev \
+    fonts-liberation \
     && rm -rf /var/lib/apt/lists/*
 
 # freecadcmd is the true headless CLI — no display/xvfb needed
