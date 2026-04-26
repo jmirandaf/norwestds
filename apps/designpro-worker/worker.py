@@ -139,33 +139,32 @@ def run_freecad(job, workdir):
 
 def run_blender(step_file, workdir):
     """
-    Call Blender to render a STEP file to GLB.
-    Falls back to a minimal stub GLB if Blender is not installed.
-    Returns Path to output.glb (always exists, even if stub).
+    Call Blender to render a STEP file to a PNG preview image.
+    Falls back to a minimal stub PNG if Blender is not installed.
+    Returns Path to output.png (always exists, even if stub).
     """
-    glb_file = workdir / 'output.glb'
+    png_file = workdir / 'output.png'
 
     result = subprocess.run(
         [BLENDER_BIN, '--background',
          '--python', str(SCRIPTS_DIR / 'blender_render.py'), '--',
-         str(step_file), str(glb_file)],
+         str(step_file), str(png_file)],
         capture_output=True,
         text=True,
         timeout=300,
     )
-    if result.returncode != 0 or not glb_file.exists():
+    if result.returncode != 0 or not png_file.exists():
         print(f'[blender] non-zero exit or missing output — stderr: {result.stderr[:300]}', flush=True)
-        # Minimal valid GLB (glTF 2.0 binary with empty scene)
-        json_chunk = b'{"asset":{"version":"2.0"}}'
-        # Pad JSON chunk to 4-byte alignment
-        pad = (4 - len(json_chunk) % 4) % 4
-        json_chunk += b' ' * pad
-        json_len = len(json_chunk).to_bytes(4, 'little')
-        total = 12 + 8 + len(json_chunk)
-        header = b'glTF\x02\x00\x00\x00' + total.to_bytes(4, 'little')
-        chunk_header = json_len + b'JSON'
-        glb_file.write_bytes(header + chunk_header + json_chunk)
-    return glb_file
+        # Minimal valid 1x1 PNG stub
+        import struct, zlib
+        def chunk(tag, data):
+            raw = tag + data
+            return struct.pack('>I', len(data)) + raw + struct.pack('>I', zlib.crc32(raw) & 0xFFFFFFFF)
+        ihdr = chunk(b'IHDR', struct.pack('>IIBBBBB', 1, 1, 8, 2, 0, 0, 0))
+        idat = chunk(b'IDAT', zlib.compress(b'\x00\x80\x80\x80'))
+        iend = chunk(b'IEND', b'')
+        png_file.write_bytes(b'\x89PNG\r\n\x1a\n' + ihdr + idat + iend)
+    return png_file
 
 
 # ─── Job processor ─────────────────────────────────────────────────
@@ -214,9 +213,9 @@ def process_job(job):
         step_file = run_freecad(job, workdir)
         print(f'[worker] STEP ready: {step_file.stat().st_size} bytes', flush=True)
 
-        # Blender — render to GLB
-        glb_file = run_blender(step_file, workdir)
-        print(f'[worker] GLB ready: {glb_file.stat().st_size} bytes', flush=True)
+        # Blender — render isometric PNG preview
+        png_file = run_blender(step_file, workdir)
+        print(f'[worker] PNG ready: {png_file.stat().st_size} bytes', flush=True)
 
         # BOM JSON
         bom_file = workdir / 'lista-materiales.json'
@@ -231,7 +230,7 @@ def process_job(job):
         # Upload artifacts
         upload_file(job_id, 'bom',    'lista-materiales.json',     bom_file)
         upload_file(job_id, 'step',   'modelo-cad.step',           step_file)
-        upload_file(job_id, 'render', 'preview-3d.glb',            glb_file)
+        upload_file(job_id, 'render', 'preview-render.png',        png_file)
 
     complete_job(job_id, result)
     print(
