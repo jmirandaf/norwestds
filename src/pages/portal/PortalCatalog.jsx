@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '@clerk/clerk-react'
 import PortalLayout from '../../components/PortalLayout.jsx'
 
-const API = import.meta.env.VITE_API_BASE || 'http://localhost:8787'
+const API = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8787'
 
 const CATEGORY_LABELS = {
   bracket:  'Escuadra',
@@ -238,6 +238,7 @@ export default function PortalCatalog() {
   const { getToken } = useAuth()
   const [providers, setProviders] = useState([])
   const [loading, setLoading]     = useState(true)
+  const [loadErr, setLoadErr]     = useState('')
   const [tab, setTab]             = useState('profiles')   // 'profiles' | 'accessories'
   const [activeProvider, setActiveProvider] = useState(null)
 
@@ -246,12 +247,16 @@ export default function PortalCatalog() {
   const [accModal, setAccModal]           = useState(null)  // null | 'new' | accObj
 
   const load = useCallback(async () => {
-    setLoading(true)
+    setLoading(true); setLoadErr('')
     try {
       const r = await fetch(`${API}/api/catalog/providers`)
       const data = await r.json()
+      if (!r.ok) throw new Error(data?.error || `HTTP ${r.status}`)
+      if (!Array.isArray(data)) throw new Error(`Respuesta inesperada: ${JSON.stringify(data).slice(0, 120)}`)
       setProviders(data)
       setActiveProvider(p => p ?? data[0]?.id ?? null)
+    } catch (e) {
+      setLoadErr(e.message || 'Error al cargar proveedores')
     } finally { setLoading(false) }
   }, [])
 
@@ -307,6 +312,18 @@ export default function PortalCatalog() {
         </div>
 
         {loading && <p style={{ color: 'var(--nds-muted)' }}>Cargando…</p>}
+
+        {loadErr && (
+          <div style={{ padding: '12px 16px', background: '#fee2e2', borderRadius: 8, color: '#991b1b', fontSize: '0.9rem', marginBottom: 16 }}>
+            <strong>Error al cargar:</strong> {loadErr}
+          </div>
+        )}
+
+        {!loading && !loadErr && providers.length === 0 && (
+          <div style={{ padding: '12px 16px', background: '#fef9c3', borderRadius: 8, color: '#854d0e', fontSize: '0.9rem', marginBottom: 16 }}>
+            No se encontraron proveedores. Verifica que el seed de la base de datos se ejecutó correctamente.
+          </div>
+        )}
 
         {!loading && provider && (
           <>
