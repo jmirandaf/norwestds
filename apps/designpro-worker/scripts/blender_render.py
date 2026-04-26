@@ -108,6 +108,9 @@ def render_with_blender(input_step, output_png):
     cam_data = bpy.data.cameras.new('Camera')
     cam_data.type = 'ORTHO'
     cam_data.ortho_scale = extent * 1.4
+    # Clip planes must cover the full scene distance (FreeCAD exports in mm)
+    cam_data.clip_start = extent * 0.0001
+    cam_data.clip_end = (dist + extent) * 10
     cam_obj = bpy.data.objects.new('Camera', cam_data)
     bpy.context.collection.objects.link(cam_obj)
     cam_obj.location = mathutils.Vector((cx + dist, cy - dist, cz + dist))
