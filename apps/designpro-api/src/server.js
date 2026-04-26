@@ -12,6 +12,15 @@ import {
   workerFailRoute,
   workerUploadRoute,
 } from './routes/jobs.js'
+import {
+  listProvidersRoute,
+  upsertProviderRoute,
+  toggleProviderRoute,
+  createProfileRoute,
+  updateProfileRoute,
+  createAccessoryRoute,
+  updateAccessoryRoute,
+} from './routes/catalog.js'
 
 const UPLOAD_DIR = path.join(process.cwd(), 'uploads')
 const WORKER_SECRET = process.env.WORKER_SECRET || ''
@@ -26,7 +35,7 @@ function json(res, status, body) {
     'content-type': 'application/json',
     'access-control-allow-origin': '*',
     'access-control-allow-methods': 'GET,POST,PATCH,DELETE,OPTIONS',
-    'access-control-allow-headers': 'Content-Type, Authorization',
+    'access-control-allow-headers': 'Content-Type, Authorization, X-Worker-Secret',
   })
   res.end(JSON.stringify(body))
 }
@@ -36,17 +45,12 @@ function parseJsonBody(req, maxBytes = 1_000_000) {
     let raw = ''
     req.on('data', (chunk) => {
       raw += chunk
-      if (raw.length > maxBytes) {
-        reject(new Error('Payload too large'))
-      }
+      if (raw.length > maxBytes) reject(new Error('Payload too large'))
     })
     req.on('end', () => {
       if (!raw) return resolve({})
-      try {
-        resolve(JSON.parse(raw))
-      } catch {
-        reject(new Error('Invalid JSON body'))
-      }
+      try { resolve(JSON.parse(raw)) }
+      catch { reject(new Error('Invalid JSON body')) }
     })
     req.on('error', reject)
   })
@@ -62,9 +66,7 @@ const server = http.createServer(async (req, res) => {
   const url = parseUrl(req)
   const pathname = url.pathname
 
-  if (method === 'OPTIONS') {
-    return json(res, 204, {})
-  }
+  if (method === 'OPTIONS') return json(res, 204, {})
 
   if (method === 'GET' && pathname === '/health') {
     return json(res, 200, { ok: true, service: 'designpro-api' })
@@ -73,6 +75,58 @@ const server = http.createServer(async (req, res) => {
   if (method === 'GET' && pathname === '/designpro/catalogs') {
     return json(res, 200, catalogs)
   }
+
+  // ── Catalog CRUD (worker-auth protected for writes) ───────────────
+
+  if (method === 'GET' && pathname === '/designpro/catalog/providers') {
+    const response = await listProvidersRoute()
+    return json(res, response.status, response.body)
+  }
+
+  if (method === 'POST' && pathname === '/designpro/catalog/providers') {
+    if (!isWorkerAuth(req)) return json(res, 401, { error: 'Unauthorized' })
+    const body = await parseJsonBody(req)
+    return json(res, ...(r => [r.status, r.body])(await upsertProviderRoute(body)))
+  }
+
+  const providerToggle = pathname.match(/^\/designpro\/catalog\/providers\/([^/]+)\/toggle$/)
+  if (method === 'POST' && providerToggle) {
+    if (!isWorkerAuth(req)) return json(res, 401, { error: 'Unauthorized' })
+    const r = await toggleProviderRoute(providerToggle[1])
+    return json(res, r.status, r.body)
+  }
+
+  if (method === 'POST' && pathname === '/designpro/catalog/profiles') {
+    if (!isWorkerAuth(req)) return json(res, 401, { error: 'Unauthorized' })
+    const body = await parseJsonBody(req)
+    const r = await createProfileRoute(body)
+    return json(res, r.status, r.body)
+  }
+
+  const profileMatch = pathname.match(/^\/designpro\/catalog\/profiles\/([^/]+)$/)
+  if (method === 'PATCH' && profileMatch) {
+    if (!isWorkerAuth(req)) return json(res, 401, { error: 'Unauthorized' })
+    const body = await parseJsonBody(req)
+    const r = await updateProfileRoute(profileMatch[1], body)
+    return json(res, r.status, r.body)
+  }
+
+  if (method === 'POST' && pathname === '/designpro/catalog/accessories') {
+    if (!isWorkerAuth(req)) return json(res, 401, { error: 'Unauthorized' })
+    const body = await parseJsonBody(req)
+    const r = await createAccessoryRoute(body)
+    return json(res, r.status, r.body)
+  }
+
+  const accMatch = pathname.match(/^\/designpro\/catalog\/accessories\/([^/]+)$/)
+  if (method === 'PATCH' && accMatch) {
+    if (!isWorkerAuth(req)) return json(res, 401, { error: 'Unauthorized' })
+    const body = await parseJsonBody(req)
+    const r = await updateAccessoryRoute(accMatch[1], body)
+    return json(res, r.status, r.body)
+  }
+
+  // ── Jobs ─────────────────────────────────────────────────────────
 
   if (method === 'GET' && pathname === '/designpro/jobs') {
     const response = await listJobsRoute(Object.fromEntries(url.searchParams.entries()))
@@ -149,7 +203,7 @@ const server = http.createServer(async (req, res) => {
     return json(res, response.status, response.body)
   }
 
-  // ── Static file serving ──────────────────────────────────────────
+  // ── Static files ─────────────────────────────────────────────────
 
   const fileMatch = pathname.match(/^\/files\/([^/]+)$/)
   if (method === 'GET' && fileMatch) {
@@ -163,12 +217,12 @@ const server = http.createServer(async (req, res) => {
       const contentType = {
         '.json': 'application/json',
         '.step': 'application/octet-stream',
-        '.stp': 'application/octet-stream',
-        '.glb': 'model/gltf-binary',
+        '.stp':  'application/octet-stream',
+        '.glb':  'model/gltf-binary',
         '.gltf': 'model/gltf+json',
-        '.pdf': 'application/pdf',
-        '.png': 'image/png',
-        '.jpg': 'image/jpeg',
+        '.pdf':  'application/pdf',
+        '.png':  'image/png',
+        '.jpg':  'image/jpeg',
       }[ext] || 'application/octet-stream'
       res.writeHead(200, {
         'content-type': contentType,
