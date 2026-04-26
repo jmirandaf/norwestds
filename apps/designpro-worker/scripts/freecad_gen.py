@@ -5,8 +5,10 @@ FreeCAD script — generates a STEP file from DesignPro job parameters.
 Called by worker.py as:
   FreeCAD --console freecad_gen.py -- <params.json> <output.step>
 
-When FreeCAD is available, builds a parametric 3D model using Part workbench.
-When running outside FreeCAD, writes a stub STEP header so the pipeline continues.
+Builds a parametric aluminum-profile frame: individual square-section beams
+along all edges plus cross-members, matching the selected profile series and
+load class.  Also exports an STL for Blender (native import, no add-on needed).
+Falls back to a stub STEP header when FreeCAD is not available.
 """
 
 import sys
@@ -25,33 +27,87 @@ def parse_args():
 
 
 def build_model_freecad(params, output_path):
-    """Build a parametric box model as a stand-in for the real structural geometry."""
-    import FreeCAD   # noqa: F401 — only available inside FreeCAD runtime
+    """Build a parametric aluminum-profile frame structure."""
+    import FreeCAD
     import Part
     import Mesh
 
     dims = params.get('dimensions', {})
+    opts = params.get('options', {})
+
     L = float(dims.get('length', 1200))
     W = float(dims.get('width',  800))
     H = float(dims.get('height', 900))
 
-    # Base enclosure box
-    box = Part.makeBox(L, W, H)
+    series = opts.get('profileSeries', '40')
+    p = {'45': 45.0, '40': 40.0, '30': 30.0}.get(str(series), 40.0)  # profile size mm
 
-    # Add cross-member representation (simple inner box)
-    inner = Part.makeBox(
-        L * 0.9, W * 0.9, H * 0.9,
-        FreeCAD.Vector(L * 0.05, W * 0.05, H * 0.05),
-    )
-    frame = box.cut(inner)
+    load = opts.get('loadClass', 'medium')
+
+    members = []
+
+    def bx(x0, y0, z0, length):
+        return Part.makeBox(length, p, p, FreeCAD.Vector(x0, y0, z0))
+
+    def by(x0, y0, z0, length):
+        return Part.makeBox(p, length, p, FreeCAD.Vector(x0, y0, z0))
+
+    def bz(x0, y0, z0, length):
+        return Part.makeBox(p, p, length, FreeCAD.Vector(x0, y0, z0))
+
+    # ── Bottom frame ──────────────────────────────────────────────────
+    members += [
+        bx(0,   0,   0, L),   # front-bottom X
+        bx(0,   W-p, 0, L),   # back-bottom X
+        by(0,   0,   0, W),   # left-bottom Y
+        by(L-p, 0,   0, W),   # right-bottom Y
+    ]
+
+    # ── Top frame ─────────────────────────────────────────────────────
+    members += [
+        bx(0,   0,   H-p, L),  # front-top X
+        bx(0,   W-p, H-p, L),  # back-top X
+        by(0,   0,   H-p, W),  # left-top Y
+        by(L-p, 0,   H-p, W),  # right-top Y
+    ]
+
+    # ── Corner verticals ──────────────────────────────────────────────
+    members += [
+        bz(0,   0,   0, H),
+        bz(L-p, 0,   0, H),
+        bz(0,   W-p, 0, H),
+        bz(L-p, W-p, 0, H),
+    ]
+
+    # ── Mid-span verticals (heavy load or wide structure) ─────────────
+    if load == 'heavy' or L >= 1200:
+        mx = L / 2 - p / 2
+        members += [bz(mx, 0, 0, H), bz(mx, W-p, 0, H)]
+    if load == 'heavy' or W >= 900:
+        my = W / 2 - p / 2
+        members += [bz(0, my, 0, H), bz(L-p, my, 0, H)]
+
+    # ── Horizontal cross-members at mid-height ────────────────────────
+    if H >= 700 or load == 'heavy':
+        mz = H / 2 - p / 2
+        members += [
+            bx(0,   0,   mz, L),
+            bx(0,   W-p, mz, L),
+            by(0,   0,   mz, W),
+            by(L-p, 0,   mz, W),
+        ]
+
+    frame = Part.makeCompound(members)
 
     # Export STEP (for download)
     Part.export([frame], str(output_path))
     print(f'[freecad_gen] exported STEP: {output_path} ({output_path.stat().st_size} bytes)', flush=True)
 
-    # Export STL (for Blender import — native format, no add-on needed)
+    # Export STL (for Blender — native import, no add-on needed)
     stl_path = output_path.with_suffix('.stl')
-    mesh = Mesh.Mesh(frame.tessellate(0.1))
+    mesh = Mesh.Mesh()
+    for member in members:
+        mesh.addMesh(Mesh.Mesh(member.tessellate(0.5)))
     mesh.write(str(stl_path))
     print(f'[freecad_gen] exported STL: {stl_path} ({stl_path.stat().st_size} bytes)', flush=True)
 
@@ -67,15 +123,15 @@ def write_stub_step(params, output_path):
         'ISO-10303-21;\n'
         'HEADER;\n'
         f"FILE_DESCRIPTION(('NDS DesignPro — {structure} {L}x{W}x{H}mm'),'2;1');\n"
-        f"FILE_NAME('{output_path.name}','','('NDS DesignPro Worker'),'','','');\n"
-        'FILE_SCHEMA((\'AUTOMOTIVE_DESIGN\'));\n'
+        f"FILE_NAME('{output_path.name}','','','','NDS DesignPro Worker','','');\n"
+        "FILE_SCHEMA(('AUTOMOTIVE_DESIGN'));\n"
         'ENDSEC;\n'
         'DATA;\n'
-        '/* Stub output — install FreeCAD and set FREECAD_BIN to generate real geometry */\n'
+        '/* Stub output — FreeCAD not available */\n'
         'ENDSEC;\n'
         'END-ISO-10303-21;\n'
     )
-    print(f'[freecad_gen] stub STEP written (FreeCAD not available)', flush=True)
+    print('[freecad_gen] stub STEP written (FreeCAD not available)', flush=True)
 
 
 def main():
