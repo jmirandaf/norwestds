@@ -1,6 +1,5 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { enqueueStubJob } from '../jobs/stubProcessor.js'
 import { claimNextJob, createArtifact, createJob, getJob, listJobs, updateJob } from '../services/store.js'
 
 const UPLOAD_DIR = path.join(process.cwd(), 'uploads')
@@ -42,7 +41,6 @@ export async function createJobRoute(reqBody) {
   if (parsed.error) return { status: 400, body: { error: parsed.error } }
 
   const job = await createJob(parsed.value)
-  enqueueStubJob(job.id)
   return { status: 201, body: job }
 }
 
