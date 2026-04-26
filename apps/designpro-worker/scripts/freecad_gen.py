@@ -26,6 +26,19 @@ def parse_args():
     return Path(args[0]), Path(args[1])
 
 
+def load_profile_spec(provider, series):
+    """Load profile dimensions from the vendor catalog."""
+    import json as _json
+    data_path = Path(__file__).parent.parent / 'data' / 'profiles.json'
+    try:
+        with open(data_path) as f:
+            catalog = _json.load(f)
+        spec = catalog['providers'][provider]['series'][str(series)]
+        return spec
+    except Exception:
+        return {'size_mm': float(series), 'weight_kg_m': 1.44, 'groove_width_mm': 8}
+
+
 def build_model_freecad(params, output_path):
     """Build a parametric aluminum-profile frame structure."""
     import FreeCAD
@@ -39,8 +52,10 @@ def build_model_freecad(params, output_path):
     W = float(dims.get('width',  800))
     H = float(dims.get('height', 900))
 
-    series = opts.get('profileSeries', '40')
-    p = {'45': 45.0, '40': 40.0, '30': 30.0}.get(str(series), 40.0)  # profile size mm
+    series   = str(opts.get('profileSeries', '40'))
+    provider = opts.get('provider', 'advanced')
+    spec     = load_profile_spec(provider, series)
+    p        = float(spec['size_mm'])   # profile cross-section size mm
 
     load = opts.get('loadClass', 'medium')
 

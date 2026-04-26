@@ -84,7 +84,7 @@ const STRUCTURE_DEFS = [
 
 // ─── Param definitions ─────────────────────────────────────────────
 const PARAM_DEFS = {
-  provider:       { label: 'Proveedor',          hint: 'Sistema de perfiles',          options: { tjsd: 'TJSD', modular: 'Modular', item: 'item' },                                                              default: 'tjsd' },
+  provider:       { label: 'Proveedor',          hint: 'Sistema de perfiles',          options: { advanced: 'Advanced', modular: 'Modular', item: 'Item' },                                               default: 'advanced' },
   profileSeries:  { label: 'Serie de perfil',    hint: 'Sección transversal',          options: { '30': 'Serie 30 (30×30 mm)', '40': 'Serie 40 (40×40 mm)', '45': 'Serie 45 (45×45 mm)' },                      default: '40' },
   loadClass:      { label: 'Clase de carga',     hint: 'Capacidad estructural',        options: { light: 'Ligera (< 50 kg)', medium: 'Media (50–150 kg)', heavy: 'Pesada (> 150 kg)' },                          default: 'medium' },
   panelType:      { label: 'Panel lateral',      hint: 'Tipo de cerramiento',          options: { none: 'Sin panel', mesh: 'Malla metálica', polycarbonate: 'Policarbonato', solid: 'Chapa sólida' },            default: 'none' },
