@@ -221,18 +221,22 @@ def process_job(job):
         png_file = run_blender(step_file, workdir)
         print(f'[worker] PNG ready: {png_file.stat().st_size} bytes', flush=True)
 
-        # BOM JSON
-        bom_file = workdir / 'lista-materiales.json'
-        bom_file.write_text(json.dumps({
-            'jobId':         job_id,
-            'structureType': params.get('structureType'),
-            'dimensions':    params.get('dimensions', {}),
-            'options':       params.get('options', {}),
-            'result':        result,
-        }, indent=2, ensure_ascii=False))
+        # PDF report (BOM + cut list + render, Norwest branded)
+        pdf_file = workdir / 'lista-materiales.pdf'
+        logo_path = Path(__file__).parent / 'assets' / 'logo.png'
+        try:
+            import sys as _sys
+            if str(SCRIPTS_DIR.parent) not in _sys.path:
+                _sys.path.insert(0, str(SCRIPTS_DIR.parent))
+            from scripts.pdf_gen import generate_pdf
+            generate_pdf(params, result, png_file, pdf_file, logo_path)
+        except Exception as e:
+            print(f'[worker] PDF generation failed: {e} — skipping', flush=True)
+            pdf_file = None
 
         # Upload artifacts
-        upload_file(job_id, 'bom',    'lista-materiales.json',     bom_file)
+        if pdf_file and pdf_file.exists():
+            upload_file(job_id, 'bom',    'lista-materiales.pdf',  pdf_file)
         upload_file(job_id, 'step',   'modelo-cad.step',           step_file)
         upload_file(job_id, 'render', 'preview-render.png',        png_file)
 
