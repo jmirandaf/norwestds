@@ -371,7 +371,7 @@ export default function PortalDesignPro() {
                             className="nds-dp-artifact-dl"
                             disabled={!a.url}
                             title={a.url ? 'Descargar archivo' : 'Disponible cuando el worker complete el render'}
-                            onClick={() => a.url && window.open(a.url)}
+                            onClick={() => a.url && window.open(`${import.meta.env.VITE_DESIGNPRO_API_BASE}${a.url}`)}
                           >
                             <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
                               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
