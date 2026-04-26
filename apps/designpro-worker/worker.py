@@ -118,8 +118,10 @@ def run_freecad(job, workdir):
         text=True,
         timeout=180,
     )
+    if result.stdout:
+        print(result.stdout.strip(), flush=True)
     if result.returncode != 0 or not step_file.exists():
-        print(f'[freecad] non-zero exit or missing output — stderr: {result.stderr[:300]}', flush=True)
+        print(f'[freecad] non-zero exit ({result.returncode}) — stderr: {result.stderr[:600]}', flush=True)
         # Write stub STEP so the pipeline can continue
         params = job.get('params', {})
         dims = params.get('dimensions', {})

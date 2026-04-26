@@ -105,9 +105,7 @@ def build_model_freecad(params, output_path):
 
     # Export STL (for Blender — native import, no add-on needed)
     stl_path = output_path.with_suffix('.stl')
-    mesh = Mesh.Mesh()
-    for member in members:
-        mesh.addMesh(Mesh.Mesh(member.tessellate(0.5)))
+    mesh = Mesh.Mesh(frame.tessellate(0.5))
     mesh.write(str(stl_path))
     print(f'[freecad_gen] exported STL: {stl_path} ({stl_path.stat().st_size} bytes)', flush=True)
 
