@@ -1,4 +1,4 @@
-export const ROLES = ['admin', 'pm', 'client']
+export const ROLES = ['admin', 'pm', 'client', 'estudiante']
 
 export const PROJECT_STATUSES = [
   'planned',
