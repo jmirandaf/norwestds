@@ -155,8 +155,10 @@ def run_blender(step_file, workdir):
         text=True,
         timeout=300,
     )
+    if result.stdout:
+        print(result.stdout.strip(), flush=True)
     if result.returncode != 0 or not png_file.exists():
-        print(f'[blender] non-zero exit or missing output — stderr: {result.stderr[:300]}', flush=True)
+        print(f'[blender] non-zero exit ({result.returncode}) — stderr: {result.stderr[:600]}', flush=True)
         # Minimal valid 1x1 PNG stub
         import struct, zlib
         def chunk(tag, data):
