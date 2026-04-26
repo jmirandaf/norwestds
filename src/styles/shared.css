@@ -1640,3 +1640,15 @@
   .nds-portal-header { padding: 16px 20px; }
   .nds-portal-content { padding: 16px 20px; }
 }
+
+/* ── Modal overlay ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 30, 48, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}

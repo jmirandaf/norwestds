@@ -2,6 +2,7 @@ import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import portalRoutes from './routes/portal.js'
+import catalogRoutes from './routes/catalog.js'
 
 const app = express()
 const port = Number(process.env.PORT || 8787)
@@ -14,6 +15,7 @@ app.use(express.json())
 
 app.get('/health', (_, res) => res.json({ ok: true }))
 app.use('/api/portal', portalRoutes)
+app.use('/api/catalog', catalogRoutes)
 
 app.listen(port, () => {
   console.log(`[norwestds-backend] running on http://localhost:${port}`)

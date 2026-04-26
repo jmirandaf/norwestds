@@ -45,12 +45,64 @@ model DesignProJob {
 
 model DesignProArtifact {
   id        String       @id @default(cuid())
-  jobId      String
-  job        DesignProJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
-  kind       String
-  name       String
-  url        String?
-  createdAt  DateTime     @default(now())
+  jobId     String
+  job       DesignProJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  kind      String
+  name      String
+  url       String?
+  createdAt DateTime     @default(now())
 
   @@index([jobId])
+}
+
+// ── Catalog ──────────────────────────────────────────────────────────────────
+
+model Provider {
+  id      String  @id
+  name    String
+  country String  @default("MX")
+  active  Boolean @default(true)
+
+  profiles    ProfileSpec[]
+  accessories Accessory[]
+
+  @@map("providers")
+}
+
+model ProfileSpec {
+  id              String   @id @default(cuid())
+  providerId      String
+  provider        Provider @relation(fields: [providerId], references: [id])
+  series          String
+  sizeMm          Float
+  weightKgM       Float
+  grooveWidthMm   Float
+  grooveDepthMm   Float
+  cornerRadiusMm  Float
+  wallThicknessMm Float
+  priceMxnM       Float
+  maxLoadNM       Float
+  active          Boolean  @default(true)
+  updatedAt       DateTime @updatedAt
+
+  @@unique([providerId, series])
+  @@map("profile_specs")
+}
+
+model Accessory {
+  id               String   @id @default(cuid())
+  providerId       String
+  provider         Provider @relation(fields: [providerId], references: [id])
+  sku              String   @unique
+  name             String
+  category         String
+  compatibleSeries String[]
+  priceMxn         Float
+  tNutsRequired    Int?
+  screwsRequired   Int?
+  active           Boolean  @default(true)
+  updatedAt        DateTime @updatedAt
+
+  @@index([providerId])
+  @@map("accessories")
 }
