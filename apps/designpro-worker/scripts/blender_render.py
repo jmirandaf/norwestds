@@ -58,22 +58,24 @@ def import_geometry(input_step):
 
 
 def scene_bounds(meshes):
-    """Return (cx, cy, cz, extent) over all mesh bounding boxes."""
+    """Return (cx, cy, cz, bb_l, bb_w, bb_h) from all mesh bounding boxes."""
     import mathutils
     corners = []
     for o in meshes:
         for v in o.bound_box:
             corners.append(o.matrix_world @ mathutils.Vector(v))
     if not corners:
-        return 0.0, 0.0, 0.0, 2.0
+        return 0.0, 0.0, 0.0, 2.0, 2.0, 2.0
     xs = [c.x for c in corners]
     ys = [c.y for c in corners]
     zs = [c.z for c in corners]
+    bb_l = max(xs) - min(xs)
+    bb_w = max(ys) - min(ys)
+    bb_h = max(zs) - min(zs)
     cx = (min(xs) + max(xs)) / 2
     cy = (min(ys) + max(ys)) / 2
     cz = (min(zs) + max(zs)) / 2
-    extent = max(max(xs) - min(xs), max(ys) - min(ys), max(zs) - min(zs))
-    return cx, cy, cz, max(extent, 0.1)
+    return cx, cy, cz, max(bb_l, 0.1), max(bb_w, 0.1), max(bb_h, 0.1)
 
 
 def render_with_blender(input_step, output_png):
@@ -101,21 +103,32 @@ def render_with_blender(input_step, output_png):
             else:
                 o.data.materials.append(mat)
 
-    cx, cy, cz, extent = scene_bounds(meshes)
-    dist = extent * 0.9
+    import math
+    cx, cy, cz, bb_l, bb_w, bb_h = scene_bounds(meshes)
 
-    # Isometric orthographic camera
+    # 3D diagonal guarantees the full isometric projection fits regardless of
+    # which dimension dominates — single-axis extent is not enough.
+    diag3 = math.sqrt(bb_l**2 + bb_w**2 + bb_h**2)
+    dist  = diag3 * 0.8
+
+    # ortho_scale: isometric projection of (L+W) base + full height, 20% margin
+    proj_base = (bb_l + bb_w) / math.sqrt(2)
+    proj_vert = bb_h + proj_base * 0.5
+    # For 4:3 render, scale must satisfy both width and height
+    ortho_scale = max(proj_base, proj_vert / 0.75) * 1.25
+
+    # Aim slightly above centre so the full height of the frame is used
+    target = mathutils.Vector((cx, cy, cz + bb_h * 0.15))
+
     cam_data = bpy.data.cameras.new('Camera')
     cam_data.type = 'ORTHO'
-    cam_data.ortho_scale = extent * 1.4
-    # Clip planes must cover the full scene distance (FreeCAD exports in mm)
-    cam_data.clip_start = extent * 0.0001
-    cam_data.clip_end = (dist + extent) * 10
+    cam_data.ortho_scale = ortho_scale
+    cam_data.clip_start = diag3 * 0.0001
+    cam_data.clip_end   = diag3 * 20
     cam_obj = bpy.data.objects.new('Camera', cam_data)
     bpy.context.collection.objects.link(cam_obj)
     cam_obj.location = mathutils.Vector((cx + dist, cy - dist, cz + dist))
-    direction = mathutils.Vector((cx, cy, cz)) - cam_obj.location
-    cam_obj.rotation_euler = direction.to_track_quat('-Z', 'Y').to_euler()
+    cam_obj.rotation_euler = (target - cam_obj.location).to_track_quat('-Z', 'Y').to_euler()
     bpy.context.scene.camera = cam_obj
 
     # Sun lights (work well with CYCLES CPU)
