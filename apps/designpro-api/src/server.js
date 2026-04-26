@@ -95,12 +95,6 @@ const server = http.createServer(async (req, res) => {
     return json(res, response.status, response.body)
   }
 
-  const jobMatch = pathname.match(/^\/designpro\/jobs\/([^/]+)$/)
-  if (method === 'GET' && jobMatch) {
-    const response = await getJobRoute(jobMatch[1])
-    return json(res, response.status, response.body)
-  }
-
   // ── Worker endpoints ─────────────────────────────────────────────
 
   if (method === 'GET' && pathname === '/designpro/jobs/next') {
@@ -147,6 +141,12 @@ const server = http.createServer(async (req, res) => {
     } catch (error) {
       return json(res, 400, { error: String(error.message || error) })
     }
+  }
+
+  const jobMatch = pathname.match(/^\/designpro\/jobs\/([^/]+)$/)
+  if (method === 'GET' && jobMatch) {
+    const response = await getJobRoute(jobMatch[1])
+    return json(res, response.status, response.body)
   }
 
   // ── Static file serving ──────────────────────────────────────────
