@@ -173,33 +173,53 @@ def run_blender(step_file, workdir):
 
 # ─── Job processor ─────────────────────────────────────────────────
 
+def _load_profile_catalog():
+    import json as _json
+    catalog_path = Path(__file__).parent / 'data' / 'profiles.json'
+    try:
+        with open(catalog_path) as f:
+            return _json.load(f)
+    except Exception:
+        return {}
+
+
 def calc_result(params):
     """Calculate structural metrics from job parameters."""
-    dims = params.get('dimensions', {})
-    opts = params.get('options', {})
-    series = opts.get('profileSeries', '40')
-    load   = opts.get('loadClass', 'medium')
+    dims     = params.get('dimensions', {})
+    opts     = params.get('options', {})
+    series   = str(opts.get('profileSeries', '40'))
+    provider = opts.get('provider', 'advanced')
+    load     = opts.get('loadClass', 'medium')
 
-    kg_per_m    = {'45': 4.2, '40': 3.1, '30': 2.1}.get(series, 3.1)
-    load_factor = {'heavy': 1.4, 'light': 0.7}.get(load, 1.0)
+    # Look up vendor-specific weight and price
+    catalog   = _load_profile_catalog()
+    spec      = (catalog.get('providers', {})
+                        .get(provider, {})
+                        .get('series', {})
+                        .get(series, {}))
+    kg_per_m      = spec.get('weight_kg_m', {'45': 1.78, '40': 1.44, '30': 0.92}.get(series, 1.44))
+    price_mxn_m   = spec.get('price_mxn_m', {'45': 320, '40': 255, '30': 165}.get(series, 255))
+    load_factor   = {'heavy': 1.4, 'light': 0.7}.get(load, 1.0)
 
     L = float(dims.get('length', 1200))
-    W = float(dims.get('width', 800))
+    W = float(dims.get('width',  800))
     H = float(dims.get('height', 900))
 
-    verticals    = (L / 500 + 1) * (W / 500 + 1)
-    horiz_l      = (L / 500) * (H / 400)
-    horiz_w      = (W / 500) * (H / 400)
+    verticals     = (L / 500 + 1) * (W / 500 + 1)
+    horiz_l       = (L / 500) * (H / 400)
+    horiz_w       = (W / 500) * (H / 400)
     profile_count = round((verticals + horiz_l + horiz_w) * load_factor)
     total_meters  = round(profile_count * (L + W + H) / 3 / 1000, 1)
     weight_kg     = round(total_meters * kg_per_m, 1)
-    estimated_cost = round(weight_kg * 85 * load_factor)
+    estimated_cost = round(total_meters * price_mxn_m * load_factor)
 
     return {
         'profileCount':   profile_count,
         'totalMeters':    total_meters,
         'weightKg':       weight_kg,
         'estimatedCost':  estimated_cost,
+        'provider':       provider,
+        'series':         series,
     }
 
 

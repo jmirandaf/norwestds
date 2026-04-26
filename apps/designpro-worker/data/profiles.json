@@ -1,0 +1,286 @@
+{
+  "providers": {
+    "advanced": {
+      "name": "Advanced",
+      "formerly": "TJSD",
+      "country": "MX",
+      "series": {
+        "30": {
+          "size_mm": 30,
+          "weight_kg_m": 0.92,
+          "groove_width_mm": 6,
+          "groove_depth_mm": 5.5,
+          "corner_radius_mm": 2.0,
+          "wall_thickness_mm": 2.0,
+          "price_mxn_m": 165,
+          "max_load_n_m": 1200
+        },
+        "40": {
+          "size_mm": 40,
+          "weight_kg_m": 1.44,
+          "groove_width_mm": 8,
+          "groove_depth_mm": 7.0,
+          "corner_radius_mm": 2.5,
+          "wall_thickness_mm": 2.5,
+          "price_mxn_m": 255,
+          "max_load_n_m": 2200
+        },
+        "45": {
+          "size_mm": 45,
+          "weight_kg_m": 1.78,
+          "groove_width_mm": 10,
+          "groove_depth_mm": 8.5,
+          "corner_radius_mm": 3.0,
+          "wall_thickness_mm": 3.0,
+          "price_mxn_m": 320,
+          "max_load_n_m": 3200
+        }
+      },
+      "accessories": {
+        "bracket_inner_90": {
+          "name": "Escuadra interior 90°",
+          "sku": "ADV-BRK-I90",
+          "compatible_series": ["30", "40", "45"],
+          "price_mxn": 32,
+          "t_nuts_required": 2,
+          "screws_required": 2
+        },
+        "bracket_outer_90": {
+          "name": "Escuadra exterior 90°",
+          "sku": "ADV-BRK-O90",
+          "compatible_series": ["30", "40", "45"],
+          "price_mxn": 42,
+          "t_nuts_required": 2,
+          "screws_required": 2
+        },
+        "bracket_double": {
+          "name": "Escuadra doble refuerzo",
+          "sku": "ADV-BRK-D",
+          "compatible_series": ["40", "45"],
+          "price_mxn": 65,
+          "t_nuts_required": 4,
+          "screws_required": 4
+        },
+        "t_nut_m6": {
+          "name": "Tuerca en T M6",
+          "sku": "ADV-TN-M6",
+          "compatible_series": ["30"],
+          "price_mxn": 3.5
+        },
+        "t_nut_m8": {
+          "name": "Tuerca en T M8",
+          "sku": "ADV-TN-M8",
+          "compatible_series": ["40", "45"],
+          "price_mxn": 4.5
+        },
+        "screw_m6x12": {
+          "name": "Tornillo Allen M6×12",
+          "sku": "ADV-SC-M6x12",
+          "compatible_series": ["30"],
+          "price_mxn": 2.5
+        },
+        "screw_m8x16": {
+          "name": "Tornillo Allen M8×16",
+          "sku": "ADV-SC-M8x16",
+          "compatible_series": ["40", "45"],
+          "price_mxn": 3.2
+        },
+        "end_cap": {
+          "name": "Tapa de perfil",
+          "sku": "ADV-CAP",
+          "compatible_series": ["30", "40", "45"],
+          "price_mxn": 7.5
+        }
+      }
+    },
+
+    "modular": {
+      "name": "Modular",
+      "country": "MX",
+      "series": {
+        "30": {
+          "size_mm": 30,
+          "weight_kg_m": 0.88,
+          "groove_width_mm": 6,
+          "groove_depth_mm": 5.2,
+          "corner_radius_mm": 1.5,
+          "wall_thickness_mm": 1.8,
+          "price_mxn_m": 155,
+          "max_load_n_m": 1100
+        },
+        "40": {
+          "size_mm": 40,
+          "weight_kg_m": 1.38,
+          "groove_width_mm": 8,
+          "groove_depth_mm": 6.8,
+          "corner_radius_mm": 2.0,
+          "wall_thickness_mm": 2.2,
+          "price_mxn_m": 240,
+          "max_load_n_m": 2000
+        },
+        "45": {
+          "size_mm": 45,
+          "weight_kg_m": 1.72,
+          "groove_width_mm": 10,
+          "groove_depth_mm": 8.2,
+          "corner_radius_mm": 2.5,
+          "wall_thickness_mm": 2.8,
+          "price_mxn_m": 305,
+          "max_load_n_m": 3000
+        }
+      },
+      "accessories": {
+        "bracket_inner_90": {
+          "name": "Conector interior 90°",
+          "sku": "MOD-CI90",
+          "compatible_series": ["30", "40", "45"],
+          "price_mxn": 28,
+          "t_nuts_required": 2,
+          "screws_required": 2
+        },
+        "bracket_outer_90": {
+          "name": "Conector exterior 90°",
+          "sku": "MOD-CE90",
+          "compatible_series": ["30", "40", "45"],
+          "price_mxn": 38,
+          "t_nuts_required": 2,
+          "screws_required": 2
+        },
+        "bracket_double": {
+          "name": "Conector doble refuerzo",
+          "sku": "MOD-CD",
+          "compatible_series": ["40", "45"],
+          "price_mxn": 58,
+          "t_nuts_required": 4,
+          "screws_required": 4
+        },
+        "t_nut_m6": {
+          "name": "Tuerca deslizante M6",
+          "sku": "MOD-TD-M6",
+          "compatible_series": ["30"],
+          "price_mxn": 3.2
+        },
+        "t_nut_m8": {
+          "name": "Tuerca deslizante M8",
+          "sku": "MOD-TD-M8",
+          "compatible_series": ["40", "45"],
+          "price_mxn": 4.2
+        },
+        "screw_m6x12": {
+          "name": "Tornillo hex M6×12",
+          "sku": "MOD-SC-M6x12",
+          "compatible_series": ["30"],
+          "price_mxn": 2.2
+        },
+        "screw_m8x16": {
+          "name": "Tornillo hex M8×16",
+          "sku": "MOD-SC-M8x16",
+          "compatible_series": ["40", "45"],
+          "price_mxn": 2.8
+        },
+        "end_cap": {
+          "name": "Tapón de perfil",
+          "sku": "MOD-CAP",
+          "compatible_series": ["30", "40", "45"],
+          "price_mxn": 6.5
+        }
+      }
+    },
+
+    "item": {
+      "name": "Item",
+      "country": "DE",
+      "series": {
+        "30": {
+          "size_mm": 30,
+          "weight_kg_m": 0.97,
+          "groove_width_mm": 6,
+          "groove_depth_mm": 6.0,
+          "corner_radius_mm": 2.5,
+          "wall_thickness_mm": 2.2,
+          "price_mxn_m": 210,
+          "max_load_n_m": 1400,
+          "item_ref": "Profile 6 30x30"
+        },
+        "40": {
+          "size_mm": 40,
+          "weight_kg_m": 1.54,
+          "groove_width_mm": 8,
+          "groove_depth_mm": 8.0,
+          "corner_radius_mm": 3.0,
+          "wall_thickness_mm": 2.5,
+          "price_mxn_m": 310,
+          "max_load_n_m": 2600,
+          "item_ref": "Profile 8 40x40"
+        },
+        "45": {
+          "size_mm": 45,
+          "weight_kg_m": 1.92,
+          "groove_width_mm": 8,
+          "groove_depth_mm": 8.0,
+          "corner_radius_mm": 3.5,
+          "wall_thickness_mm": 3.0,
+          "price_mxn_m": 380,
+          "max_load_n_m": 3800,
+          "item_ref": "Profile 8 45x45"
+        }
+      },
+      "accessories": {
+        "bracket_inner_90": {
+          "name": "Ángulo interior 90°",
+          "sku": "ITEM-ANG-I90",
+          "compatible_series": ["30", "40", "45"],
+          "price_mxn": 48,
+          "t_nuts_required": 2,
+          "screws_required": 2
+        },
+        "bracket_outer_90": {
+          "name": "Ángulo exterior 90°",
+          "sku": "ITEM-ANG-O90",
+          "compatible_series": ["30", "40", "45"],
+          "price_mxn": 62,
+          "t_nuts_required": 2,
+          "screws_required": 2
+        },
+        "bracket_double": {
+          "name": "Escuadra de fijación doble",
+          "sku": "ITEM-ANG-D",
+          "compatible_series": ["40", "45"],
+          "price_mxn": 95,
+          "t_nuts_required": 4,
+          "screws_required": 4
+        },
+        "t_nut_m6": {
+          "name": "Tuerca T ranura 6 M6",
+          "sku": "ITEM-TN6-M6",
+          "compatible_series": ["30"],
+          "price_mxn": 5.0
+        },
+        "t_nut_m8": {
+          "name": "Tuerca T ranura 8 M8",
+          "sku": "ITEM-TN8-M8",
+          "compatible_series": ["40", "45"],
+          "price_mxn": 6.5
+        },
+        "screw_m6x12": {
+          "name": "Tornillo cilíndrico M6×12",
+          "sku": "ITEM-SC-M6x12",
+          "compatible_series": ["30"],
+          "price_mxn": 3.5
+        },
+        "screw_m8x16": {
+          "name": "Tornillo cilíndrico M8×16",
+          "sku": "ITEM-SC-M8x16",
+          "compatible_series": ["40", "45"],
+          "price_mxn": 4.5
+        },
+        "end_cap": {
+          "name": "Tapa de perfil con lengüeta",
+          "sku": "ITEM-CAP",
+          "compatible_series": ["30", "40", "45"],
+          "price_mxn": 12.0
+        }
+      }
+    }
+  }
+}
