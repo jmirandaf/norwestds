@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '@clerk/clerk-react'
 import PortalLayout from '../../components/PortalLayout.jsx'
 
-const API = import.meta.env.VITE_API_BASE || 'http://localhost:8787'
+const API = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8787'
 
 const CATEGORY_LABELS = {
   bracket:  'Escuadra',
