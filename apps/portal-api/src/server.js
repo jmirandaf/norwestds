@@ -3,6 +3,8 @@ import express from 'express'
 import cors from 'cors'
 import portalRoutes from './routes/portal.js'
 import catalogRoutes from './routes/catalog.js'
+import materialsRoutes from './routes/materials.js'
+import quotesRoutes from './routes/quotes.js'
 
 const app = express()
 const port = Number(process.env.PORT || 8787)
@@ -16,6 +18,8 @@ app.use(express.json())
 app.get('/health', (_, res) => res.json({ ok: true }))
 app.use('/api/portal', portalRoutes)
 app.use('/api/catalog', catalogRoutes)
+app.use('/api/materials', materialsRoutes)
+app.use('/api/quotes', quotesRoutes)
 
 app.listen(port, () => {
   console.log(`[norwestds-backend] running on http://localhost:${port}`)
