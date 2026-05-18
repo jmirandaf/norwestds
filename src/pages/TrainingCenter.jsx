@@ -32,7 +32,7 @@ export default function TrainingCenter() {
       {/* ── HEADER ── */}
       <div className="ns-page-header">
         <div className="ns-page-header-inner">
-          <div className="ns-eyebrow"><span className="ns-eyebrow-dot" />Capacitación Especializada</div>
+          <div className="ns-eyebrow"><span className="ns-eyebrow-dot" />{t('training.eyebrow')}</div>
           <h1 className="ns-page-title">{t('training.title')}</h1>
           <p className="ns-page-lead">{t('training.lead')}</p>
         </div>
@@ -41,9 +41,9 @@ export default function TrainingCenter() {
       {/* ── CURSOS ── */}
       <section className="ns-section">
         <div className="ns-section-inner">
-          <div className="ns-section-overline">Cursos disponibles</div>
-          <h2 className="ns-section-title">Programas de Capacitación</h2>
-          <p className="ns-section-lead">Formación práctica para ingenieros y técnicos de planta.</p>
+          <div className="ns-section-overline">{t('training.coursesOverline')}</div>
+          <h2 className="ns-section-title">{t('training.programsTitle')}</h2>
+          <p className="ns-section-lead">{t('training.programsLead')}</p>
           <div className="ns-grid ns-grid--3">
             {courses.map((c, i) => (
               <article key={i} className="ns-card" style={{ position: 'relative', opacity: c.comingSoon ? 0.75 : 1 }}>
@@ -69,11 +69,11 @@ export default function TrainingCenter() {
       <section className="ns-cta-band">
         <div className="ns-cta-band-inner">
           <div>
-            <h2>¿Interesado en capacitar a tu equipo?</h2>
-            <p>Diseñamos programas a medida para las necesidades de tu planta.</p>
+            <h2>{t('training.ctaTitle')}</h2>
+            <p>{t('training.ctaText')}</p>
           </div>
           <div className="ns-cta-band-btns">
-            <Link to="/contact" className="ns-btn ns-btn-light">Solicitar información</Link>
+            <Link to="/contact" className="ns-btn ns-btn-light">{t('training.ctaInfo')}</Link>
           </div>
         </div>
       </section>

@@ -38,9 +38,9 @@ export default function Services() {
       {/* ── HEADER ── */}
       <div className="ns-page-header">
         <div className="ns-page-header-inner">
-          <div className="ns-eyebrow"><span className="ns-eyebrow-dot" />Soluciones</div>
+          <div className="ns-eyebrow"><span className="ns-eyebrow-dot" />{t('services.eyebrow')}</div>
           <h1 className="ns-page-title">{t('services.title')}</h1>
-          <p className="ns-page-lead">Diseñamos e implementamos sistemas de automatización adaptados a los requerimientos de cada industria.</p>
+          <p className="ns-page-lead">{t('services.lead')}</p>
         </div>
       </div>
 
@@ -85,9 +85,9 @@ export default function Services() {
       {/* ── SERVICIOS GRID ── */}
       <section className="ns-section">
         <div className="ns-section-inner">
-          <div className="ns-section-overline">Catálogo</div>
-          <h2 className="ns-section-title">Nuestros Servicios</h2>
-          <p className="ns-section-lead">Soluciones end-to-end desde el diseño hasta la puesta en marcha y soporte.</p>
+          <div className="ns-section-overline">{t('services.catalogOverline')}</div>
+          <h2 className="ns-section-title">{t('services.ourServicesTitle')}</h2>
+          <p className="ns-section-lead">{t('services.ourServicesLead')}</p>
           <div className="ns-grid ns-grid--4">
             {items.map((item, i) => (
               <article className="ns-card" key={i}>
@@ -108,12 +108,12 @@ export default function Services() {
       <section className="ns-cta-band">
         <div className="ns-cta-band-inner">
           <div>
-            <h2>¿Necesitas una solución personalizada?</h2>
-            <p>Cuéntanos tu reto y diseñamos la respuesta técnica ideal.</p>
+            <h2>{t('services.ctaTitle')}</h2>
+            <p>{t('services.ctaText')}</p>
           </div>
           <div className="ns-cta-band-btns">
-            <Link to="/contact" className="ns-btn ns-btn-light">Solicitar consultoría</Link>
-            <Link to="/projects" className="ns-btn ns-btn-ghost-dark">Ver casos de éxito</Link>
+            <Link to="/contact" className="ns-btn ns-btn-light">{t('services.ctaConsult')}</Link>
+            <Link to="/projects" className="ns-btn ns-btn-ghost-dark">{t('services.ctaProjects')}</Link>
           </div>
         </div>
       </section>

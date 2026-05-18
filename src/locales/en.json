@@ -99,6 +99,13 @@
   "about": {
     "title": "About Us",
     "lead": "An engineering firm built for industrial performance",
+    "whoWeAreOverline": "Who We Are",
+    "builtForPerformance": "Built for Industrial Performance",
+    "ourValuesOverline": "Our Values",
+    "ctaTitle": "Ready to work together?",
+    "ctaText": "Tell us about your project and we'll find the right solution.",
+    "ctaContact": "Contact us",
+    "ctaProjects": "See projects",
     "description": "NORWEST DYNAMIC SYSTEMS is an industrial automation and robotics integration firm based in Tijuana, B.C. — serving manufacturers across Mexico and the U.S. border region. We design, build, program, and commission automated systems that deliver measurable results: higher throughput, lower scrap, and reduced labor dependency. From concept to commissioning, we work as an embedded technical partner — not just a vendor.",
     "missionLabel": "Mission",
     "missionText": "To design, integrate, and execute high-performance engineering, automation, and industrial control solutions, ensuring quality, reliability, and measurable results for our clients, while driving technological growth in the Tijuana–San Diego region.",
@@ -117,6 +124,15 @@
   },
   "services": {
     "title": "Services",
+    "eyebrow": "Solutions",
+    "lead": "We design and implement automation systems tailored to the requirements of each industry.",
+    "catalogOverline": "Catalog",
+    "ourServicesTitle": "Our Services",
+    "ourServicesLead": "End-to-end solutions from design to commissioning and support.",
+    "ctaTitle": "Need a custom solution?",
+    "ctaText": "Tell us your challenge and we'll design the ideal technical answer.",
+    "ctaConsult": "Request consultation",
+    "ctaProjects": "View success stories",
     "service1": "Industrial Automation",
     "service1Desc": "Implementation of control and automation systems to optimize industrial processes and improve operational efficiency.",
     "service2": "Control Systems",
@@ -148,14 +164,33 @@
     "designProMetric3Label": "initial client response"
   },
   "projects": {
-    "title": "Projects"
+    "title": "Projects",
+    "eyebrow": "Success Stories",
+    "pageTitle": "Featured Projects",
+    "pageLead": "Explore some of our success stories in industrial automation solutions.",
+    "engineering3DOverline": "3D Engineering",
+    "engineering3DTitle": "Design & Engineering in SolidWorks",
+    "engineering3DLead": "Each project starts from a detailed 3D model. Scroll to explore the design process.",
+    "techLabel": "Technologies",
+    "resultsLabel": "Key Results",
+    "ctaTitle": "Ready for Your Next Project?",
+    "ctaText": "Let us take your operation to the next level with custom automation.",
+    "ctaContact": "Contact Now",
+    "ctaServices": "View Services"
   },
   "contact": {
     "title": "Contact",
     "lead": "Ready to automate? Tell us about your project and we'll respond within the next 24 business hours.",
     "office": "Office",
     "phone": "Phone",
-    "email": "Email"
+    "email": "Email",
+    "eyebrow": "Let's Talk",
+    "sendMessage": "Send us a message",
+    "contactInfo": "Contact Information",
+    "officeInfo": "Pedregal de Santa Julia\nTijuana, Baja California, México",
+    "phoneInfo": "+52 664-685-3430",
+    "phoneHours": "Mon — Fri: 9:00 — 18:00",
+    "responseTime": "Response time: within 24 business hours"
   },
   "training": {
     "title": "NDS Training Center",
@@ -170,7 +205,14 @@
     "course4Desc": "Configuration and administration of industrial communication networks.",
     "course5": "Industrial Robotics",
     "course5Desc": "Training in programming and operation of FANUC industrial robots.",
-    "comingSoon": "Coming Soon"
+    "comingSoon": "Coming Soon",
+    "eyebrow": "Specialized Training",
+    "coursesOverline": "Available courses",
+    "programsTitle": "Training Programs",
+    "programsLead": "Hands-on training for plant engineers and technicians.",
+    "ctaTitle": "Interested in training your team?",
+    "ctaText": "We design custom programs for your plant's specific needs.",
+    "ctaInfo": "Request information"
   },
   "team": {
     "title": "Our Team",

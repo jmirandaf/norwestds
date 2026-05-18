@@ -59,13 +59,13 @@ export default function About() {
         <div className="ns-section-inner">
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48, alignItems: 'center' }}>
             <div>
-              <div className="ns-section-overline">Who We Are</div>
-              <h2 className="ns-section-title" style={{ marginBottom: 20 }}>Built for Industrial Performance</h2>
+              <div className="ns-section-overline">{t('about.whoWeAreOverline')}</div>
+              <h2 className="ns-section-title" style={{ marginBottom: 20 }}>{t('about.builtForPerformance')}</h2>
               <p style={{ color: 'var(--nds-muted)', lineHeight: 1.75, fontSize: '1rem' }}>
                 {t('about.description')}
               </p>
               <div style={{ display: 'flex', gap: 16, marginTop: 28, flexWrap: 'wrap' }}>
-                {['Turnkey Execution', 'In-House Build', 'Binational Operations'].map(tag => (
+                {[t('home.heroBullet1'), t('home.heroBullet2'), t('home.heroBullet3')].map(tag => (
                   <span key={tag} style={{
                     padding: '6px 14px', borderRadius: 999,
                     background: 'var(--nds-teal-wash)', color: 'var(--nds-teal-deep)',
@@ -109,7 +109,7 @@ export default function About() {
       {/* ── WHAT DRIVES EVERY DECISION ── */}
       <section className="ns-section" style={{ background: '#fff' }}>
         <div className="ns-section-inner">
-          <div className="ns-section-overline">Our Values</div>
+          <div className="ns-section-overline">{t('about.ourValuesOverline')}</div>
           <h2 className="ns-section-title">{t('about.valuesTitle')}</h2>
           <p className="ns-section-lead">{t('about.valuesLead')}</p>
           <div className="ns-grid ns-grid--4">
@@ -132,12 +132,12 @@ export default function About() {
       <section className="ns-cta-band">
         <div className="ns-cta-band-inner">
           <div>
-            <h2>Ready to work together?</h2>
-            <p>Tell us about your project and we'll find the right solution.</p>
+            <h2>{t('about.ctaTitle')}</h2>
+            <p>{t('about.ctaText')}</p>
           </div>
           <div className="ns-cta-band-btns">
-            <Link to="/contact" className="ns-btn ns-btn-light">Contact us</Link>
-            <Link to="/projects" className="ns-btn ns-btn-ghost-dark">See projects</Link>
+            <Link to="/contact" className="ns-btn ns-btn-light">{t('about.ctaContact')}</Link>
+            <Link to="/projects" className="ns-btn ns-btn-ghost-dark">{t('about.ctaProjects')}</Link>
           </div>
         </div>
       </section>
