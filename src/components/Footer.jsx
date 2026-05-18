@@ -19,7 +19,6 @@ export default function Footer() {
             <h4>{t('footer.company')}</h4>
             <ul>
               <li><Link to="/about">{t('footer.about')}</Link></li>
-              <li><Link to="/team">{t('footer.team')}</Link></li>
               <li><Link to="/contact">{t('footer.contact')}</Link></li>
             </ul>
           </div>
