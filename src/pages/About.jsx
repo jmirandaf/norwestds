@@ -3,106 +3,125 @@ import { Link } from 'react-router-dom';
 import useMeta from '../hooks/useMeta';
 import PageLayout from '../layout/PageLayout';
 
-const team = [
-  { name: 'Carlos Gonzalez',   role: 'Sales Engineer / PM',        expertise: 'Ventas y Gestión de Proyectos' },
-  { name: 'Sebastian Bandeliz', role: 'Legal Affairs / PM',          expertise: 'Asuntos Legales y Gestión de Proyectos' },
-  { name: 'Elias Mejia',        role: 'Design Lead Engineer',        expertise: 'Diseño e Ingeniería' },
-  { name: 'Juan Miranda',       role: 'Control Lead Engineer',       expertise: 'Control e Ingeniería' },
-];
-
-const whyUs = [
-  { title: 'Experiencia Comprobada', text: 'Más de 10 años en el sector industrial implementando soluciones de automatización exitosas.' },
-  { title: 'Soporte Continuo',       text: 'Acompañamiento técnico durante y después de la implementación para asegurar el éxito del proyecto.' },
-  { title: 'Tecnología de Punta',    text: 'Trabajamos con las marcas líderes del mercado para entregar soluciones confiables y escalables.' },
-  { title: 'Equipo Certificado',     text: 'Nuestros ingenieros cuentan con certificaciones internacionales en robótica, visión y control.' },
+const VALUES = [
+  {
+    vKey: 'v1',
+    icon: <><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></>,
+  },
+  {
+    vKey: 'v2',
+    icon: <><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></>,
+  },
+  {
+    vKey: 'v3',
+    icon: <><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></>,
+  },
+  {
+    vKey: 'v4',
+    icon: <><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></>,
+  },
+  {
+    vKey: 'v5',
+    icon: <><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></>,
+  },
+  {
+    vKey: 'v6',
+    icon: <><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></>,
+  },
+  {
+    vKey: 'v7',
+    icon: <><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>,
+  },
 ];
 
 export default function About() {
   const { t } = useTranslation();
   useMeta({
-    title: 'Quiénes Somos | Norwest DS — Integradora en Tijuana',
-    description: 'Equipo de ingenieros especializados en automatización industrial. 8+ años de experiencia. Sede en Tijuana, BC con presencia en San Diego, CA.',
+    title: 'About Us | Norwest Dynamic Systems — Industrial Automation',
+    description: 'Industrial automation and robotics integration firm based in Tijuana, B.C. Serving manufacturers across Mexico and the U.S. border region.',
     url: 'https://norwestds.com/about',
   });
 
   return (
     <PageLayout>
+
       {/* ── HEADER ── */}
       <div className="ns-page-header">
         <div className="ns-page-header-inner">
           <div className="ns-eyebrow"><span className="ns-eyebrow-dot" />Norwest Dynamic Systems</div>
           <h1 className="ns-page-title">{t('about.title')}</h1>
-          <p className="ns-page-lead">{t('about.lead')}, comprometidos con la excelencia técnica y la innovación.</p>
+          <p className="ns-page-lead">{t('about.lead')}</p>
         </div>
       </div>
 
-      {/* ── MISIÓN / VISIÓN / VALORES ── */}
+      {/* ── WHO WE ARE ── */}
       <section className="ns-section">
         <div className="ns-section-inner">
-          <div className="ns-grid ns-grid--3">
-            <article className="ns-card">
-              <div className="ns-card-icon">
-                <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-              </div>
-              <h3>Nuestra Misión</h3>
-              <p>Transformar procesos industriales mediante soluciones de automatización innovadoras y confiables que impulsen la productividad y competitividad de nuestros clientes.</p>
-            </article>
-            <article className="ns-card">
-              <div className="ns-card-icon">
-                <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-              </div>
-              <h3>Nuestra Visión</h3>
-              <p>Ser el referente en integración de tecnologías avanzadas para la industria 4.0 en México, reconocidos por nuestra excelencia técnica y compromiso con resultados.</p>
-            </article>
-            <article className="ns-card">
-              <div className="ns-card-icon">
-                <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-              </div>
-              <h3>Valores</h3>
-              <ul style={{ listStyle: 'none', padding: 0, margin: '8px 0 0', display: 'flex', flexDirection: 'column', gap: 6 }}>
-                {['Excelencia técnica', 'Innovación continua', 'Compromiso con resultados', 'Integridad profesional'].map(v => (
-                  <li key={v} style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--nds-muted)', fontSize: '.93rem' }}>
-                    <svg width="14" height="14" fill="none" stroke="var(--nds-teal)" strokeWidth="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                    {v}
-                  </li>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48, alignItems: 'center' }}>
+            <div>
+              <div className="ns-section-overline">Who We Are</div>
+              <h2 className="ns-section-title" style={{ marginBottom: 20 }}>Built for Industrial Performance</h2>
+              <p style={{ color: 'var(--nds-muted)', lineHeight: 1.75, fontSize: '1rem' }}>
+                {t('about.description')}
+              </p>
+              <div style={{ display: 'flex', gap: 16, marginTop: 28, flexWrap: 'wrap' }}>
+                {['Turnkey Execution', 'In-House Build', 'Binational Operations'].map(tag => (
+                  <span key={tag} style={{
+                    padding: '6px 14px', borderRadius: 999,
+                    background: 'var(--nds-teal-wash)', color: 'var(--nds-teal-deep)',
+                    fontSize: '.82rem', fontWeight: 700, letterSpacing: '.02em',
+                  }}>
+                    {tag}
+                  </span>
                 ))}
-              </ul>
-            </article>
+              </div>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {/* Mission */}
+              <article className="ns-card" style={{ borderLeft: '3px solid var(--nds-teal)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                  <svg width="18" height="18" fill="none" stroke="var(--nds-teal)" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                  </svg>
+                  <h3 style={{ margin: 0, fontSize: '.95rem', textTransform: 'uppercase', letterSpacing: '.06em', color: 'var(--nds-teal-deep)' }}>
+                    {t('about.missionLabel')}
+                  </h3>
+                </div>
+                <p style={{ margin: 0, fontSize: '.9rem', lineHeight: 1.65 }}>{t('about.missionText')}</p>
+              </article>
+              {/* Vision */}
+              <article className="ns-card" style={{ borderLeft: '3px solid var(--nds-teal)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                  <svg width="18" height="18" fill="none" stroke="var(--nds-teal)" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                  </svg>
+                  <h3 style={{ margin: 0, fontSize: '.95rem', textTransform: 'uppercase', letterSpacing: '.06em', color: 'var(--nds-teal-deep)' }}>
+                    {t('about.visionLabel')}
+                  </h3>
+                </div>
+                <p style={{ margin: 0, fontSize: '.9rem', lineHeight: 1.65 }}>{t('about.visionText')}</p>
+              </article>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── EQUIPO ── */}
+      {/* ── WHAT DRIVES EVERY DECISION ── */}
       <section className="ns-section" style={{ background: '#fff' }}>
         <div className="ns-section-inner">
-          <div className="ns-section-overline">Personas</div>
-          <h2 className="ns-section-title">{t('about.teamTitle')}</h2>
-          <p className="ns-section-lead">Contamos con profesionales especializados en diferentes áreas de ingeniería y gestión de proyectos.</p>
+          <div className="ns-section-overline">Our Values</div>
+          <h2 className="ns-section-title">{t('about.valuesTitle')}</h2>
+          <p className="ns-section-lead">{t('about.valuesLead')}</p>
           <div className="ns-grid ns-grid--4">
-            {team.map((m) => (
-              <article className="ns-card" key={m.name}>
-                <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'var(--nds-teal-wash)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14, color: 'var(--nds-teal)', fontWeight: 700, fontSize: '1.1rem' }}>
-                  {m.name.charAt(0)}
+            {VALUES.map(({ vKey, icon }) => (
+              <article className="ns-card" key={vKey}>
+                <div className="ns-card-icon">
+                  <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
+                    {icon}
+                  </svg>
                 </div>
-                <h3 style={{ marginBottom: 4 }}>{m.name}</h3>
-                <p style={{ color: 'var(--nds-teal)', fontWeight: 600, fontSize: '.88rem', marginBottom: 6 }}>{m.role}</p>
-                <p>{m.expertise}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── POR QUÉ ELEGIRNOS ── */}
-      <section className="ns-section">
-        <div className="ns-section-inner">
-          <div className="ns-section-overline">Diferenciadores</div>
-          <h2 className="ns-section-title">Por Qué Elegirnos</h2>
-          <div className="ns-grid ns-grid--4">
-            {whyUs.map((w) => (
-              <article className="ns-card" key={w.title}>
-                <h3>{w.title}</h3>
-                <p>{w.text}</p>
+                <h3 style={{ fontSize: '.95rem' }}>{t(`about.${vKey}`)}</h3>
+                <p>{t(`about.${vKey}Desc`)}</p>
               </article>
             ))}
           </div>
@@ -113,15 +132,16 @@ export default function About() {
       <section className="ns-cta-band">
         <div className="ns-cta-band-inner">
           <div>
-            <h2>¿Listo para trabajar juntos?</h2>
-            <p>Cuéntanos tu proyecto y encontramos la solución ideal.</p>
+            <h2>Ready to work together?</h2>
+            <p>Tell us about your project and we'll find the right solution.</p>
           </div>
           <div className="ns-cta-band-btns">
-            <Link to="/contact" className="ns-btn ns-btn-light">Contactar</Link>
-            <Link to="/projects" className="ns-btn ns-btn-ghost-dark">Ver proyectos</Link>
+            <Link to="/contact" className="ns-btn ns-btn-light">Contact us</Link>
+            <Link to="/projects" className="ns-btn ns-btn-ghost-dark">See projects</Link>
           </div>
         </div>
       </section>
+
     </PageLayout>
   );
 }

@@ -117,50 +117,51 @@ export default function Home() {
               </div>
             </div>
 
-            {/* RIGHT: INFO CARD */}
-            <aside className="ns-info-card" aria-label={t('home.panelLabel')}>
+            {/* RIGHT: CORE CAPABILITIES CARD */}
+            <aside className="ns-info-card" aria-label={t('home.capLabel')}>
               <div className="ns-info-card__header">
                 <div className="ns-info-card__header-icon">
                   <svg width="18" height="18" fill="none" stroke="#12A6CC" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
-                    <circle cx="12" cy="12" r="3" />
-                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14" />
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
                   </svg>
                 </div>
-                <div className="ns-info-card__header-text">{t('home.panelLabel')}</div>
+                <div className="ns-info-card__header-text">{t('home.capLabel')}</div>
               </div>
 
-              <div className="ns-info-card__section">
-                <div className="ns-info-card__label">{t('home.infoCat1')}</div>
-                <div className="ns-info-card__tags">
-                  {['FANUC', 'Keyence', 'Cognex', 'SICK'].map(tag => (
-                    <span key={tag} className="ns-info-card__tag">{tag}</span>
-                  ))}
-                </div>
-              </div>
+              {[
+                {
+                  key: 'cap1',
+                  icon: <><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></>,
+                },
+                {
+                  key: 'cap2',
+                  icon: <><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></>,
+                },
+                {
+                  key: 'cap3',
+                  icon: <><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></>,
+                },
+                {
+                  key: 'cap4',
+                  icon: <><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/><path d="M9 7h6M9 11h4"/></>,
+                },
+              ].map(({ key, icon }, i, arr) => (
+                <Fragment key={key}>
+                  <div className="ns-info-card__section" style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                    <svg width="15" height="15" fill="none" stroke="#12A6CC" strokeWidth="2" viewBox="0 0 24 24"
+                      aria-hidden="true" style={{ flexShrink: 0, marginTop: 2 }}>
+                      {icon}
+                    </svg>
+                    <div className="ns-info-card__label" style={{ fontSize: '.83rem', lineHeight: 1.4 }}>
+                      {t(`home.${key}Title`)}
+                    </div>
+                  </div>
+                  {i < arr.length - 1 && <div className="ns-info-card__divider" />}
+                </Fragment>
+              ))}
 
               <div className="ns-info-card__divider" />
-
-              <div className="ns-info-card__section">
-                <div className="ns-info-card__label">{t('home.infoCat2')}</div>
-                <div className="ns-info-card__tags">
-                  {['PLCs', 'HMIs', 'SCADA'].map(tag => (
-                    <span key={tag} className="ns-info-card__tag">{tag}</span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="ns-info-card__divider" />
-
-              <div className="ns-info-card__section">
-                <div className="ns-info-card__label">{t('home.infoCat3')}</div>
-                <div className="ns-info-card__tags">
-                  <span className="ns-info-card__tag">{t('home.specialty4Title')}</span>
-                  <span className="ns-info-card__tag">ISO 13849</span>
-                </div>
-              </div>
-
-              <div className="ns-info-card__divider" />
-
               <div className="ns-info-card__stat-row">
                 <div className="ns-info-card__stat">
                   <div className="ns-info-card__stat-num">{t('home.infoStat1Num')}</div>
