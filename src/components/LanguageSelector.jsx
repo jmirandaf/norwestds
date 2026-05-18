@@ -4,7 +4,7 @@ import './LanguageSelector.css';
 const LANGS = [
   { code: 'es', label: 'Español',  flag: '/mxflag.png', alt: 'MX' },
   { code: 'en', label: 'English',  flag: '/usaflag.png', alt: 'EN' },
-  { code: 'zh', label: '中文',     flag: null,           alt: '中' },
+  { code: 'zh', label: '中文',     flag: '/cnflag.svg',  alt: 'CN' },
 ]
 
 export default function LanguageSelector() {
