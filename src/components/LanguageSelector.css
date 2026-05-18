@@ -34,6 +34,14 @@
   border-radius: 3px;
 }
 
+.flag-emoji {
+  font-size: 14px;
+  font-weight: 700;
+  color: #333;
+  line-height: 1;
+  font-family: sans-serif;
+}
+
 .lang-button:hover {
   transform: scale(1.1);
   background: rgba(0, 167, 225, 0.1);
