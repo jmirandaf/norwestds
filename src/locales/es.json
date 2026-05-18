@@ -113,7 +113,14 @@
     "v5": "Integridad y Transparencia",  "v5Desc": "Comunicamos con claridad y actuamos con honestidad.",
     "v6": "Seguridad y Calidad Primero", "v6Desc": "Nada está por encima de la seguridad o la calidad del resultado.",
     "v7": "Compromiso como Socio",       "v7Desc": "Actuamos como generadores de valor, no solo como ejecutores de trabajo.",
-    "teamTitle": "Nuestro Equipo"
+    "teamTitle": "Nuestro Equipo",
+    "whoWeAreOverline": "Quiénes Somos",
+    "builtForPerformance": "Construidos para el Rendimiento Industrial",
+    "ourValuesOverline": "Nuestros Valores",
+    "ctaTitle": "¿Listos para trabajar juntos?",
+    "ctaText": "Cuéntanos sobre tu proyecto y encontraremos la solución correcta.",
+    "ctaContact": "Contáctanos",
+    "ctaProjects": "Ver proyectos"
   },
   "services": {
     "title": "Servicios",
@@ -145,17 +152,45 @@
     "designProMetric2Value": "-35%",
     "designProMetric2Label": "retrabajo técnico",
     "designProMetric3Value": "24h",
-    "designProMetric3Label": "respuesta inicial al cliente"
+    "designProMetric3Label": "respuesta inicial al cliente",
+    "eyebrow": "Soluciones",
+    "lead": "Diseñamos e implementamos sistemas de automatización adaptados a los requerimientos de cada industria.",
+    "catalogOverline": "Catálogo",
+    "ourServicesTitle": "Nuestros Servicios",
+    "ourServicesLead": "Soluciones end-to-end desde el diseño hasta la puesta en marcha y soporte.",
+    "ctaTitle": "¿Necesitas una solución personalizada?",
+    "ctaText": "Cuéntanos tu reto y diseñamos la respuesta técnica ideal.",
+    "ctaConsult": "Solicitar consultoría",
+    "ctaProjects": "Ver casos de éxito"
   },
   "projects": {
-    "title": "Proyectos"
+    "title": "Proyectos",
+    "eyebrow": "Casos de Éxito",
+    "pageTitle": "Proyectos Destacados",
+    "pageLead": "Conoce algunos de nuestros casos de éxito en implementación de soluciones de automatización industrial.",
+    "engineering3DOverline": "Ingeniería 3D",
+    "engineering3DTitle": "Diseño e Ingeniería en SolidWorks",
+    "engineering3DLead": "Cada proyecto parte de un modelo 3D detallado. Desplázate para explorar el proceso de diseño.",
+    "techLabel": "Tecnologías",
+    "resultsLabel": "Resultados Clave",
+    "ctaTitle": "¿Listo para tu Próximo Proyecto?",
+    "ctaText": "Permítenos llevar tu operación al siguiente nivel con automatización personalizada.",
+    "ctaContact": "Contactar Ahora",
+    "ctaServices": "Ver Servicios"
   },
   "contact": {
     "title": "Contacto",
     "lead": "¿Listo para automatizar? Cuéntanos sobre tu proyecto y te responderemos dentro de las siguientes 24 horas hábiles.",
     "office": "Oficina",
     "phone": "Teléfono",
-    "email": "Email"
+    "email": "Email",
+    "eyebrow": "Hablemos",
+    "sendMessage": "Envíanos un mensaje",
+    "contactInfo": "Información de Contacto",
+    "officeInfo": "Pedregal de Santa Julia\nTijuana, Baja California, México",
+    "phoneInfo": "+52 664-685-3430",
+    "phoneHours": "Lun — Vie: 9:00 — 18:00",
+    "responseTime": "Tiempo de respuesta: dentro de las 24 horas hábiles"
   },
   "training": {
     "title": "NDS Training Center",
@@ -170,7 +205,14 @@
     "course4Desc": "Configuración y administración de redes de comunicación industrial.",
     "course5": "Robótica Industrial",
     "course5Desc": "Capacitación en programación y operación de robots industriales FANUC.",
-    "comingSoon": "Próximamente"
+    "comingSoon": "Próximamente",
+    "eyebrow": "Capacitación Especializada",
+    "coursesOverline": "Cursos disponibles",
+    "programsTitle": "Programas de Capacitación",
+    "programsLead": "Formación práctica para ingenieros y técnicos de planta.",
+    "ctaTitle": "¿Interesado en capacitar a tu equipo?",
+    "ctaText": "Diseñamos programas a medida para las necesidades de tu planta.",
+    "ctaInfo": "Solicitar información"
   },
   "team": {
     "title": "Nuestro Equipo",

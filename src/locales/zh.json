@@ -113,10 +113,26 @@
     "v5": "诚信与透明", "v5Desc": "我们清晰沟通，诚实行事。",
     "v6": "安全与质量优先", "v6Desc": "没有什么比安全和成果质量更重要。",
     "v7": "合作伙伴承诺",   "v7Desc": "我们以价值创造者的身份行事，而不仅仅是工作执行者。",
-    "teamTitle": "我们的团队"
+    "teamTitle": "我们的团队",
+    "whoWeAreOverline": "关于我们",
+    "builtForPerformance": "为工业高性能而建",
+    "ourValuesOverline": "我们的价值观",
+    "ctaTitle": "准备好合作了吗？",
+    "ctaText": "告诉我们您的项目，我们将找到合适的解决方案。",
+    "ctaContact": "联系我们",
+    "ctaProjects": "查看项目"
   },
   "services": {
     "title": "服务",
+    "eyebrow": "解决方案",
+    "lead": "我们设计并实施针对各行业需求的自动化系统。",
+    "catalogOverline": "服务目录",
+    "ourServicesTitle": "我们的服务",
+    "ourServicesLead": "从设计到调试和支持的端到端解决方案。",
+    "ctaTitle": "需要定制解决方案？",
+    "ctaText": "告诉我们您的挑战，我们将设计最佳技术方案。",
+    "ctaConsult": "申请咨询",
+    "ctaProjects": "查看成功案例",
     "service1": "工业自动化",
     "service1Desc": "实施控制和自动化系统，优化工业流程，提高运营效率。",
     "service2": "控制系统",
@@ -148,14 +164,33 @@
     "designProMetric3Label": "客户初始响应"
   },
   "projects": {
-    "title": "项目"
+    "title": "项目",
+    "eyebrow": "成功案例",
+    "pageTitle": "精选项目",
+    "pageLead": "了解我们在工业自动化解决方案实施方面的一些成功案例。",
+    "engineering3DOverline": "3D工程",
+    "engineering3DTitle": "SolidWorks设计与工程",
+    "engineering3DLead": "每个项目都从详细的3D模型开始。滚动浏览设计过程。",
+    "techLabel": "技术",
+    "resultsLabel": "关键成果",
+    "ctaTitle": "准备好开始下一个项目了吗？",
+    "ctaText": "让我们通过定制自动化将您的运营提升到新水平。",
+    "ctaContact": "立即联系",
+    "ctaServices": "查看服务"
   },
   "contact": {
     "title": "联系我们",
     "lead": "准备好实现自动化了吗？告诉我们您的项目，我们将在24个工作小时内回复您。",
     "office": "办公室",
     "phone": "电话",
-    "email": "电子邮件"
+    "email": "电子邮件",
+    "eyebrow": "联系我们",
+    "sendMessage": "发送消息",
+    "contactInfo": "联系信息",
+    "officeInfo": "Pedregal de Santa Julia\n蒂华纳，下加利福尼亚州，墨西哥",
+    "phoneInfo": "+52 664-685-3430",
+    "phoneHours": "周一 — 周五: 9:00 — 18:00",
+    "responseTime": "响应时间：24个工作小时内"
   },
   "training": {
     "title": "NDS 培训中心",
@@ -170,7 +205,14 @@
     "course4Desc": "工业通信网络的配置与管理。",
     "course5": "工业机器人",
     "course5Desc": "FANUC 工业机器人编程与操作培训。",
-    "comingSoon": "即将推出"
+    "comingSoon": "即将推出",
+    "eyebrow": "专业培训",
+    "coursesOverline": "可用课程",
+    "programsTitle": "培训项目",
+    "programsLead": "为工厂工程师和技术人员提供的实践培训。",
+    "ctaTitle": "有兴趣培训您的团队吗？",
+    "ctaText": "我们根据您工厂的具体需求设计定制项目。",
+    "ctaInfo": "申请信息"
   },
   "team": {
     "title": "我们的团队",

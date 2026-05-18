@@ -54,21 +54,21 @@ export default function Projects() {
       {/* ── HEADER ── */}
       <div className="ns-page-header">
         <div className="ns-page-header-inner">
-          <div className="ns-eyebrow"><span className="ns-eyebrow-dot" />Casos de Éxito</div>
-          <h1 className="ns-page-title">Proyectos Destacados</h1>
-          <p className="ns-page-lead">Conoce algunos de nuestros casos de éxito en implementación de soluciones de automatización industrial.</p>
+          <div className="ns-eyebrow"><span className="ns-eyebrow-dot" />{t('projects.eyebrow')}</div>
+          <h1 className="ns-page-title">{t('projects.pageTitle')}</h1>
+          <p className="ns-page-lead">{t('projects.pageLead')}</p>
         </div>
       </div>
 
       {/* ── SOLIDWORKS ANIMATION ── */}
       <section className="ns-section--dark ns-section--tight">
         <div className="ns-section-inner">
-          <div className="ns-eyebrow"><span className="ns-eyebrow-dot" />Ingeniería 3D</div>
+          <div className="ns-eyebrow"><span className="ns-eyebrow-dot" />{t('projects.engineering3DOverline')}</div>
           <h2 className="ns-section-title" style={{ color: '#fff', marginBottom: 8 }}>
-            Diseño e Ingeniería en SolidWorks
+            {t('projects.engineering3DTitle')}
           </h2>
           <p className="ns-section-lead" style={{ marginBottom: 0 }}>
-            Cada proyecto parte de un modelo 3D detallado. Desplázate para explorar el proceso de diseño.
+            {t('projects.engineering3DLead')}
           </p>
         </div>
       </section>
@@ -90,7 +90,7 @@ export default function Projects() {
                 <p style={{ fontSize: '1rem', color: 'var(--nds-muted)', lineHeight: 1.6 }}>{p.description}</p>
 
                 <div>
-                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--nds-muted)', marginBottom: 10 }}>Tecnologías</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--nds-muted)', marginBottom: 10 }}>{t('projects.techLabel')}</div>
                   <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                     {p.tech.map(t => (
                       <span key={t} className="nds-badge nds-badge-teal">{t}</span>
@@ -99,7 +99,7 @@ export default function Projects() {
                 </div>
 
                 <div>
-                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--nds-muted)', marginBottom: 10 }}>Resultados Clave</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--nds-muted)', marginBottom: 10 }}>{t('projects.resultsLabel')}</div>
                   <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 8 }}>
                     {p.results.map(r => (
                       <li key={r} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '.93rem', color: 'var(--nds-text)' }}>
@@ -119,12 +119,12 @@ export default function Projects() {
       <section className="ns-cta-band">
         <div className="ns-cta-band-inner">
           <div>
-            <h2>¿Listo para tu Próximo Proyecto?</h2>
-            <p>Permítenos llevar tu operación al siguiente nivel con automatización personalizada.</p>
+            <h2>{t('projects.ctaTitle')}</h2>
+            <p>{t('projects.ctaText')}</p>
           </div>
           <div className="ns-cta-band-btns">
-            <Link to="/contact" className="ns-btn ns-btn-light">Contactar Ahora</Link>
-            <Link to="/services" className="ns-btn ns-btn-ghost-dark">Ver Servicios</Link>
+            <Link to="/contact" className="ns-btn ns-btn-light">{t('projects.ctaContact')}</Link>
+            <Link to="/services" className="ns-btn ns-btn-ghost-dark">{t('projects.ctaServices')}</Link>
           </div>
         </div>
       </section>
