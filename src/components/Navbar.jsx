@@ -71,7 +71,6 @@ export default function Navbar() {
       href: '/about',
       links: [
         { label: t('nav.aboutUs'), href: '/about' },
-        { label: t('nav.aboutTeam'), href: '/team' },
         { label: t('nav.aboutContact'), href: '/contact' },
       ],
     },

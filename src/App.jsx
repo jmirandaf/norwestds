@@ -7,7 +7,6 @@ const Home = lazy(() => import('./pages/Home.jsx'))
 const Services = lazy(() => import('./pages/Services.jsx'))
 const Projects = lazy(() => import('./pages/Projects.jsx'))
 const About = lazy(() => import('./pages/About.jsx'))
-const Team = lazy(() => import('./pages/Team.jsx'))
 const Contact = lazy(() => import('./pages/Contact.jsx'))
 const TrainingCenter = lazy(() => import('./pages/TrainingCenter.jsx'))
 const Login = lazy(() => import('./pages/Login.jsx'))
@@ -28,7 +27,7 @@ const PortalInvites = lazy(() => import('./pages/portal/PortalInvites.jsx'))
 const PortalCatalog = lazy(() => import('./pages/portal/PortalCatalog.jsx'))
 const PortalPrices  = lazy(() => import('./pages/portal/PortalPrices.jsx'))
 const PortalQuotes  = lazy(() => import('./pages/portal/PortalQuotes.jsx'))
-const PortalROI = lazy(() => import('./pages/portal/PortalROI.jsx'))
+const PortalROI     = lazy(() => import('./pages/portal/PortalROI.jsx'))
 const PortalSafety = lazy(() => import('./pages/portal/PortalSafety.jsx'))
 
 // LMS — Training Center (rol: estudiante)
@@ -49,7 +48,6 @@ export default function App() {
       <Route path="/services" element={<MainLayout><Services /></MainLayout>} />
       <Route path="/projects" element={<MainLayout><Projects /></MainLayout>} />
       <Route path="/about" element={<MainLayout><About /></MainLayout>} />
-      <Route path="/team" element={<MainLayout><Team /></MainLayout>} />
       <Route path="/contact" element={<MainLayout><Contact /></MainLayout>} />
       <Route path="/training" element={<MainLayout><TrainingCenter /></MainLayout>} />
 

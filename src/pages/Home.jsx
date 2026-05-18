@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import useMeta from '../hooks/useMeta';
@@ -46,8 +46,25 @@ function MarqueeRow({ logos, direction = 'lr', label }) {
   );
 }
 
+const CAP_KEYS = ['cap1', 'cap2', 'cap3', 'cap4'];
+const CYCLE_MS = 3800;
+const FADE_MS  = 380;
+
 export default function Home() {
   const { t } = useTranslation();
+  const [capIdx, setCapIdx]     = useState(0);
+  const [visible, setVisible]   = useState(true);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setVisible(false);
+      setTimeout(() => {
+        setCapIdx(i => (i + 1) % CAP_KEYS.length);
+        setVisible(true);
+      }, FADE_MS);
+    }, CYCLE_MS);
+    return () => clearInterval(timer);
+  }, []);
 
   useMeta({
     title: 'Automatización Industrial Tijuana | Norwest Dynamic Systems',
@@ -71,12 +88,36 @@ export default function Home() {
                 {t('home.heroOverline')}
               </div>
 
-              <h1 className="ns-hero-title">
-                {t('home.heroTitle')}<br />
-                <span className="accent">{t('home.heroTitleAccent')}</span>
+              <h1
+                className="ns-hero-title"
+                style={{ opacity: visible ? 1 : 0, transition: `opacity ${FADE_MS}ms ease` }}
+              >
+                <span className="accent">{t(`home.${CAP_KEYS[capIdx]}Title`)}</span>
               </h1>
 
-              <p className="ns-hero-sub">{t('home.heroSubtitle')}</p>
+              <p
+                className="ns-hero-sub"
+                style={{ opacity: visible ? 1 : 0, transition: `opacity ${FADE_MS}ms ease` }}
+              >
+                {t(`home.${CAP_KEYS[capIdx]}Desc`)}
+              </p>
+
+              {/* Indicator dots */}
+              <div style={{ display: 'flex', gap: 8, marginTop: -4, marginBottom: 8 }}>
+                {CAP_KEYS.map((_, i) => (
+                  <button
+                    key={i}
+                    aria-label={`Capability ${i + 1}`}
+                    onClick={() => { setVisible(false); setTimeout(() => { setCapIdx(i); setVisible(true); }, FADE_MS); }}
+                    style={{
+                      width: i === capIdx ? 24 : 8, height: 8,
+                      borderRadius: 999, border: 'none', padding: 0, cursor: 'pointer',
+                      background: i === capIdx ? '#12A6CC' : 'rgba(255,255,255,0.35)',
+                      transition: 'width 0.3s ease, background 0.3s ease',
+                    }}
+                  />
+                ))}
+              </div>
 
               <div className="ns-hero-ctas">
                 <Link to="/contact" className="ns-hero-btn-primary">
@@ -117,51 +158,50 @@ export default function Home() {
               </div>
             </div>
 
-            {/* RIGHT: CORE CAPABILITIES CARD */}
-            <aside className="ns-info-card" aria-label={t('home.capLabel')}>
+            {/* RIGHT: INFO CARD */}
+            <aside className="ns-info-card" aria-label={t('home.panelLabel')}>
               <div className="ns-info-card__header">
                 <div className="ns-info-card__header-icon">
                   <svg width="18" height="18" fill="none" stroke="#12A6CC" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
-                    <circle cx="12" cy="12" r="3"/>
-                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14" />
                   </svg>
                 </div>
-                <div className="ns-info-card__header-text">{t('home.capLabel')}</div>
+                <div className="ns-info-card__header-text">{t('home.panelLabel')}</div>
               </div>
 
-              {[
-                {
-                  key: 'cap1',
-                  icon: <><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></>,
-                },
-                {
-                  key: 'cap2',
-                  icon: <><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></>,
-                },
-                {
-                  key: 'cap3',
-                  icon: <><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></>,
-                },
-                {
-                  key: 'cap4',
-                  icon: <><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/><path d="M9 7h6M9 11h4"/></>,
-                },
-              ].map(({ key, icon }, i, arr) => (
-                <Fragment key={key}>
-                  <div className="ns-info-card__section" style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-                    <svg width="15" height="15" fill="none" stroke="#12A6CC" strokeWidth="2" viewBox="0 0 24 24"
-                      aria-hidden="true" style={{ flexShrink: 0, marginTop: 2 }}>
-                      {icon}
-                    </svg>
-                    <div className="ns-info-card__label" style={{ fontSize: '.83rem', lineHeight: 1.4 }}>
-                      {t(`home.${key}Title`)}
-                    </div>
-                  </div>
-                  {i < arr.length - 1 && <div className="ns-info-card__divider" />}
-                </Fragment>
-              ))}
+              <div className="ns-info-card__section">
+                <div className="ns-info-card__label">{t('home.infoCat1')}</div>
+                <div className="ns-info-card__tags">
+                  {['FANUC', 'Keyence', 'Cognex', 'SICK'].map(tag => (
+                    <span key={tag} className="ns-info-card__tag">{tag}</span>
+                  ))}
+                </div>
+              </div>
 
               <div className="ns-info-card__divider" />
+
+              <div className="ns-info-card__section">
+                <div className="ns-info-card__label">{t('home.infoCat2')}</div>
+                <div className="ns-info-card__tags">
+                  {['PLCs', 'HMIs', 'SCADA'].map(tag => (
+                    <span key={tag} className="ns-info-card__tag">{tag}</span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="ns-info-card__divider" />
+
+              <div className="ns-info-card__section">
+                <div className="ns-info-card__label">{t('home.infoCat3')}</div>
+                <div className="ns-info-card__tags">
+                  <span className="ns-info-card__tag">{t('home.specialty4Title')}</span>
+                  <span className="ns-info-card__tag">ISO 13849</span>
+                </div>
+              </div>
+
+              <div className="ns-info-card__divider" />
+
               <div className="ns-info-card__stat-row">
                 <div className="ns-info-card__stat">
                   <div className="ns-info-card__stat-num">{t('home.infoStat1Num')}</div>
