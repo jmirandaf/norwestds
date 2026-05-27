@@ -9,7 +9,7 @@ import SolidworksScrollCanvas from '../components/SolidworksScrollCanvas';
 //   `/sw-frames/frame_${String(i).padStart(3, '0')}.png`
 // );
 const SW_FRAMES = Array.from({ length: 201 }, (_, i) =>
-  `/sw-frames/CAH%20Legacy-${String(i).padStart(4, '0')}.png`
+  `/sw-frames/cah-legacy/CAH%20Legacy-${String(i).padStart(4, '0')}.png`
 );
 
 const projects = [
