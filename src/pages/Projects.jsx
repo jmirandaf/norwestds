@@ -8,7 +8,9 @@ import SolidworksScrollCanvas from '../components/SolidworksScrollCanvas';
 // const SW_FRAMES = Array.from({ length: 120 }, (_, i) =>
 //   `/sw-frames/frame_${String(i).padStart(3, '0')}.png`
 // );
-const SW_FRAMES = [];
+const SW_FRAMES = Array.from({ length: 201 }, (_, i) =>
+  `/sw-frames/cah-legacy/CAH%20Legacy-${String(i).padStart(4, '0')}.png`
+);
 
 const projects = [
   {
@@ -72,7 +74,7 @@ export default function Projects() {
           </p>
         </div>
       </section>
-      <SolidworksScrollCanvas frames={SW_FRAMES} scrollHeight={3} />
+      <SolidworksScrollCanvas frames={SW_FRAMES} scrollHeight={5} />
 
       {/* ── PROYECTOS ── */}
       <section className="ns-section">
