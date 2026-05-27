@@ -8,9 +8,8 @@ import SolidworksScrollCanvas from '../components/SolidworksScrollCanvas';
 // const SW_FRAMES = Array.from({ length: 120 }, (_, i) =>
 //   `/sw-frames/frame_${String(i).padStart(3, '0')}.png`
 // );
-const SW_FRAMES = Array.from({ length: 201 }, (_, i) =>
-  `/sw-frames/cah-legacy/CAH%20Legacy-${String(i).padStart(4, '0')}.png`
-);
+// Uncomment when animation.mp4 is ready (export with background #071e30):
+// const SW_VIDEO = '/sw-frames/cah-legacy/animation.mp4';
 
 const projects = [
   {
@@ -74,7 +73,7 @@ export default function Projects() {
           </p>
         </div>
       </section>
-      <SolidworksScrollCanvas frames={SW_FRAMES} scrollHeight={5} />
+      <SolidworksScrollCanvas scrollHeight={5} />
 
       {/* ── PROYECTOS ── */}
       <section className="ns-section">

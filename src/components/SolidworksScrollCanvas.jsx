@@ -2,46 +2,67 @@ import { useEffect, useRef } from 'react';
 
 // ─── SolidworksScrollCanvas ─────────────────────────────────────────────────
 //
-// Scroll-driven frame animation for SolidWorks image sequences.
+// Scroll-driven animation. Two modes:
 //
-// HOW TO ADD REAL FRAMES:
-//   1. In SolidWorks: Animation → Save Animation → PNG sequence (frame_000.png…)
-//   2. Place frames in /public/sw-frames/
-//   3. Build the array in Projects.jsx:
-//        const SW_FRAMES = Array.from({ length: 120 }, (_, i) =>
-//          `/sw-frames/frame_${String(i).padStart(3, '0')}.png`
-//        );
-//   4. Pass to component:
-//        <SolidworksScrollCanvas frames={SW_FRAMES} scrollHeight={4} />
+//  MP4 mode (recommended):
+//    <SolidworksScrollCanvas videoSrc="/sw-frames/cah-legacy/animation.mp4" scrollHeight={5} />
+//    Export from SolidWorks/video editor with background #071e30 to blend seamlessly.
+//
+//  PNG frame sequence mode:
+//    const FRAMES = Array.from({ length: 201 }, (_, i) =>
+//      `/sw-frames/cah-legacy/CAH%20Legacy-${String(i).padStart(4, '0')}.png`
+//    );
+//    <SolidworksScrollCanvas frames={FRAMES} scrollHeight={5} />
 //
 // `scrollHeight` controls how many viewport-heights tall the scroll section is.
 // ────────────────────────────────────────────────────────────────────────────
 
-export default function SolidworksScrollCanvas({ frames = [], scrollHeight = 3 }) {
+export default function SolidworksScrollCanvas({ frames = [], videoSrc = null, scrollHeight = 3 }) {
   const containerRef = useRef(null);
-  const canvasRef = useRef(null);
-  const imagesRef = useRef([]);
-  const progressRef = useRef(0);
+  const canvasRef    = useRef(null);
+  const videoRef     = useRef(null);
+  const imagesRef    = useRef([]);
+  const progressRef  = useRef(0);
 
-  // Pre-load frames when provided
+  // ── PNG mode: preload images ──
   useEffect(() => {
-    if (!frames.length) { imagesRef.current = []; return; }
+    if (videoSrc || !frames.length) { imagesRef.current = []; return; }
     imagesRef.current = frames.map(src => {
       const img = new Image();
       img.src = src;
       return img;
     });
-  }, [frames]);
+  }, [frames, videoSrc]);
 
+  // ── MP4 mode: control currentTime via scroll ──
   useEffect(() => {
+    if (!videoSrc || !containerRef.current) return;
     const container = containerRef.current;
-    const canvas = canvasRef.current;
+
+    const onScroll = () => {
+      const video = videoRef.current;
+      if (!video || !video.duration) return;
+      const rect      = container.getBoundingClientRect();
+      const scrollable = container.offsetHeight - window.innerHeight;
+      if (scrollable <= 0) return;
+      const p = Math.min(1, Math.max(0, -rect.top / scrollable));
+      video.currentTime = p * video.duration;
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [videoSrc]);
+
+  // ── PNG / placeholder mode: canvas render ──
+  useEffect(() => {
+    if (videoSrc) return;
+
+    const container = containerRef.current;
+    const canvas    = canvasRef.current;
     if (!container || !canvas) return;
 
     const ctx = canvas.getContext('2d');
     const dpr = window.devicePixelRatio || 1;
-
-    // ── All functions defined first to avoid temporal-dead-zone errors ──
 
     const drawPlaceholder = (p) => {
       const W = canvas.width / dpr;
@@ -50,11 +71,9 @@ export default function SolidworksScrollCanvas({ frames = [], scrollHeight = 3 }
       const cx = W / 2;
       const cy = H / 2;
 
-      // Background
       ctx.fillStyle = '#071e30';
       ctx.fillRect(0, 0, W, H);
 
-      // Grid
       const g = 60;
       ctx.strokeStyle = 'rgba(0,167,225,0.06)';
       ctx.lineWidth = 1;
@@ -65,7 +84,6 @@ export default function SolidworksScrollCanvas({ frames = [], scrollHeight = 3 }
         ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
       }
 
-      // Cross-hair
       ctx.strokeStyle = 'rgba(18,166,204,0.1)';
       ctx.lineWidth = 1;
       ctx.setLineDash([6, 8]);
@@ -73,7 +91,6 @@ export default function SolidworksScrollCanvas({ frames = [], scrollHeight = 3 }
       ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(W, cy); ctx.stroke();
       ctx.setLineDash([]);
 
-      // Glow
       const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, 140);
       glow.addColorStop(0, 'rgba(0,125,166,0.18)');
       glow.addColorStop(1, 'rgba(0,125,166,0)');
@@ -82,12 +99,10 @@ export default function SolidworksScrollCanvas({ frames = [], scrollHeight = 3 }
 
       const angle = p * Math.PI * 3;
 
-      // Outer ring
       ctx.strokeStyle = 'rgba(18,166,204,0.2)';
       ctx.lineWidth = 1;
       ctx.beginPath(); ctx.arc(cx, cy, 110, 0, Math.PI * 2); ctx.stroke();
 
-      // Tick marks
       for (let i = 0; i < 16; i++) {
         const theta = angle + (i / 16) * Math.PI * 2;
         const major = i % 4 === 0;
@@ -100,12 +115,10 @@ export default function SolidworksScrollCanvas({ frames = [], scrollHeight = 3 }
         ctx.stroke();
       }
 
-      // Mid ring
       ctx.strokeStyle = 'rgba(18,166,204,0.35)';
       ctx.lineWidth = 1.5;
       ctx.beginPath(); ctx.arc(cx, cy, 75, 0, Math.PI * 2); ctx.stroke();
 
-      // Hexagon
       ctx.strokeStyle = 'rgba(18,166,204,0.55)';
       ctx.lineWidth = 1.5;
       ctx.beginPath();
@@ -117,12 +130,10 @@ export default function SolidworksScrollCanvas({ frames = [], scrollHeight = 3 }
       }
       ctx.closePath(); ctx.stroke();
 
-      // Inner ring
       ctx.strokeStyle = 'rgba(18,166,204,0.25)';
       ctx.lineWidth = 1;
       ctx.beginPath(); ctx.arc(cx, cy, 30, 0, Math.PI * 2); ctx.stroke();
 
-      // Center dot with glow
       const dotGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, 10);
       dotGlow.addColorStop(0, 'rgba(18,166,204,1)');
       dotGlow.addColorStop(1, 'rgba(18,166,204,0)');
@@ -131,7 +142,6 @@ export default function SolidworksScrollCanvas({ frames = [], scrollHeight = 3 }
       ctx.fillStyle = '#12A6CC';
       ctx.beginPath(); ctx.arc(cx, cy, 4, 0, Math.PI * 2); ctx.fill();
 
-      // Scan line
       const scanY = H * p;
       const sg = ctx.createLinearGradient(0, scanY - 50, 0, scanY + 50);
       sg.addColorStop(0, 'rgba(18,166,204,0)');
@@ -140,7 +150,6 @@ export default function SolidworksScrollCanvas({ frames = [], scrollHeight = 3 }
       ctx.fillStyle = sg;
       ctx.fillRect(0, Math.max(0, scanY - 50), W, 100);
 
-      // Corner brackets
       const bS = 22, bP = 28;
       ctx.strokeStyle = 'rgba(18,166,204,0.3)';
       ctx.lineWidth = 2;
@@ -151,19 +160,16 @@ export default function SolidworksScrollCanvas({ frames = [], scrollHeight = 3 }
           ctx.stroke();
         });
 
-      // Frame counter
       ctx.fillStyle = 'rgba(18,166,204,0.55)';
       ctx.font = '11px "JetBrains Mono", monospace';
       ctx.textAlign = 'left';
       ctx.fillText(`FRAME  ${String(Math.round(p * 100)).padStart(3, '0')} / 100`, bP, H - bP);
 
-      // Label bottom-right
       ctx.fillStyle = 'rgba(234,246,251,0.18)';
       ctx.font = '11px Inter, sans-serif';
       ctx.textAlign = 'right';
       ctx.fillText('SolidWorks · Animación 3D', W - bP, H - bP);
 
-      // Center placeholder text
       ctx.textAlign = 'center';
       ctx.fillStyle = 'rgba(234,246,251,0.2)';
       ctx.font = '14px Inter, sans-serif';
@@ -182,7 +188,7 @@ export default function SolidworksScrollCanvas({ frames = [], scrollHeight = 3 }
         if (img?.complete && img.naturalWidth > 0) {
           const W = canvas.width / dpr;
           const H = canvas.height / dpr;
-          ctx.fillStyle = '#000';
+          ctx.fillStyle = '#071e30';
           ctx.fillRect(0, 0, W, H);
           const scale = Math.min(W / img.naturalWidth, H / img.naturalHeight);
           const w = img.naturalWidth * scale;
@@ -197,14 +203,14 @@ export default function SolidworksScrollCanvas({ frames = [], scrollHeight = 3 }
     const setSize = () => {
       const r = canvas.getBoundingClientRect();
       if (r.width === 0 || r.height === 0) return;
-      canvas.width = Math.round(r.width * dpr);
+      canvas.width  = Math.round(r.width  * dpr);
       canvas.height = Math.round(r.height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       render(progressRef.current);
     };
 
     const onScroll = () => {
-      const rect = container.getBoundingClientRect();
+      const rect      = container.getBoundingClientRect();
       const scrollable = container.offsetHeight - window.innerHeight;
       if (scrollable <= 0) { render(0); return; }
       const p = Math.min(1, Math.max(0, -rect.top / scrollable));
@@ -212,7 +218,6 @@ export default function SolidworksScrollCanvas({ frames = [], scrollHeight = 3 }
       render(p);
     };
 
-    // ── Wire up after all functions are defined ──
     const ro = new ResizeObserver(setSize);
     ro.observe(canvas);
     setSize();
@@ -223,36 +228,50 @@ export default function SolidworksScrollCanvas({ frames = [], scrollHeight = 3 }
       window.removeEventListener('scroll', onScroll);
       ro.disconnect();
     };
-  }, []);
+  }, [videoSrc]);
+
+  const scrollHint = (
+    <div style={{
+      position: 'absolute',
+      bottom: 32,
+      left: '50%',
+      transform: 'translateX(-50%)',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      gap: 6,
+      opacity: 0.45,
+      pointerEvents: 'none',
+      animation: 'ns-hero-pulse 2.4s ease-in-out infinite',
+    }}>
+      <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(18,166,204,0.8)' }}>
+        Desplaza para animar
+      </span>
+      <svg width="16" height="24" viewBox="0 0 16 24" fill="none" stroke="rgba(18,166,204,0.8)" strokeWidth="1.5">
+        <rect x="1" y="1" width="14" height="22" rx="7" />
+        <line x1="8" y1="6" x2="8" y2="10" />
+      </svg>
+    </div>
+  );
 
   return (
     <div ref={containerRef} style={{ position: 'relative', height: `${scrollHeight * 100}vh` }}>
-      <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
-        <canvas
-          ref={canvasRef}
-          style={{ display: 'block', width: '100%', height: '100%' }}
-        />
-        <div style={{
-          position: 'absolute',
-          bottom: 32,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 6,
-          opacity: 0.45,
-          pointerEvents: 'none',
-          animation: 'ns-hero-pulse 2.4s ease-in-out infinite',
-        }}>
-          <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(18,166,204,0.8)' }}>
-            Desplaza para animar
-          </span>
-          <svg width="16" height="24" viewBox="0 0 16 24" fill="none" stroke="rgba(18,166,204,0.8)" strokeWidth="1.5">
-            <rect x="1" y="1" width="14" height="22" rx="7" />
-            <line x1="8" y1="6" x2="8" y2="10" />
-          </svg>
-        </div>
+      <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', background: '#071e30' }}>
+        {videoSrc
+          ? <video
+              ref={videoRef}
+              src={videoSrc}
+              muted
+              playsInline
+              preload="auto"
+              style={{ display: 'block', width: '100%', height: '100%', objectFit: 'contain' }}
+            />
+          : <canvas
+              ref={canvasRef}
+              style={{ display: 'block', width: '100%', height: '100%' }}
+            />
+        }
+        {scrollHint}
       </div>
     </div>
   );
