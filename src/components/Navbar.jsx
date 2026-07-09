@@ -29,7 +29,6 @@ export default function Navbar() {
       '/services': () => import('../pages/Services.jsx'),
       '/projects': () => import('../pages/Projects.jsx'),
       '/about': () => import('../pages/About.jsx'),
-      '/team': () => import('../pages/Team.jsx'),
       '/contact': () => import('../pages/Contact.jsx'),
       '/training': () => import('../pages/TrainingCenter.jsx'),
       '/portal': () => import('../pages/portal/PortalHome.jsx'),

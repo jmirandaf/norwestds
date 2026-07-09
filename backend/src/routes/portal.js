@@ -75,4 +75,27 @@ router.post('/invites', requireRole(['admin']), async (req, res) => {
   })
 })
 
+// ── Plants ────────────────────────────────────────────────────────────────────
+
+router.get('/plants', async (_req, res) => {
+  const plants = await prisma.plant.findMany({ orderBy: { name: 'asc' }, take: 500 })
+  res.json(plants)
+})
+
+const plantPatchSchema = z.object({
+  potential: z.number().int().min(0).max(5).optional(),
+  notes: z.string().max(2000).optional(),
+  status: z.enum(['prospecto', 'contactado', 'calificado', 'cliente']).optional(),
+})
+
+router.patch('/plants/:id', requireRole(['admin', 'pm']), async (req, res) => {
+  const parsed = plantPatchSchema.safeParse(req.body)
+  if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() })
+  const plant = await prisma.plant.update({
+    where: { id: req.params.id },
+    data: parsed.data,
+  })
+  res.json(plant)
+})
+
 export default router

@@ -27,8 +27,9 @@ const PortalInvites = lazy(() => import('./pages/portal/PortalInvites.jsx'))
 const PortalCatalog = lazy(() => import('./pages/portal/PortalCatalog.jsx'))
 const PortalPrices  = lazy(() => import('./pages/portal/PortalPrices.jsx'))
 const PortalQuotes  = lazy(() => import('./pages/portal/PortalQuotes.jsx'))
-const PortalROI     = lazy(() => import('./pages/portal/PortalROI.jsx'))
-const PortalSafety = lazy(() => import('./pages/portal/PortalSafety.jsx'))
+const PortalROI       = lazy(() => import('./pages/portal/PortalROI.jsx'))
+const PortalSafety    = lazy(() => import('./pages/portal/PortalSafety.jsx'))
+const PortalProspects = lazy(() => import('./pages/portal/PortalProspects.jsx'))
 
 // LMS — Training Center (rol: estudiante)
 const LMSHome = lazy(() => import('./pages/lms/LMSHome.jsx'))
@@ -129,6 +130,14 @@ export default function App() {
         element={
           <ProtectedRoute allowedRoles={['admin', 'pm', 'client']}>
             <PortalSafety />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/portal/prospects"
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'pm']}>
+            <PortalProspects />
           </ProtectedRoute>
         }
       />
