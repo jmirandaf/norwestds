@@ -129,7 +129,21 @@ export default function PortalLayout({ title, subtitle, children }) {
             </NavLink>
           ))}
 
-          {/* ── Admin section ── */}
+          {/* ── Admin / PM section ── */}
+          {(userData?.role === 'admin' || userData?.role === 'pm') && (
+            <>
+              <div className="nds-portal-nav-divider" />
+              <div className="nds-portal-nav-section-label">Comercial</div>
+              <NavLink
+                to="/portal/prospects"
+                onClick={closeMobile}
+                className={({ isActive }) => `nds-portal-nav-link${isActive ? ' active' : ''}`}
+              >
+                <NavIcon d={<><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/></>} />
+                Mapa Prospectos
+              </NavLink>
+            </>
+          )}
           {userData?.role === 'admin' && (
             <>
               <div className="nds-portal-nav-divider" />
